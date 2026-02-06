@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>冉子民 - 个人主页</title>
+  <meta name="description" content="冉子民 - 个人主页">
+  <link rel="shortcut icon" href="assets/img/profile_pic.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #202122;
+      background: #f8f9fa;
+    }
+
+    /* Header */
+    .wiki-header {
+      background: #fff;
+      border-bottom: 1px solid #a2a9b1;
+      padding: 0.5em 0;
+    }
+    .wiki-header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .wiki-logo {
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #202122;
+      text-decoration: none;
+    }
+    .wiki-nav a {
+      color: #0645ad;
+      text-decoration: none;
+      margin-left: 1.5em;
+      font-size: 0.9em;
+    }
+    .wiki-nav a:hover { text-decoration: underline; }
+
+    /* Main layout */
+    .wiki-wrapper {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      min-height: calc(100vh - 100px);
+    }
+
+    /* Left sidebar - TOC */
+    .wiki-sidebar {
+      width: 176px;
+      flex-shrink: 0;
+      background: #f8f9fa;
+      border-right: 1px solid #a2a9b1;
+      padding: 0.75em;
+    }
+    .wiki-sidebar-title {
+      font-weight: bold;
+      padding-bottom: 0.5em;
+      border-bottom: 1px solid #c8ccd1;
+      margin-bottom: 0.5em;
+    }
+    .wiki-sidebar ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .wiki-sidebar li {
+      margin: 0.3em 0;
+    }
+    .wiki-sidebar a {
+      color: #0645ad;
+      text-decoration: none;
+      font-size: 0.9em;
+    }
+    .wiki-sidebar a:hover { text-decoration: underline; }
+
+    /* Content area */
+    .wiki-content {
+      flex: 1;
+      background: #fff;
+      border-left: 1px solid #a2a9b1;
+      border-right: 1px solid #a2a9b1;
+      padding: 1.5em 2em;
+      min-width: 0;
+    }
+
+    /* Page title */
+    .wiki-title {
+      font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+      font-size: 1.8em;
+      font-weight: normal;
+      border-bottom: 1px solid #a2a9b1;
+      padding-bottom: 0.2em;
+      margin-bottom: 0.5em;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: normal;
+      color: #000;
+      margin-top: 1em;
+      margin-bottom: 0.25em;
+    }
+    h2 {
+      font-size: 1.5em;
+      border-bottom: 1px solid #a2a9b1;
+      padding-bottom: 0.2em;
+    }
+    h3 { font-size: 1.2em; }
+    h4 { font-size: 1.1em; font-weight: bold; }
+    h5 { font-size: 1em; font-weight: bold; }
+
+    p { margin: 0.5em 0; }
+
+    a { color: #0645ad; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:visited { color: #0b0080; }
+
+    ul, ol { margin: 0.3em 0 0.3em 1.6em; }
+    li { margin: 0.2em 0; }
+
+    hr {
+      border: none;
+      border-top: 1px solid #a2a9b1;
+      margin: 1em 0;
+    }
+
+    blockquote {
+      border-left: 3px solid #c8ccd1;
+      padding-left: 1em;
+      margin: 1em 0;
+      color: #54595d;
+    }
+
+    code {
+      font-family: monospace;
+      background: #f8f9fa;
+      padding: 1px 4px;
+      border: 1px solid #eaecf0;
+    }
+    pre {
+      background: #f8f9fa;
+      border: 1px solid #eaecf0;
+      padding: 1em;
+      overflow-x: auto;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+
+    /* Right sidebar - Infobox */
+    .wiki-infobox-container {
+      width: 260px;
+      flex-shrink: 0;
+      padding: 0.75em;
+      background: #f8f9fa;
+    }
+    .infobox {
+      border: 1px solid #a2a9b1;
+      background: #f8f9fa;
+      font-size: 0.9em;
+      padding: 0.5em;
+      position: sticky;
+      top: 1em;
+    }
+    .infobox-title {
+      background: #eaecf0;
+      text-align: center;
+      font-weight: bold;
+      padding: 0.4em;
+      margin: -0.5em -0.5em 0.5em -0.5em;
+    }
+    .infobox img {
+      width: 100%;
+      border: 1px solid #c8ccd1;
+    }
+    .infobox-caption {
+      text-align: center;
+      font-size: 0.85em;
+      color: #54595d;
+      padding: 0.3em 0;
+    }
+    .infobox-row {
+      padding: 0.3em 0;
+      border-top: 1px solid #eaecf0;
+    }
+    .infobox-label {
+      font-weight: bold;
+    }
+
+    .infobox-row a {
+      word-break: break-all;
+    }
+    .infobox-row i {
+      width: 1.2em;
+      text-align: center;
+    }
+
+    /* Publications */
+    .publications { margin-top: 0.5em; }
+    .publications ol.bibliography {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .publications ol.bibliography li {
+      margin-bottom: 0.8em !important;
+      padding-bottom: 0.6em !important;
+      padding-top: 0.6em !important;
+      margin-top: 0 !important;
+      border-bottom: 1px solid #eaecf0;
+    }
+    .publications ol.bibliography li:last-child {
+      border-bottom: none;
+    }
+    .publications ol.bibliography li .pub-entry .hidden {
+      display: none;
+    }
+    .pub-entry {
+      line-height: 1.4;
+    }
+    .pub-entry .periodical,
+    .pub-entry .additional,
+    .pub-entry .author {
+      margin: 0.2em 0 0;
+      line-height: 1.3;
+    }
+    .pub-entry .pub-number {
+      display: none;
+    }
+    .pub-entry .title {
+      font-weight: bold;
+    }
+    .pub-entry .title a {
+      color: #0645ad;
+    }
+    .pub-entry .periodical {
+      display: block;
+      color: #54595d;
+      font-size: 0.9em;
+    }
+    .pub-entry .periodical .genre-tag {
+      display: inline-block;
+      padding: 0.12em 0.45em;
+      border: 1px solid #c8ccd1;
+      border-radius: 3px;
+      background: #f8f9fa;
+      color: #54595d;
+      font-size: 0.85em;
+      font-style: normal;
+      line-height: 1.2;
+      margin: 0.15em 0.4em 0 0;
+      max-width: 100%;
+      white-space: normal;
+      word-break: break-word;
+    }
+    .pub-entry .periodical .genre-tag-secondary {
+      border-color: #eaecf0;
+      background: #fff;
+    }
+    .pub-entry .periodical .genre-tag a {
+      color: inherit;
+      text-decoration: none;
+    }
+    .pub-entry .periodical .genre-tag a:hover {
+      text-decoration: underline;
+    }
+    .pub-entry .additional {
+      display: block;
+      color: #5c4a1a;
+      background: #fff8e1;
+      border-left: 3px solid #d4a017;
+      padding: 0.25em 0.5em;
+      border-radius: 2px;
+      font-weight: normal;
+    }
+    .pub-entry .author {
+      display: block;
+      color: #54595d;
+      font-size: 0.9em;
+    }
+    .pub-entry .links {
+      font-size: 0.85em;
+      margin-left: 0.5em;
+    }
+    .pub-entry .links a {
+      margin-right: 0.3em;
+    }
+    .pub-entry .hidden {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.2s ease;
+      background: #f8f9fa;
+      border: 1px solid #eaecf0;
+      margin-top: 0.5em;
+      font-size: 0.9em;
+    }
+    .pub-entry .hidden.open {
+      max-height: 30em;
+      padding: 0.5em;
+    }
+
+    /* Footer */
+    .wiki-footer {
+      text-align: center;
+      padding: 1em;
+      font-size: 0.85em;
+      color: #54595d;
+      border-top: 1px solid #a2a9b1;
+      background: #f8f9fa;
+    }
+
+    /* Hide TOC in content when sidebar exists */
+    .toc { display: none; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .wiki-wrapper {
+        flex-direction: column;
+      }
+      .wiki-sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #a2a9b1;
+      }
+      .wiki-infobox-container {
+        width: 100%;
+        order: -1;
+      }
+      .wiki-content {
+        border-left: none;
+        border-right: none;
+        padding: 1em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="wiki-header">
+    <div class="wiki-header-inner">
+      <a href="/" class="wiki-logo">个人主页</a>
+      <nav class="wiki-nav">
+        <a href="#about">关于</a>
+        <a href="#projects">项目</a>
+        <a href="#contact">联系方式</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="wiki-wrapper">
+    <aside class="wiki-sidebar">
+      <div class="wiki-sidebar-title">目录</div>
+      <ul>
+        <li><a href="#">(顶部)</a></li>
+        <li><a href="#about">关于</a></li>
+        <li><a href="#projects">项目</a></li>
+        <li><a href="#skills">技能</a></li>
+        <li><a href="#contact">联系方式</a></li>
+      </ul>
+    </aside>
+
+    <main class="wiki-content">
+      <h1 class="wiki-title">冉子民</h1>
+
+<p><b>冉子民</b>是一名<b>软件开发工程师</b>，专注于构建优质的现金牛项目。热衷于学习新技术，并将其应用于实际项目中。</p>
+
+<h2 id="about">关于</h2>
+
+<p>欢迎来到我的个人主页！我是冉子民，一名充满热情的开发者。我相信通过持续学习和实践，能够创造出有价值的产品和服务。</p>
+
+<p>我的兴趣领域包括：</p>
+<ul>
+  <li>Web开发与应用</li>
+  <li>软件工程最佳实践</li>
+  <li>开源项目贡献</li>
+  <li>技术创新与实践</li>
+</ul>
+
+<h2 id="projects">项目</h2>
+
+<h3>现金牛项目</h3>
+<p>专注于构建可持续盈利的优质项目，通过技术手段创造价值。项目注重用户体验和长期价值。</p>
+
+<h3>开源贡献</h3>
+<p>积极参与开源社区，为各类开源项目贡献代码，学习先进的技术和开发模式。</p>
+
+<h2 id="skills">技能</h2>
+
+<ul>
+  <li><b>编程语言：</b>精通多种主流编程语言</li>
+  <li><b>Web开发：</b>前端和后端开发经验</li>
+  <li><b>软件工程：</b>良好的软件设计和架构能力</li>
+  <li><b>项目管理：</b>能够有效管理和推进项目</li>
+</ul>
+
+<h2 id="contact">联系方式</h2>
+
+<ul>
+  <li><a href="https://github.com/ziminran" target="_blank"><i class="fab fa-github"></i> GitHub: ziminran</a></li>
+  <li><a href="mailto:ziminran@example.com"><i class="fas fa-envelope"></i> Email: ziminran@example.com</a></li>
+</ul>
+
+<hr />
+
+<p><em>此页面采用<a href="https://zh.wikipedia.org/">维基百科</a>风格设计。</em></p>
+
+    </main>
+
+    <aside class="wiki-infobox-container">
+      <div class="infobox">
+        <div class="infobox-title">冉子民</div>
+        
+        <img src="assets/img/profile_pic.jpg" alt="冉子民" onerror="this.style.display='none'">
+        <div class="infobox-caption">软件开发工程师</div>
+        
+        <div class="infobox-row">
+          <span class="infobox-label">职业</span><br>
+          软件开发工程师
+        </div>
+        <div class="infobox-row">
+          <span class="infobox-label">专业领域</span><br>
+          软件开发、Web应用
+        </div>
+        <div class="infobox-row">
+          <span class="infobox-label">兴趣方向</span><br>
+          技术创新、开源项目
+        </div>
+        
+        <div class="infobox-row">
+          <span class="infobox-label">GitHub</span><br>
+          <a href="https://github.com/ziminran" target="_blank"><i class="fab fa-github"></i> ziminran</a>
+        </div>
+        
+        <div class="infobox-row">
+          <span class="infobox-label">Email</span><br>
+          <a href="mailto:ziminran@example.com"><i class="fas fa-envelope"></i> 联系</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <footer class="wiki-footer">
+    本页面最后更新于 2026年2月6日。
+  </footer>
+</body>
+</html>
