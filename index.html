@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Zimin Ran - Computer Science PhD">
+    <title>Zimin Ran - Personal Homepage</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="profile-section">
+                <div class="profile-photo">
+                    <img src="photo.jpg" alt="Zimin Ran" onerror="this.style.display='none'">
+                </div>
+                <div class="profile-info">
+                    <h1>冉子民 (Zimin Ran)</h1>
+                    <p class="title">Doctor of Philosophy in Computer Science</p>
+                    <p class="affiliation">University of Technology Sydney</p>
+                </div>
+            </div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <main>
+            <section id="about">
+                <h2>About Me</h2>
+                <p>
+                    Welcome to my homepage! I am Zimin Ran (冉子民), a Doctor of Philosophy in Computer Science 
+                    from the University of Technology Sydney. My academic journey spans multiple disciplines 
+                    including computer science, data science, and accounting & finance.
+                </p>
+            </section>
+
+            <section id="education">
+                <h2>Education</h2>
+                <div class="education-item">
+                    <h3>Doctor of Philosophy (PhD) in Computer Science</h3>
+                    <p class="institution">University of Technology Sydney (悉尼科技大学)</p>
+                    <p class="location">Sydney, Australia</p>
+                </div>
+
+                <div class="education-item">
+                    <h3>Master of Data Science</h3>
+                    <p class="institution">The University of Sydney (悉尼大学)</p>
+                    <p class="location">Sydney, Australia</p>
+                </div>
+
+                <div class="education-item">
+                    <h3>Bachelor of Accounting and Finance</h3>
+                    <p class="institution">Liaoning University (辽宁大学) & De Montfort University</p>
+                    <p class="location">China & United Kingdom</p>
+                </div>
+
+                <div class="education-item">
+                    <h3>Professional Certification</h3>
+                    <p class="institution">ACCA (Association of Chartered Certified Accountants)</p>
+                    <p class="location">UK Certified Accountant</p>
+                </div>
+            </section>
+
+            <section id="contact">
+                <h2>Contact</h2>
+                <p>Feel free to reach out to me:</p>
+                <ul class="contact-list">
+                    <li><strong>Email:</strong> <a href="mailto:your.email@example.com">your.email@example.com</a></li>
+                    <li><strong>GitHub:</strong> <a href="https://github.com/ziminran" target="_blank">@ziminran</a></li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; <span id="year"></span> Zimin Ran. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
