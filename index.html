@@ -391,6 +391,307 @@
   <li>Skin Tone Estimation</li>
 </ul>
 
+<!-- Chat Dialog Component -->
+<style>
+  .chat-section {
+    margin: 2em 0;
+  }
+  
+  .chat-section-title {
+    font-size: 1.6em;
+    font-weight: normal;
+    margin-bottom: 1em;
+    color: #000;
+  }
+  
+  .chat-container {
+    border: 1px solid #a2a9b1;
+    background: #fff;
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  
+  .chat-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #a2a9b1;
+    padding: 0.75em 1em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .chat-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+  }
+  
+  .chat-header-title {
+    font-weight: bold;
+    font-size: 1em;
+  }
+  
+  .chat-badge {
+    display: inline-block;
+    background: #e8f4f8;
+    color: #0645ad;
+    padding: 0.2em 0.5em;
+    border-radius: 3px;
+    font-size: 0.75em;
+    border: 1px solid #a2d0e8;
+  }
+  
+  .chat-fullscreen-btn {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: #54595d;
+    padding: 0.2em 0.4em;
+    line-height: 1;
+  }
+  
+  .chat-fullscreen-btn:hover {
+    color: #000;
+  }
+  
+  .chat-messages {
+    padding: 1em;
+    min-height: 300px;
+    max-height: 400px;
+    overflow-y: auto;
+    background: #fff;
+  }
+  
+  .chat-message {
+    margin-bottom: 1em;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .chat-message.system {
+    align-items: flex-start;
+  }
+  
+  .chat-message.user {
+    align-items: flex-end;
+  }
+  
+  .chat-message-label {
+    font-size: 0.75em;
+    color: #54595d;
+    margin-bottom: 0.3em;
+    font-weight: bold;
+  }
+  
+  .chat-message-content {
+    max-width: 80%;
+    padding: 0.75em 1em;
+    border-radius: 4px;
+    line-height: 1.4;
+  }
+  
+  .chat-message.system .chat-message-content {
+    background: #fff;
+    border-left: 3px solid #4CAF50;
+    text-align: left;
+  }
+  
+  .chat-message.user .chat-message-content {
+    background: #0645ad;
+    color: #fff;
+    text-align: left;
+  }
+  
+  .chat-input-area {
+    border-top: 1px solid #a2a9b1;
+    padding: 1em;
+    background: #f8f9fa;
+    display: flex;
+    gap: 0.5em;
+  }
+  
+  .chat-input {
+    flex: 1;
+    padding: 0.6em 0.8em;
+    border: 1px solid #a2a9b1;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95em;
+    background: #fff;
+  }
+  
+  .chat-input:focus {
+    outline: none;
+    border-color: #0645ad;
+  }
+  
+  .chat-send-btn {
+    padding: 0.6em 1.5em;
+    background: #2196F3;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.95em;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .chat-send-btn:hover {
+    background: #1976D2;
+  }
+  
+  .chat-send-btn:active {
+    background: #0D47A1;
+  }
+  
+  /* Fullscreen mode */
+  .chat-container.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    border-radius: 0;
+    max-width: none;
+  }
+  
+  .chat-container.fullscreen .chat-messages {
+    max-height: calc(100vh - 140px);
+    min-height: calc(100vh - 140px);
+  }
+  
+  /* Responsive */
+  @media (max-width: 900px) {
+    .chat-message-content {
+      max-width: 90%;
+    }
+    
+    .chat-input-area {
+      flex-direction: column;
+    }
+    
+    .chat-send-btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<div class="chat-section">
+  <h2 class="chat-section-title">Ask Zimin Ran anything</h2>
+  
+  <div class="chat-container" id="chatContainer">
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <span class="chat-header-title">💬 Chat</span>
+        <span class="chat-badge">RAG-enhanced</span>
+      </div>
+      <button class="chat-fullscreen-btn" id="fullscreenBtn" title="Toggle fullscreen">⛶</button>
+    </div>
+    
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-message system">
+        <div class="chat-message-label">ZIMIN RAN</div>
+        <div class="chat-message-content">
+          你好！欢迎来到子民的主页，有什么可以帮你的吗？
+        </div>
+      </div>
+    </div>
+    
+    <div class="chat-input-area">
+      <input 
+        type="text" 
+        class="chat-input" 
+        id="chatInput" 
+        placeholder="输入您的消息..."
+        autocomplete="off"
+      >
+      <button class="chat-send-btn" id="sendBtn">发送</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const chatContainer = document.getElementById('chatContainer');
+  const chatMessages = document.getElementById('chatMessages');
+  const chatInput = document.getElementById('chatInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const fullscreenBtn = document.getElementById('fullscreenBtn');
+  let firstMessageSent = false;
+  
+  // Function to add a message to the chat
+  function addMessage(text, isUser) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${isUser ? 'user' : 'system'}`;
+    
+    const labelDiv = document.createElement('div');
+    labelDiv.className = 'chat-message-label';
+    labelDiv.textContent = isUser ? 'YOU' : 'ZIMIN RAN';
+    
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'chat-message-content';
+    contentDiv.textContent = text;
+    
+    messageDiv.appendChild(labelDiv);
+    messageDiv.appendChild(contentDiv);
+    chatMessages.appendChild(messageDiv);
+    
+    // Auto-scroll to the latest message
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+  
+  // Function to send a message
+  function sendMessage() {
+    const text = chatInput.value.trim();
+    if (!text) return;
+    
+    // Add user message
+    addMessage(text, true);
+    chatInput.value = '';
+    
+    // Enter fullscreen on first message
+    if (!firstMessageSent) {
+      firstMessageSent = true;
+      chatContainer.classList.add('fullscreen');
+    }
+    
+    // Auto-reply after 500-1000ms delay
+    const delay = 500 + Math.random() * 500;
+    setTimeout(() => {
+      addMessage('正在升级中', false);
+    }, delay);
+  }
+  
+  // Toggle fullscreen
+  function toggleFullscreen() {
+    chatContainer.classList.toggle('fullscreen');
+  }
+  
+  // Event listeners
+  sendBtn.addEventListener('click', sendMessage);
+  
+  chatInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      sendMessage();
+    }
+  });
+  
+  fullscreenBtn.addEventListener('click', toggleFullscreen);
+  
+  // Close fullscreen with Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && chatContainer.classList.contains('fullscreen')) {
+      chatContainer.classList.remove('fullscreen');
+    }
+  });
+})();
+</script>
+
 <h2 id="publications">Publications</h2>
 
 <div class="publications">
