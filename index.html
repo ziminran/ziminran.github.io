@@ -617,77 +617,87 @@
 
 <script>
 (function() {
-  const chatContainer = document.getElementById('chatContainer');
-  const chatMessages = document.getElementById('chatMessages');
-  const chatInput = document.getElementById('chatInput');
-  const sendBtn = document.getElementById('sendBtn');
-  const fullscreenBtn = document.getElementById('fullscreenBtn');
-  let firstMessageSent = false;
-  
-  // Function to add a message to the chat
-  function addMessage(text, isUser) {
-    const messageDiv = document.createElement('div');
-    messageDiv.className = `chat-message ${isUser ? 'user' : 'system'}`;
+  // Wait for DOM to be fully loaded
+  document.addEventListener('DOMContentLoaded', function() {
+    const chatContainer = document.getElementById('chatContainer');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    let firstMessageSent = false;
     
-    const labelDiv = document.createElement('div');
-    labelDiv.className = 'chat-message-label';
-    labelDiv.textContent = isUser ? 'YOU' : 'ZIMIN RAN';
+    // Reply delay constants (in milliseconds)
+    const MIN_REPLY_DELAY_MS = 500;
+    const MAX_ADDITIONAL_DELAY_MS = 500;
     
-    const contentDiv = document.createElement('div');
-    contentDiv.className = 'chat-message-content';
-    contentDiv.textContent = text;
-    
-    messageDiv.appendChild(labelDiv);
-    messageDiv.appendChild(contentDiv);
-    chatMessages.appendChild(messageDiv);
-    
-    // Auto-scroll to the latest message
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-  }
-  
-  // Function to send a message
-  function sendMessage() {
-    const text = chatInput.value.trim();
-    if (!text) return;
-    
-    // Add user message
-    addMessage(text, true);
-    chatInput.value = '';
-    
-    // Enter fullscreen on first message
-    if (!firstMessageSent) {
-      firstMessageSent = true;
-      chatContainer.classList.add('fullscreen');
+    // Function to add a message to the chat
+    function addMessage(text, isUser) {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `chat-message ${isUser ? 'user' : 'system'}`;
+      
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'chat-message-label';
+      labelDiv.textContent = isUser ? 'YOU' : 'ZIMIN RAN';
+      
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'chat-message-content';
+      contentDiv.textContent = text;
+      
+      messageDiv.appendChild(labelDiv);
+      messageDiv.appendChild(contentDiv);
+      chatMessages.appendChild(messageDiv);
+      
+      // Auto-scroll to the latest message
+      chatMessages.scrollTop = chatMessages.scrollHeight;
     }
     
-    // Auto-reply after 500-1000ms delay
-    const delay = 500 + Math.random() * 500;
-    setTimeout(() => {
-      addMessage('正在升级中', false);
-    }, delay);
-  }
-  
-  // Toggle fullscreen
-  function toggleFullscreen() {
-    chatContainer.classList.toggle('fullscreen');
-  }
-  
-  // Event listeners
-  sendBtn.addEventListener('click', sendMessage);
-  
-  chatInput.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-      sendMessage();
+    // Function to send a message
+    function sendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      
+      // Add user message
+      addMessage(text, true);
+      chatInput.value = '';
+      
+      // Enter fullscreen on first message
+      if (!firstMessageSent) {
+        firstMessageSent = true;
+        chatContainer.classList.add('fullscreen');
+      }
+      
+      // Auto-reply after random delay between MIN_REPLY_DELAY_MS and (MIN_REPLY_DELAY_MS + MAX_ADDITIONAL_DELAY_MS)
+      const delay = MIN_REPLY_DELAY_MS + Math.random() * MAX_ADDITIONAL_DELAY_MS;
+      setTimeout(() => {
+        addMessage('正在升级中', false);
+      }, delay);
     }
-  });
-  
-  fullscreenBtn.addEventListener('click', toggleFullscreen);
-  
-  // Close fullscreen with Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && chatContainer.classList.contains('fullscreen')) {
-      chatContainer.classList.remove('fullscreen');
+    
+    // Toggle fullscreen
+    function toggleFullscreen() {
+      chatContainer.classList.toggle('fullscreen');
     }
+    
+    // Handle Escape key to exit fullscreen
+    function handleEscapeKey(e) {
+      if (e.key === 'Escape' && chatContainer.classList.contains('fullscreen')) {
+        chatContainer.classList.remove('fullscreen');
+      }
+    }
+    
+    // Event listeners
+    sendBtn.addEventListener('click', sendMessage);
+    
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+    
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+    
+    // Add escape key listener
+    document.addEventListener('keydown', handleEscapeKey);
   });
 })();
 </script>
