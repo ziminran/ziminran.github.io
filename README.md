@@ -334,11 +334,11 @@ configureBailianAPI({
        parameters: { result_format: 'message' }
      });
      ```
-   - ⚠️ 建议优先使用页面内 **API Key** 按钮配置；如需在控制台测试，请勿在公共设备操作，测试后刷新页面清理记录。
+   - ⚠️ 建议优先使用页面内 **API Key** 按钮配置； 如需在控制台测试， 请勿在公共设备操作， 测试后刷新页面清理记录。
    - 再次发送消息，确保返回的是 `output.choices[0].message.content`。
 
 4. **检查 API 端点是否正确**
-   - 默认端点为华东 1（杭州），如在北京区请改为（可在已配置 API Key 后单独执行）：
+   - 默认端点为华东 1 (杭州)，如在北京区请改为（可在已配置 API Key 后单独执行）：
      ```javascript
      configureBailianAPI({
        apiEndpoint: 'https://dashscope-beijing.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
