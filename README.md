@@ -318,7 +318,7 @@ configureBailianAPI({
 如果对话没有正常返回内容，请按以下步骤定位问题并修正，直到能看到 AI 回复：
 
 1. **确认脚本已加载**
-   - 打开浏览器控制台（F12 → Console），输入 `typeof sendMessageToBailian`。
+   - 打开浏览器控制台，按 F12 切换到 Console 标签后输入 `typeof sendMessageToBailian`。
    - 结果应为 `function`；若为 `undefined`，检查 `index.html` 中是否已加载 `assets/js/bailian-api.js`。
 
 2. **确认 API Key 已保存**
