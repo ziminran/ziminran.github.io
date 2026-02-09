@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bailian-endpoint="">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -637,7 +637,7 @@
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     let firstMessageSent = false;
     let conversationHistory = []; // 对话历史
-    const API_PROXY_URL = null; // Replace with your Worker address, e.g., https://my-chat-proxy.workers.dev/chat / 替换为您的Worker地址
+    const API_PROXY_URL = (window.BAILIAN_WORKER_URL || document.documentElement.dataset.bailianEndpoint || '').trim();
     
     configureBailianAPI({
       apiEndpoint: API_PROXY_URL,
@@ -701,7 +701,8 @@
     async function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
-      if (!API_PROXY_URL || !API_PROXY_URL.startsWith('https://')) {
+      const apiEndpoint = API_PROXY_URL || (typeof BAILIAN_CONFIG !== 'undefined' ? BAILIAN_CONFIG.apiEndpoint : '');
+      if (!apiEndpoint || !/^https?:\/\//.test(apiEndpoint)) {
         addMessage('提示：请先在代码中配置正确的Worker地址后再使用聊天功能。', false);
         return;
       }
@@ -754,11 +755,28 @@
         
         // 显示错误信息
         let errorMessage = '抱歉，我暂时无法回复。';
+        const rawMessage = error?.message || '';
         
-        if (error.message.includes('API端点未配置')) {
-          errorMessage = '提示：聊天服务尚未配置，请稍后再试或查看部署说明。';
-        } else if (error.message.includes('API请求失败')) {
-          errorMessage = '抱歉，后端服务暂时不可用，请稍后再试。';
+        if (rawMessage.includes('API端点未配置')) {
+          errorMessage = '提示：聊天服务尚未配置，请在页面中设置 Worker 地址后重试。';
+        } else if (rawMessage.includes('Missing DASHSCOPE_API_KEY')) {
+          errorMessage = '提示：Worker 未配置 DASHSCOPE_API_KEY，请先在 Cloudflare 中设置密钥。';
+        } else if (rawMessage.includes('API返回的数据格式不正确')) {
+          errorMessage = '提示：Worker 返回格式异常，请确认前端指向 cloudflare-worker.js 代理地址。';
+        } else if (rawMessage.includes('Failed to fetch') || rawMessage.includes('NetworkError')) {
+          errorMessage = '提示：无法访问聊天服务，请检查 Worker 地址是否可访问，并确认 ALLOWED_ORIGIN 包含当前域名。';
+        } else if (rawMessage.includes('API请求失败')) {
+          if (rawMessage.includes('401')) {
+            errorMessage = '提示：DASHSCOPE_API_KEY 无效或权限不足，请检查密钥。';
+          } else if (rawMessage.includes('403')) {
+            errorMessage = '提示：当前域名未被 Worker 允许，请更新 ALLOWED_ORIGIN。';
+          } else if (rawMessage.includes('429')) {
+            errorMessage = '提示：请求过于频繁，请稍后再试。';
+          } else {
+            errorMessage = '抱歉，后端服务暂时不可用，请稍后再试。';
+          }
+        } else if (rawMessage.includes('API错误')) {
+          errorMessage = `提示：聊天服务返回错误：${rawMessage.replace('API错误:', '').trim()}`;
         }
         
         addMessage(errorMessage, false);

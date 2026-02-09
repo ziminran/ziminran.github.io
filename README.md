@@ -184,7 +184,7 @@ Deploy your personal homepage to GitHub Pages for free hosting:
 3. **部署后记录 Worker 地址**，例如：
    - `https://my-chat-proxy.workers.dev/chat`
 
-4. **修改前端配置**，将 `apiEndpoint` 指向您的 Worker：
+4. **修改前端配置**，将 `apiEndpoint` 指向您的 Worker（或在 `<html>` 标签上设置 `data-bailian-endpoint`，也可以在脚本前设置 `window.BAILIAN_WORKER_URL`）：
 
 ```javascript
 configureBailianAPI({
@@ -216,7 +216,7 @@ configureBailianAPI({
 
 ### 如果对话框无法回复
 
-如果对话框提示“抱歉，我暂时无法回复”，请确认以下配置是否完成：
+如果对话框提示“抱歉，我暂时无法回复”，请确认以下配置是否完成（若提示“请先在代码中配置正确的Worker地址”，说明前端尚未设置 Worker 地址）：
 
 1. **Worker 已部署并设置 `DASHSCOPE_API_KEY`**  
 2. **前端 `apiEndpoint` 已更新为 Worker 地址**  
