@@ -327,12 +327,14 @@ configureBailianAPI({
 
 3. **确认配置与模型**
    - 通过页面 **API Key** 按钮完成密钥配置。
-   - 优先在 `index.html` 的聊天脚本中查找 `configureBailianAPI` 调用（位于对话初始化部分）；若未显式配置，请查看 `assets/js/bailian-api.js` 中的默认 `BAILIAN_CONFIG`，确认 `model` 为 `qwen-flash`，且 `parameters.result_format` 为 `message`。
+   - 优先在 `index.html` 的聊天脚本中查找 `configureBailianAPI` 调用（位于对话初始化部分）。
+   - 若未显式配置，请查看 `assets/js/bailian-api.js` 中的默认 `BAILIAN_CONFIG`，确认 `model` 为 `qwen-flash`，且 `parameters.result_format` 为 `message`。
    - ⚠️ 请勿在控制台输入 API Key，也不要分享包含密钥的截图或日志。
    - 再次发送消息，确保返回的是 `output.choices[0].message.content`。
 
 4. **检查 API 端点是否正确**
-   - `configureBailianAPI` 会与已有配置合并；默认端点为华东 1 (杭州)，如在北京区可在 `index.html` 的 `configureBailianAPI` 调用处加入以下配置，仅覆盖端点，其他设置会保留：
+   - `configureBailianAPI` 会与已有配置合并，仅覆盖传入的字段。
+   - 默认端点为华东 1 (杭州)，如在北京区可在 `index.html` 的 `configureBailianAPI` 调用处加入以下配置覆盖端点：
      ```javascript
      configureBailianAPI({
        apiEndpoint: 'https://dashscope-beijing.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
