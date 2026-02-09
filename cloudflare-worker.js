@@ -1,4 +1,7 @@
-const ALLOWED_ORIGIN = 'https://ziminran.github.io';
+// Default allowlist origin; override via ALLOWED_ORIGIN env for other deployments.
+const DEFAULT_ALLOWED_ORIGIN = 'https://ziminran.github.io';
+const DEFAULT_MODEL = 'qwen-plus';
+// DashScope OpenAI-compatible endpoint.
 const DASH_SCOPE_ENDPOINT =
   'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
 
@@ -8,12 +11,22 @@ const MAX_INPUT_CHARS = 4000;
 const MAX_TOKENS_LIMIT = 800;
 const DEFAULT_MAX_TOKENS = 500;
 
+// Simple per-isolate limiter; does not apply across regions/isolates.
 const rateLimitStore = new Map();
+const MAX_RATE_LIMIT_ENTRIES = 1000;
 
-function withCors(headers = {}) {
+function cleanupRateLimitStore(now) {
+  for (const [ip, entry] of rateLimitStore.entries()) {
+    if (entry.resetAt <= now) {
+      rateLimitStore.delete(ip);
+    }
+  }
+}
+
+function withCors(origin, headers = {}) {
   return {
     ...headers,
-    'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
+    'Access-Control-Allow-Origin': origin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
     'Access-Control-Max-Age': '86400',
@@ -30,7 +43,10 @@ function getClientIp(request) {
 
 function isRateLimited(ip, now) {
   const entry = rateLimitStore.get(ip);
-  if (!entry || now > entry.resetAt) {
+  if (rateLimitStore.size > MAX_RATE_LIMIT_ENTRIES) {
+    cleanupRateLimitStore(now);
+  }
+  if (!entry || now >= entry.resetAt) {
     rateLimitStore.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
     return false;
   }
@@ -53,11 +69,12 @@ function totalMessageLength(messages) {
 export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin');
-    const corsHeaders = withCors({ 'Content-Type': 'application/json' });
+    const allowedOrigin = env.ALLOWED_ORIGIN || DEFAULT_ALLOWED_ORIGIN;
+    const corsHeaders = withCors(allowedOrigin, { 'Content-Type': 'application/json' });
 
-    if (origin !== ALLOWED_ORIGIN) {
+    if (origin !== allowedOrigin) {
       return new Response(
-        JSON.stringify({ error: 'Forbidden origin.' }),
+        JSON.stringify({ error: 'Forbidden origin.', code: 'FORBIDDEN_ORIGIN' }),
         { status: 403, headers: corsHeaders }
       );
     }
@@ -68,7 +85,7 @@ export default {
 
     if (request.method !== 'POST') {
       return new Response(
-        JSON.stringify({ error: 'Method not allowed.' }),
+        JSON.stringify({ error: 'Method not allowed.', code: 'METHOD_NOT_ALLOWED' }),
         { status: 405, headers: corsHeaders }
       );
     }
@@ -77,14 +94,14 @@ export default {
     const clientIp = getClientIp(request);
     if (isRateLimited(clientIp, now)) {
       return new Response(
-        JSON.stringify({ error: 'Too many requests. Please slow down.' }),
+        JSON.stringify({ error: 'Too many requests. Please slow down.', code: 'RATE_LIMITED' }),
         { status: 429, headers: corsHeaders }
       );
     }
 
     if (!env.DASHSCOPE_API_KEY) {
       return new Response(
-        JSON.stringify({ error: 'Server configuration missing.' }),
+        JSON.stringify({ error: 'Server configuration missing.', code: 'SERVER_CONFIG' }),
         { status: 500, headers: corsHeaders }
       );
     }
@@ -94,7 +111,7 @@ export default {
       payload = await request.json();
     } catch (error) {
       return new Response(
-        JSON.stringify({ error: 'Invalid JSON body.' }),
+        JSON.stringify({ error: 'Invalid JSON body.', code: 'INVALID_JSON' }),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -102,7 +119,7 @@ export default {
     const messages = Array.isArray(payload.messages) ? payload.messages : [];
     if (messages.length === 0) {
       return new Response(
-        JSON.stringify({ error: 'Messages are required.' }),
+        JSON.stringify({ error: 'Messages are required.', code: 'MISSING_MESSAGES' }),
         { status: 400, headers: corsHeaders }
       );
     }
@@ -110,7 +127,7 @@ export default {
     const totalLength = totalMessageLength(messages);
     if (totalLength > MAX_INPUT_CHARS) {
       return new Response(
-        JSON.stringify({ error: 'Input is too long.' }),
+        JSON.stringify({ error: 'Input is too long.', code: 'INPUT_TOO_LONG' }),
         { status: 413, headers: corsHeaders }
       );
     }
@@ -127,7 +144,7 @@ export default {
         : 0.8;
 
     const dashscopePayload = {
-      model: 'qwen-plus',
+      model: env.DASHSCOPE_MODEL || DEFAULT_MODEL, // Falls back to DEFAULT_MODEL if DASHSCOPE_MODEL is not set.
       messages,
       max_tokens: maxTokens,
       temperature: safeTemperature,
@@ -146,7 +163,7 @@ export default {
       });
     } catch (error) {
       return new Response(
-        JSON.stringify({ error: 'Upstream request failed.' }),
+        JSON.stringify({ error: 'Upstream request failed.', code: 'UPSTREAM_UNAVAILABLE' }),
         { status: 502, headers: corsHeaders }
       );
     }
@@ -156,6 +173,7 @@ export default {
       return new Response(
         JSON.stringify({
           error: 'Upstream error.',
+          code: 'UPSTREAM_ERROR',
           status: dashscopeResponse.status,
           details: responseText
         }),

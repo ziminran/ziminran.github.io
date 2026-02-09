@@ -12,7 +12,8 @@
 const BAILIAN_CONFIG = {
   // Cloudflare Worker代理端点
   // 示例: https://<worker-name>.<account>.workers.dev/chat
-  apiEndpoint: 'https://ziminran-chat-proxy.ziminran.workers.dev/chat',
+  // 注意：与 index.html 中的 WORKER_CHAT_ENDPOINT 保持一致
+  apiEndpoint: '',
   
   // 请求参数
   parameters: {
@@ -42,6 +43,12 @@ function configureBailianAPI(config) {
  * @returns {Promise<string>} - AI回复
  */
 async function sendMessageToBailian(userMessage, conversationHistory = []) {
+  if (!BAILIAN_CONFIG.apiEndpoint) {
+    const error = new Error('Worker endpoint not configured.');
+    error.code = 'ENDPOINT_NOT_CONFIGURED';
+    throw error;
+  }
+
   // 构建消息列表
   const messages = [
     {
@@ -90,11 +97,20 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
         typeof data.error === 'string'
           ? data.error
           : (data.error.message || 'API返回错误');
-      throw new Error(errorMessage);
+      const error = new Error(errorMessage);
+      if (data.code) {
+        error.code = data.code;
+      }
+      throw error;
     }
     
     // 提取AI的回复
-    if (data.choices && data.choices.length > 0) {
+    if (
+      data.choices &&
+      data.choices.length > 0 &&
+      data.choices[0].message &&
+      typeof data.choices[0].message.content === 'string'
+    ) {
       const assistantMessage = data.choices[0].message;
       return assistantMessage.content;
     } else {
@@ -108,7 +124,7 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
 }
 
 /**
- * 使用流式输出发送消息（SSE）
+ * 使用流式输出发送消息（当前Worker返回完整响应，按一次性回调处理）
  * @param {string} userMessage - 用户消息
  * @param {Array} conversationHistory - 对话历史（可选）
  * @param {Function} onChunk - 接收到文本片段时的回调函数

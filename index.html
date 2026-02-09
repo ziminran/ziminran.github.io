@@ -651,7 +651,10 @@
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     let firstMessageSent = false;
     let conversationHistory = []; // 对话历史
-    const WORKER_CHAT_ENDPOINT = 'https://ziminran-chat-proxy.ziminran.workers.dev/chat';
+    const WORKER_ENDPOINT_PLACEHOLDER = 'YOUR_WORKER_URL_HERE';
+    const WORKER_CHAT_ENDPOINT = WORKER_ENDPOINT_PLACEHOLDER;
+    // 请替换为你的 Cloudflare Worker /chat 地址
+    const isEndpointConfigured = WORKER_CHAT_ENDPOINT !== WORKER_ENDPOINT_PLACEHOLDER;
     
     configureBailianAPI({
       apiEndpoint: WORKER_CHAT_ENDPOINT,
@@ -682,6 +685,12 @@
       chatMessages.scrollTop = chatMessages.scrollHeight;
       
       return contentDiv;
+    }
+
+    if (!isEndpointConfigured) {
+      addMessage('⚠️ 请先配置 Worker /chat 地址后再使用对话功能。', false);
+      chatInput.disabled = true;
+      sendBtn.disabled = true;
     }
 
     // Function to add a typing indicator
@@ -718,6 +727,7 @@
     async function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
+      if (!isEndpointConfigured) return;
       
       // Disable input while processing
       chatInput.disabled = true;
@@ -768,13 +778,15 @@
         // 显示错误信息
         let errorMessage = '抱歉，我暂时无法回复。';
         
-        if (error.message.includes('Too many requests')) {
+        if (error.code === 'ENDPOINT_NOT_CONFIGURED') {
+          errorMessage = '请先配置 Worker /chat 地址后再试。';
+        } else if (error.code === 'RATE_LIMITED' || error.message.includes('Too many requests')) {
           errorMessage = '请求过于频繁，请稍后再试。';
-        } else if (error.message.includes('Input is too long')) {
+        } else if (error.code === 'INPUT_TOO_LONG' || error.message.includes('Input is too long')) {
           errorMessage = '输入内容过长，请缩短后再试。';
-        } else if (error.message.includes('Forbidden origin')) {
+        } else if (error.code === 'FORBIDDEN_ORIGIN' || error.message.includes('Forbidden origin')) {
           errorMessage = '当前来源未被允许，请检查部署配置。';
-        } else if (error.message.includes('API请求失败')) {
+        } else if (error.code === 'UPSTREAM_ERROR' || error.message.includes('API请求失败')) {
           errorMessage = '抱歉，服务暂时不可用，请稍后再试。';
         }
         

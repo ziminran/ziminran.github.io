@@ -159,7 +159,7 @@ Deploy your personal homepage to GitHub Pages for free hosting:
 
 1. **创建Worker**：将仓库中的 `cloudflare-worker.js` 复制到Cloudflare Workers
 2. **设置密钥**：在Worker环境变量/Secret中设置 `DASHSCOPE_API_KEY`
-3. **修改前端配置**：将 `WORKER_CHAT_ENDPOINT` 指向你的Worker `/chat` 地址
+3. **修改前端配置**：将 `index.html` 中的 `WORKER_CHAT_ENDPOINT` 指向你的Worker `/chat` 地址
 
 出于安全原因，前端不再支持配置 API Key，请使用 Cloudflare Worker Secret 管理密钥。
 
@@ -175,9 +175,9 @@ Deploy your personal homepage to GitHub Pages for free hosting:
 | `qwen-max` | 最强性能 | 高难度任务、创意生成 |
 | `qwen-long` | 超长上下文 | 长文档理解 |
 
-修改模型配置：在 `cloudflare-worker.js` 中调整 `model: 'qwen-plus'` 为你需要的模型名称。
+修改模型配置：在Worker设置中新增 `DASHSCOPE_MODEL`（例如 `qwen-plus`），或在 `cloudflare-worker.js` 中修改 `DEFAULT_MODEL` 常量。
 
-### 使用 qwen-plus 让对话框正常回复
+### 让对话框正常回复
 
 如果对话框提示“抱歉，我暂时无法回复”，请确认以下配置是否完成（本项目默认使用 `qwen-plus`）：
 

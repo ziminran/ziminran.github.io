@@ -7,6 +7,7 @@
  */
 
 configureBailianAPI({
+  // 请将占位符替换为你的 Worker 地址
   apiEndpoint: 'https://your-worker-name.your-account.workers.dev/chat',
   parameters: {
     temperature: 0.8,
