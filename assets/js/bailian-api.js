@@ -170,7 +170,7 @@ async function sendMessageToBailianStream(userMessage, conversationHistory = [],
         alert(errorMessage);
       }
       throw new Error(
-        `API请求失败: ${response.status} ${response.statusText}\n` +
+        `API请求失败: ${response.status} ${errorMessage}\n` +
         `详情: ${JSON.stringify(errorData)}`
       );
     }
