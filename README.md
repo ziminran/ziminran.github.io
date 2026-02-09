@@ -206,7 +206,9 @@ const API_PROXY_URL = 'https://my-chat-proxy.workers.dev';
 
 ```javascript
 const payload = {
-  model: 'qwen-plus'  // 更改为您想使用的模型
+  model: 'qwen-plus',  // 更改为您想使用的模型
+  messages,
+  max_tokens: maxTokens
 };
 ```
 
@@ -224,9 +226,11 @@ const payload = {
 
 ```javascript
 const payload = {
+  model: 'qwen-plus',
+  messages,
+  max_tokens: 1500,    // 生成文本的最大长度（后端会限制上限）
   temperature: 0.8,    // 控制随机性 (0-2)，值越高越随机
-  top_p: 0.9,         // 核采样参数 (0-1)
-  max_tokens: 1500    // 生成文本的最大长度（后端会限制上限）
+  top_p: 0.9           // 核采样参数 (0-1)
 };
 ```
 

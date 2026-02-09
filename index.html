@@ -715,11 +715,13 @@
       // Add typing indicator
       addTypingIndicator();
       
+      const userMessageEntry = {
+        role: 'user',
+        content: text
+      };
+
       try {
-        conversationHistory.push({
-          role: 'user',
-          content: text
-        });
+        conversationHistory.push(userMessageEntry);
         const response = await fetch(API_PROXY_URL, {
           method: 'POST',
           headers: {
@@ -733,26 +735,35 @@
         // Remove typing indicator
         removeTypingIndicator();
         
-        if (response.ok) {
+        if (response.ok && typeof assistantReply === 'string') {
           // Add AI response
-          addMessage(assistantReply || '', false);
+          addMessage(assistantReply, false);
           
           // 更新对话历史
           conversationHistory.push({
             role: 'assistant',
-            content: assistantReply || ''
+            content: assistantReply
           });
           
           // 限制对话历史长度，保留最近10轮对话
           if (conversationHistory.length > 20) {
             conversationHistory.splice(0, conversationHistory.length - 20);
           }
+        } else if (response.ok) {
+          if (conversationHistory[conversationHistory.length - 1] === userMessageEntry) {
+            conversationHistory.pop();
+          }
+          addMessage('抱歉，服务返回格式异常，请稍后再试。', false);
         } else {
-          conversationHistory.pop();
+          if (conversationHistory[conversationHistory.length - 1] === userMessageEntry) {
+            conversationHistory.pop();
+          }
           addMessage(data?.error?.message || '抱歉，后端服务暂时不可用，请稍后再试。', false);
         }
       } catch (error) {
-        conversationHistory.pop();
+        if (conversationHistory[conversationHistory.length - 1] === userMessageEntry) {
+          conversationHistory.pop();
+        }
         removeTypingIndicator();
         addMessage('抱歉，我暂时无法回复。', false);
         console.error('发送消息时出错:', error);
