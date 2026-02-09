@@ -326,15 +326,14 @@ configureBailianAPI({
    - 刷新页面后发送一条消息；若仍提示未配置，说明密钥未保存，请重新输入。
 
 3. **确认配置与模型**
-   - 在控制台执行（仅用于本地测试）：
+   - 先通过页面 **API Key** 按钮完成密钥配置，再在控制台执行（仅用于本地测试）：
      ```javascript
      configureBailianAPI({
-       apiKey: 'YOUR_API_KEY_HERE',
        model: 'qwen-flash',
        parameters: { result_format: 'message' }
      });
      ```
-   - ⚠️ 建议优先使用页面内 **API Key** 按钮配置； 如需在控制台测试， 请勿在公共设备操作， 测试后刷新页面清理记录。
+   - ⚠️ 建议优先使用页面内 **API Key** 按钮配置；如需在控制台测试，请勿在公共设备操作，测试后刷新页面清理记录。
    - 再次发送消息，确保返回的是 `output.choices[0].message.content`。
 
 4. **检查 API 端点是否正确**
