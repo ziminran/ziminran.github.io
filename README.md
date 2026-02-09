@@ -182,7 +182,7 @@ Deploy your personal homepage to GitHub Pages for free hosting:
    ```
 
 3. **部署后记录 Worker 地址**，例如：
-   - `https://my-chat-proxy.workers.dev/chat`
+   - `https://my-chat-proxy.workers.dev`
 
 4. **修改前端配置**，将 `API_PROXY_URL` 指向您的 Worker：
 
