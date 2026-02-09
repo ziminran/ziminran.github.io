@@ -338,6 +338,7 @@ configureBailianAPI({
        apiEndpoint: 'https://dashscope-beijing.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
      });
      ```
+   - 该调用不会清除已保存的 API Key、模型或其他参数配置。
 
 5. **检查网络请求与返回数据**
    - 打开 DevTools → Network，发送一条消息，查看请求状态应为 `200`。
@@ -345,7 +346,7 @@ configureBailianAPI({
 
 6. **如果仍失败**
    - 401/403：API Key 无效或权限未开通。
-   - CORS：使用后端代理方式（见上文“方式三：使用后端代理（推荐用于生产环境）”）。
+   - CORS：使用后端代理方式（见上文“第二步：配置API密钥”中的“方式三：使用后端代理（推荐用于生产环境）”）。
    - 其它错误：查看 Console 的错误信息并对应修复。
 
 ### 高级功能：流式输出
