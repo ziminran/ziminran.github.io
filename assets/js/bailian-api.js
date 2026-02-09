@@ -17,7 +17,7 @@ const BAILIAN_CONFIG = {
   
   // API密钥 - 从环境变量或配置文件中获取，不要直接硬编码
   // 获取方式：https://help.aliyun.com/zh/dashscope/developer-reference/activate-dashscope-and-create-an-api-key
-  apiKey: '',  // 使用后端代理时无需填写API key
+  apiKey: '',  // API key not needed when using backend proxy / 使用后端代理时无需填写
   
   // 模型名称 - 可选的模型包括:
   // - qwen-flash: 通义千问极速版，低延迟输出

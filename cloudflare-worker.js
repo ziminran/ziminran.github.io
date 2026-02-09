@@ -1,4 +1,4 @@
-const ALLOWED_ORIGIN = 'https://ziminran.github.io';
+const DEFAULT_ALLOWED_ORIGIN = 'https://ziminran.github.io';
 const DASHSCOPE_ENDPOINT = 'https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions';
 const MAX_INPUT_CHARS = 4000;
 const MAX_TOKENS = 800;
@@ -17,8 +17,12 @@ function getCorsHeaders(origin) {
   };
 }
 
-function isAllowedOrigin(origin) {
-  return origin === ALLOWED_ORIGIN;
+function getAllowedOrigin(env) {
+  return env.ALLOWED_ORIGIN || DEFAULT_ALLOWED_ORIGIN;
+}
+
+function isAllowedOrigin(origin, allowedOrigin) {
+  return origin === allowedOrigin;
 }
 
 function isRateLimited(ip) {
@@ -49,25 +53,27 @@ export default {
   async fetch(request, env) {
     const origin = request.headers.get('Origin') || '';
 
+    const allowedOrigin = getAllowedOrigin(env);
+
     if (request.method === 'OPTIONS') {
-      if (!isAllowedOrigin(origin)) {
+      if (!isAllowedOrigin(origin, allowedOrigin)) {
         return new Response('Forbidden', { status: 403 });
       }
-      return new Response(null, { status: 204, headers: getCorsHeaders(origin) });
+      return new Response(null, { status: 204, headers: getCorsHeaders(allowedOrigin) });
     }
 
     if (request.method !== 'POST') {
       return new Response('Not Found', { status: 404 });
     }
 
-    if (!isAllowedOrigin(origin)) {
+    if (!isAllowedOrigin(origin, allowedOrigin)) {
       return new Response('Forbidden', { status: 403 });
     }
 
     if (!env.DASHSCOPE_API_KEY) {
       return new Response(JSON.stringify({ error: { message: 'Missing DASHSCOPE_API_KEY.' } }), {
         status: 500,
-        headers: { ...getCorsHeaders(origin), 'Content-Type': 'application/json' }
+        headers: { ...getCorsHeaders(allowedOrigin), 'Content-Type': 'application/json' }
       });
     }
 
@@ -75,7 +81,7 @@ export default {
     if (isRateLimited(clientIp)) {
       return new Response(JSON.stringify({ error: { message: 'Rate limit exceeded.' } }), {
         status: 429,
-        headers: { ...getCorsHeaders(origin), 'Content-Type': 'application/json' }
+        headers: { ...getCorsHeaders(allowedOrigin), 'Content-Type': 'application/json' }
       });
     }
 
@@ -83,7 +89,7 @@ export default {
     if (!body || !Array.isArray(body.messages)) {
       return new Response(JSON.stringify({ error: { message: 'Invalid request body.' } }), {
         status: 400,
-        headers: { ...getCorsHeaders(origin), 'Content-Type': 'application/json' }
+        headers: { ...getCorsHeaders(allowedOrigin), 'Content-Type': 'application/json' }
       });
     }
 
@@ -92,7 +98,7 @@ export default {
     if (totalLength > MAX_INPUT_CHARS) {
       return new Response(JSON.stringify({ error: { message: 'Input too long.' } }), {
         status: 413,
-        headers: { ...getCorsHeaders(origin), 'Content-Type': 'application/json' }
+        headers: { ...getCorsHeaders(allowedOrigin), 'Content-Type': 'application/json' }
       });
     }
 
@@ -127,7 +133,7 @@ export default {
     const responseText = await upstreamResponse.text();
     return new Response(responseText, {
       status: upstreamResponse.status,
-      headers: { ...getCorsHeaders(origin), 'Content-Type': 'application/json' }
+      headers: { ...getCorsHeaders(allowedOrigin), 'Content-Type': 'application/json' }
     });
   }
 };
