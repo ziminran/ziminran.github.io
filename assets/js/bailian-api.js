@@ -15,10 +15,6 @@ const BAILIAN_CONFIG = {
   // 华北2（北京）: https://dashscope-beijing.aliyuncs.com/api/v1/services/aigc/text-generation/generation
   apiEndpoint: '',
   
-  // API密钥 - 从环境变量或配置文件中获取，不要直接硬编码
-  // 获取方式：https://help.aliyun.com/zh/dashscope/developer-reference/activate-dashscope-and-create-an-api-key
-  apiKey: '',  // API key not needed when using backend proxy / 使用后端代理时无需填写
-  
   // 模型名称 - 可选的模型包括:
   // - qwen-flash: 通义千问极速版，低延迟输出
   // - qwen-turbo: 通义千问超大规模语言模型，适用于广泛的自然语言理解和生成任务
@@ -38,14 +34,10 @@ const BAILIAN_CONFIG = {
 /**
  * 配置阿里云百炼API
  * @param {Object} config - 配置对象
- * @param {string} config.apiKey - API密钥
  * @param {string} config.model - 模型名称（可选）
  * @param {string} config.apiEndpoint - API端点（可选）
  */
 function configureBailianAPI(config) {
-  if (config.apiKey !== undefined) {
-    BAILIAN_CONFIG.apiKey = config.apiKey;
-  }
   if (config.model) {
     BAILIAN_CONFIG.model = config.model;
   }
@@ -69,7 +61,7 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
   }
   
   // 构建消息列表
-  const messages = [
+  const currentMessages = [
     {
       role: 'system',
       content: '你是Zimin Ran的AI助手。你可以回答关于Zimin Ran的教育背景、研究方向和发表论文的问题。请友好、专业地回答用户的问题。'
@@ -83,10 +75,7 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
   
   // 构建请求体
   const requestBody = {
-    messages: messages,
-    temperature: BAILIAN_CONFIG.parameters.temperature,
-    top_p: BAILIAN_CONFIG.parameters.top_p,
-    max_tokens: BAILIAN_CONFIG.parameters.max_tokens
+    messages: currentMessages
   };
   
   try {
@@ -94,8 +83,7 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
     const response = await fetch(BAILIAN_CONFIG.apiEndpoint, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        ...(BAILIAN_CONFIG.apiKey ? { 'Authorization': `Bearer ${BAILIAN_CONFIG.apiKey}` } : {})
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(requestBody)
     });
@@ -104,6 +92,9 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       const errorMessage = errorData.error?.message || errorData.message || response.statusText;
+      if (typeof alert === 'function') {
+        alert(errorMessage);
+      }
       throw new Error(`API请求失败: ${response.status} ${errorMessage}`);
     }
     
@@ -144,7 +135,7 @@ async function sendMessageToBailianStream(userMessage, conversationHistory = [],
   }
   
   // 构建消息列表
-  const messages = [
+  const currentMessages = [
     {
       role: 'system',
       content: '你是Zimin Ran的AI助手。你可以回答关于Zimin Ran的教育背景、研究方向和发表论文的问题。请友好、专业地回答用户的问题。'
@@ -158,11 +149,7 @@ async function sendMessageToBailianStream(userMessage, conversationHistory = [],
   
   // 构建请求体
   const requestBody = {
-    messages: messages,
-    temperature: BAILIAN_CONFIG.parameters.temperature,
-    top_p: BAILIAN_CONFIG.parameters.top_p,
-    max_tokens: BAILIAN_CONFIG.parameters.max_tokens,
-    stream: true
+    messages: currentMessages
   };
   
   try {
@@ -170,8 +157,7 @@ async function sendMessageToBailianStream(userMessage, conversationHistory = [],
     const response = await fetch(BAILIAN_CONFIG.apiEndpoint, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        ...(BAILIAN_CONFIG.apiKey ? { 'Authorization': `Bearer ${BAILIAN_CONFIG.apiKey}` } : {})
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(requestBody)
     });
@@ -179,6 +165,10 @@ async function sendMessageToBailianStream(userMessage, conversationHistory = [],
     // 检查响应状态
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+      const errorMessage = errorData.error?.message || errorData.message || response.statusText;
+      if (typeof alert === 'function') {
+        alert(errorMessage);
+      }
       throw new Error(
         `API请求失败: ${response.status} ${response.statusText}\n` +
         `详情: ${JSON.stringify(errorData)}`
