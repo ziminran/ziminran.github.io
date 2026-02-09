@@ -461,20 +461,6 @@
     gap: 0.4em;
   }
 
-  .chat-api-key-btn {
-    background: #fff;
-    border: 1px solid #a2a9b1;
-    color: #0645ad;
-    font-size: 0.75em;
-    padding: 0.25em 0.6em;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-
-  .chat-api-key-btn:hover {
-    background: #e8f4f8;
-  }
-  
   .chat-messages {
     padding: 1em;
     min-height: 300px;
@@ -611,7 +597,6 @@
         <span class="chat-badge">RAG-enhanced</span>
       </div>
       <div class="chat-header-actions">
-        <button class="chat-api-key-btn" id="apiKeyBtn" title="设置API Key">API Key</button>
         <button class="chat-fullscreen-btn" id="fullscreenBtn" title="Toggle fullscreen">⛶</button>
       </div>
     </div>
@@ -650,26 +635,14 @@
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendBtn');
     const fullscreenBtn = document.getElementById('fullscreenBtn');
-    const apiKeyBtn = document.getElementById('apiKeyBtn');
     let firstMessageSent = false;
     let conversationHistory = []; // 对话历史
-    const API_KEY_STORAGE_KEY = 'bailianApiKey';
-    let apiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
+    const WORKER_ENDPOINT = 'https://your-worker-subdomain.workers.dev/chat';
     
-    // 配置阿里云百炼API
-    // 注意：API密钥会保存在本地浏览器中，请勿在公共设备上保存
-    function configureApiKey(key) {
-      apiKey = key;
-      localStorage.setItem(API_KEY_STORAGE_KEY, apiKey);
-      configureBailianAPI({
-        apiKey: apiKey,
-        model: 'qwen-flash'
-      });
-    }
-
-    if (apiKey) {
-      configureApiKey(apiKey);
-    }
+    configureBailianAPI({
+      apiEndpoint: WORKER_ENDPOINT,
+      model: 'qwen-plus'
+    });
     
     // Function to add a message to the chat
     function addMessage(text, isUser) {
@@ -694,22 +667,6 @@
       return contentDiv;
     }
 
-    function promptForApiKey() {
-      const inputKey = window.prompt('请输入阿里云百炼 API Key（仅保存在本地浏览器）');
-      if (!inputKey) {
-        return false;
-      }
-
-      const trimmedKey = inputKey.trim();
-      if (!trimmedKey) {
-        return false;
-      }
-
-      configureApiKey(trimmedKey);
-      addMessage('✅ API Key 已保存，可以开始对话。', false);
-      return true;
-    }
-    
     // Function to add a typing indicator
     function addTypingIndicator() {
       const messageDiv = document.createElement('div');
@@ -745,14 +702,6 @@
       const text = chatInput.value.trim();
       if (!text) return;
 
-      if (!apiKey) {
-        const configured = promptForApiKey();
-        if (!configured) {
-          addMessage('提示：请先点击右上角“API Key”按钮配置密钥后再发送消息。', false);
-          return;
-        }
-      }
-      
       // Disable input while processing
       chatInput.disabled = true;
       sendBtn.disabled = true;
@@ -802,10 +751,10 @@
         // 显示错误信息
         let errorMessage = '抱歉，我暂时无法回复。';
         
-        if (error.message.includes('API密钥未配置')) {
-          errorMessage = '提示：阿里云百炼API尚未配置。请点击右上角“API Key”按钮输入密钥，或查看README.md了解其他配置方式。';
+        if (error.message.includes('API端点未配置')) {
+          errorMessage = '提示：聊天服务尚未配置，请稍后再试或查看部署说明。';
         } else if (error.message.includes('API请求失败')) {
-          errorMessage = '抱歉，API调用失败，请稍后再试。';
+          errorMessage = '抱歉，后端服务暂时不可用，请稍后再试。';
         }
         
         addMessage(errorMessage, false);
@@ -833,11 +782,6 @@
     // Event listeners
     sendBtn.addEventListener('click', sendMessage);
 
-    apiKeyBtn.addEventListener('click', () => {
-      promptForApiKey();
-      chatInput.focus();
-    });
-    
     chatInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         sendMessage();
