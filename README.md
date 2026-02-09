@@ -322,7 +322,7 @@ configureBailianAPI({
    - 结果应为 `function`；若为 `undefined`，检查 `index.html` 中是否已加载 `assets/js/bailian-api.js`。
 
 2. **确认 API Key 已保存**
-   - 点击对话框右上角 **API Key** 按钮，输入密钥并保存。
+   - 点击对话框右上角 **API Key** 按钮，输入并保存密钥。
    - 刷新页面后发送一条消息；若仍提示未配置，说明密钥未保存，请重新输入。
 
 3. **确认配置与模型**
@@ -333,7 +333,7 @@ configureBailianAPI({
        parameters: { result_format: 'message' }
      });
      ```
-   - ⚠️ 建议优先使用页面内 **API Key** 按钮配置；如需在控制台测试，请勿在公共设备操作，测试后刷新页面清理记录。
+   - ⚠️ 建议优先使用页面内 **API Key** 按钮配置；如需在控制台测试，请勿在公共设备操作，测试后刷新页面清理记录，并避免分享包含密钥的截图或日志。
    - 再次发送消息，确保返回的是 `output.choices[0].message.content`。
 
 4. **检查 API 端点是否正确**
@@ -346,7 +346,7 @@ configureBailianAPI({
 
 5. **检查网络请求与返回数据**
    - 打开 DevTools → Network，发送一条消息，查看请求状态应为 `200`。
-   - 返回数据需包含 `output.choices[0].message.content`，否则说明参数或模型配置不正确。
+   - 点击该请求，在 **Response/Preview** 中查看 JSON；返回数据需包含 `output.choices[0].message.content`，否则说明参数或模型配置不正确。
 
 6. **如果仍失败**
    - 401/403：API Key 无效或权限未开通。
