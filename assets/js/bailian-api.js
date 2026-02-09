@@ -115,9 +115,9 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
       throw new Error(`API错误: ${data.error.message || data.error}`);
     }
 
-    const choice = data.choices?.[0]?.message?.content;
-    if (choice) {
-      return choice;
+    const responseContent = data.choices?.[0]?.message?.content;
+    if (responseContent) {
+      return responseContent;
     }
 
     throw new Error('API返回的数据格式不正确');
@@ -222,9 +222,9 @@ async function sendMessageToBailianStream(userMessage, conversationHistory = [],
               throw new Error(`API错误: ${data.error.message || data.error}`);
             }
 
-            const chunk = data.choices?.[0]?.delta?.content;
-            if (chunk && onChunk) {
-              onChunk(chunk);
+            const chunkContent = data.choices?.[0]?.delta?.content;
+            if (chunkContent && onChunk) {
+              onChunk(chunkContent);
             }
           } catch (parseError) {
             console.warn('解析SSE数据失败:', parseError, jsonStr);

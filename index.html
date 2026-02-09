@@ -701,6 +701,10 @@
     async function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
+      if (WORKER_ENDPOINT.includes('your-worker-subdomain')) {
+        addMessage('提示：请先在代码中替换您的Worker地址后再使用聊天功能。', false);
+        return;
+      }
 
       // Disable input while processing
       chatInput.disabled = true;
