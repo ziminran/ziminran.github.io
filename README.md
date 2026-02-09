@@ -153,80 +153,43 @@ Deploy your personal homepage to GitHub Pages for free hosting:
 
 ### 第二步：配置API密钥
 
-有三种方式配置API密钥：
+为了安全起见，本项目不再提供前端 API Key 输入框。请使用后端代理（推荐 Cloudflare Workers）在服务端保存密钥并转发请求。
 
-#### 方式一：在页面内配置（推荐）
+#### 推荐方式：Cloudflare Workers 代理
 
-1. 打开主页，找到“Ask Zimin Ran anything”对话框
-2. 点击右上角 **API Key** 按钮
-3. 在弹窗中输入您的API Key（仅保存在本地浏览器）
+1. **创建 Worker（复制 `cloudflare-worker.js`）**，并安装/登录 Wrangler：
 
-#### 方式二：直接在代码中配置（仅用于测试）
+   ```bash
+   npm install -g wrangler
+   wrangler login
+   ```
 
-**⚠️ 警告：不建议在生产环境中将API密钥硬编码在前端代码中，这会导致安全风险。**
+2. **部署 Worker 并设置密钥**（也可在 Cloudflare Dashboard 中设置 Secret）：
 
-编辑 `index.html` 文件，找到以下代码段：
+   ```bash
+   wrangler deploy --name my-chat-proxy cloudflare-worker.js
+   wrangler secret put DASHSCOPE_API_KEY
+   ```
 
-```javascript
-// 配置阿里云百炼API
-// configureBailianAPI({
-//   apiKey: 'YOUR_API_KEY_HERE',
-//   model: 'qwen-turbo'
-// });
-```
+   若使用旧版 Wrangler，可将 `deploy` 替换为 `publish`，或通过 `wrangler.toml` 配置名称与入口文件。
 
-取消注释并填入您的API密钥：
+   示例 `wrangler.toml`：
 
-```javascript
-// 配置阿里云百炼API
-configureBailianAPI({
-  apiKey: 'sk-your-actual-api-key-here',  // 替换为您的真实API Key
-  model: 'qwen-turbo'  // 可选：qwen-turbo, qwen-plus, qwen-max
-});
-```
+   ```toml
+   name = "my-chat-proxy"
+   main = "cloudflare-worker.js"
+   compatibility_date = "2024-01-01"
+   ```
 
-#### 方式三：使用后端代理（推荐用于生产环境）
+3. **部署后记录 Worker 地址**，例如：
+   - `https://my-chat-proxy.workers.dev/chat`
 
-为了安全起见，建议创建一个后端服务来代理API调用：
-
-1. **创建后端API端点**（例如使用Node.js + Express）：
-
-```javascript
-// server.js
-const express = require('express');
-const axios = require('axios');
-const app = express();
-
-app.use(express.json());
-
-app.post('/api/chat', async (req, res) => {
-  try {
-    const response = await axios.post(
-      'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
-      req.body,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.DASHSCOPE_API_KEY}`,
-          'X-DashScope-SSE': 'disable'
-        }
-      }
-    );
-    res.json(response.data);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.listen(3000, () => console.log('Server running on port 3000'));
-```
-
-2. **修改前端配置**，将 `apiEndpoint` 指向您的后端：
+4. **修改前端配置**，将 `apiEndpoint` 指向您的 Worker：
 
 ```javascript
 configureBailianAPI({
-  apiEndpoint: '/api/chat',  // 指向您的后端API
-  apiKey: 'dummy'  // 不需要真实的key，后端会处理
+  apiEndpoint: 'https://my-chat-proxy.workers.dev/chat',
+  model: 'qwen-plus'
 });
 ```
 
@@ -246,32 +209,18 @@ configureBailianAPI({
 
 ```javascript
 configureBailianAPI({
-  apiKey: 'your-api-key',
+  apiEndpoint: 'https://my-chat-proxy.workers.dev/chat',
   model: 'qwen-plus'  // 更改为您想使用的模型
 });
 ```
 
-### 使用 qwen-flash 让对话框正常回复
+### 如果对话框无法回复
 
-如果对话框提示“抱歉，我暂时无法回复”，请确认以下配置是否完成（本项目默认使用 `qwen-flash`）：
+如果对话框提示“抱歉，我暂时无法回复”，请确认以下配置是否完成：
 
-1. **在页面内配置 API Key**  
-   打开页面后点击右上角 **API Key** 按钮输入密钥，刷新页面后再次发送消息。
-
-2. **在代码中显式指定 qwen-flash**（仅用于测试，生产环境请避免硬编码）：
-
-```javascript
-// 配置阿里云百炼API（qwen-flash）
-configureBailianAPI({
-  apiKey: 'sk-YOUR-API-KEY-HERE',
-  model: 'qwen-flash',
-  parameters: {
-    result_format: 'message'
-  }
-});
-```
-
-3. **使用后端代理时**，确保请求体包含 `model: 'qwen-flash'` 且 `parameters.result_format` 为 `message`。
+1. **Worker 已部署并设置 `DASHSCOPE_API_KEY`**  
+2. **前端 `apiEndpoint` 已更新为 Worker 地址**  
+3. **浏览器控制台中无 CORS 或网络错误**
 
 ### 第四步：自定义API参数
 
@@ -279,13 +228,12 @@ configureBailianAPI({
 
 ```javascript
 configureBailianAPI({
-  apiKey: 'your-api-key',
-  model: 'qwen-turbo',
+  apiEndpoint: 'https://my-chat-proxy.workers.dev/chat',
+  model: 'qwen-plus',
   parameters: {
     temperature: 0.8,    // 控制随机性 (0-2)，值越高越随机
     top_p: 0.9,         // 核采样参数 (0-1)
-    max_tokens: 1500,   // 生成文本的最大长度
-    result_format: 'message'
+    max_tokens: 1500    // 生成文本的最大长度（后端会限制上限）
   }
 });
 ```
@@ -348,20 +296,19 @@ sendMessageToBailianStream(
 
 #### 问题1：API调用失败，返回401错误
 
-**原因**：API密钥无效或未配置
+**原因**：Worker 未设置 `DASHSCOPE_API_KEY` 或密钥无效
 
 **解决方案**：
-- 检查API密钥是否正确复制
+- 检查 Cloudflare Worker 的环境变量配置
 - 确认API密钥在DashScope控制台中处于启用状态
-- 验证 `configureBailianAPI()` 是否正确调用
 
 #### 问题2：CORS跨域错误
 
-**原因**：前端直接调用API时可能遇到跨域问题
+**原因**：Worker 未允许 `https://ziminran.github.io` 作为跨域来源
 
 **解决方案**：
-- 使用后端代理（推荐方式三）
-- 或在本地开发时使用CORS代理
+- 检查 Worker 代码中的 `Access-Control-Allow-Origin` 设置
+- 确认请求来源为 `https://ziminran.github.io`
 
 #### 问题3：API返回空响应
 
@@ -372,12 +319,12 @@ sendMessageToBailianStream(
 - 验证API端点URL是否正确
 - 确认网络连接正常
 
-#### 问题4：提示"API密钥未配置"
+#### 问题4：提示"API端点未配置"
 
 **原因**：未调用 `configureBailianAPI()` 或配置未生效
 
 **解决方案**：
-- 确保在发送消息前调用了 `configureBailianAPI()`
+- 确保在发送消息前调用了 `configureBailianAPI()` 并设置 `apiEndpoint`
 - 检查脚本加载顺序，确保 `bailian-api.js` 先加载
 
 ### 安全建议
