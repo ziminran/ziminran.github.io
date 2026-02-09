@@ -127,6 +127,255 @@ Deploy your personal homepage to GitHub Pages for free hosting:
    - Or add a `CNAME` record pointing to `username.github.io`
 4. In GitHub repository settings under Pages, enter your custom domain and enable HTTPS
 
+## 阿里云百炼API集成教程
+
+本项目集成了阿里云百炼（Bailian）API，为个人主页添加了智能对话功能。以下是详细的配置和使用教程。
+
+### 什么是阿里云百炼？
+
+阿里云百炼（DashScope）是阿里云推出的大模型服务平台，提供了通义千问（Qwen）等先进的大语言模型API。通过百炼API，您可以轻松地将AI对话功能集成到您的网站中。
+
+### 第一步：获取API密钥
+
+1. **注册阿里云账号**
+   - 访问 [阿里云官网](https://www.aliyun.com/) 注册账号
+   - 如果已有账号，直接登录
+
+2. **开通DashScope服务**
+   - 访问 [DashScope控制台](https://dashscope.console.aliyun.com/)
+   - 首次使用需要开通服务（提供免费额度）
+
+3. **创建API Key**
+   - 在DashScope控制台，进入"API-KEY管理"页面
+   - 点击"创建新的API-KEY"
+   - 复制生成的API Key并妥善保管（不要分享给他人）
+   - 详细步骤参考：[官方文档](https://help.aliyun.com/zh/dashscope/developer-reference/activate-dashscope-and-create-an-api-key)
+
+### 第二步：配置API密钥
+
+有两种方式配置API密钥：
+
+#### 方式一：直接在代码中配置（仅用于测试）
+
+**⚠️ 警告：不建议在生产环境中将API密钥硬编码在前端代码中，这会导致安全风险。**
+
+编辑 `index.html` 文件，找到以下代码段：
+
+```javascript
+// 配置阿里云百炼API
+// configureBailianAPI({
+//   apiKey: 'YOUR_API_KEY_HERE',
+//   model: 'qwen-turbo'
+// });
+```
+
+取消注释并填入您的API密钥：
+
+```javascript
+// 配置阿里云百炼API
+configureBailianAPI({
+  apiKey: 'sk-your-actual-api-key-here',  // 替换为您的真实API Key
+  model: 'qwen-turbo'  // 可选：qwen-turbo, qwen-plus, qwen-max
+});
+```
+
+#### 方式二：使用后端代理（推荐用于生产环境）
+
+为了安全起见，建议创建一个后端服务来代理API调用：
+
+1. **创建后端API端点**（例如使用Node.js + Express）：
+
+```javascript
+// server.js
+const express = require('express');
+const axios = require('axios');
+const app = express();
+
+app.use(express.json());
+
+app.post('/api/chat', async (req, res) => {
+  try {
+    const response = await axios.post(
+      'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
+      req.body,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.DASHSCOPE_API_KEY}`,
+          'X-DashScope-SSE': 'disable'
+        }
+      }
+    );
+    res.json(response.data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.listen(3000, () => console.log('Server running on port 3000'));
+```
+
+2. **修改前端配置**，将 `apiEndpoint` 指向您的后端：
+
+```javascript
+configureBailianAPI({
+  apiEndpoint: '/api/chat',  // 指向您的后端API
+  apiKey: 'dummy'  // 不需要真实的key，后端会处理
+});
+```
+
+### 第三步：选择合适的模型
+
+阿里云百炼提供多个模型选项：
+
+| 模型名称 | 特点 | 适用场景 |
+|---------|------|---------|
+| `qwen-turbo` | 快速响应，成本低 | 一般对话、快速问答 |
+| `qwen-plus` | 性能均衡 | 复杂对话、专业问答 |
+| `qwen-max` | 最强性能 | 高难度任务、创意生成 |
+| `qwen-long` | 超长上下文 | 长文档理解 |
+
+修改模型配置：
+
+```javascript
+configureBailianAPI({
+  apiKey: 'your-api-key',
+  model: 'qwen-plus'  // 更改为您想使用的模型
+});
+```
+
+### 第四步：自定义API参数
+
+您可以调整API参数以获得更好的效果：
+
+```javascript
+configureBailianAPI({
+  apiKey: 'your-api-key',
+  model: 'qwen-turbo',
+  parameters: {
+    temperature: 0.8,    // 控制随机性 (0-2)，值越高越随机
+    top_p: 0.9,         // 核采样参数 (0-1)
+    max_tokens: 1500,   // 生成文本的最大长度
+    result_format: 'message'
+  }
+});
+```
+
+**参数说明：**
+
+- **temperature**: 控制输出的随机性
+  - 0.1-0.5: 更确定、更一致的输出（适合事实性问答）
+  - 0.6-0.9: 平衡创造性和一致性
+  - 1.0-2.0: 更有创意、更多样化的输出（适合创意写作）
+
+- **top_p**: 核采样，控制词汇选择范围
+  - 0.1-0.5: 更保守的词汇选择
+  - 0.7-0.95: 平衡的词汇选择（推荐）
+  - 0.95-1.0: 更广泛的词汇选择
+
+- **max_tokens**: 限制生成文本的长度
+  - 建议范围：500-2000
+
+### 第五步：测试对话功能
+
+1. 在浏览器中打开您的个人主页
+2. 找到"Ask Zimin Ran anything"对话框
+3. 输入一条消息，例如："你好"
+4. 点击"发送"按钮
+5. 系统会调用阿里云百炼API并返回AI的回复
+
+### 高级功能：流式输出
+
+如果您想使用流式输出（逐字显示），可以使用 `sendMessageToBailianStream` 函数：
+
+```javascript
+sendMessageToBailianStream(
+  userMessage,
+  conversationHistory,
+  // 接收到文本片段时的回调
+  (chunk) => {
+    console.log('收到文本片段:', chunk);
+    // 在这里更新UI显示文本
+  },
+  // 完成时的回调
+  () => {
+    console.log('AI回复完成');
+  },
+  // 错误时的回调
+  (error) => {
+    console.error('出错:', error);
+  }
+);
+```
+
+### API费用说明
+
+阿里云百炼提供：
+- **免费额度**：新用户可获得一定量的免费调用额度
+- **按量计费**：超出免费额度后按实际使用量计费
+- **定价**：不同模型价格不同，详见[官方定价页面](https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-thousand-questions-metering-and-billing)
+
+### 故障排查
+
+#### 问题1：API调用失败，返回401错误
+
+**原因**：API密钥无效或未配置
+
+**解决方案**：
+- 检查API密钥是否正确复制
+- 确认API密钥在DashScope控制台中处于启用状态
+- 验证 `configureBailianAPI()` 是否正确调用
+
+#### 问题2：CORS跨域错误
+
+**原因**：前端直接调用API时可能遇到跨域问题
+
+**解决方案**：
+- 使用后端代理（推荐方式二）
+- 或在本地开发时使用CORS代理
+
+#### 问题3：API返回空响应
+
+**原因**：请求参数不正确或网络问题
+
+**解决方案**：
+- 检查浏览器控制台的错误信息
+- 验证API端点URL是否正确
+- 确认网络连接正常
+
+#### 问题4：提示"API密钥未配置"
+
+**原因**：未调用 `configureBailianAPI()` 或配置未生效
+
+**解决方案**：
+- 确保在发送消息前调用了 `configureBailianAPI()`
+- 检查脚本加载顺序，确保 `bailian-api.js` 先加载
+
+### 安全建议
+
+1. **不要在前端硬编码API密钥**
+   - 使用环境变量或配置文件
+   - 通过后端代理调用API
+
+2. **设置API密钥使用限制**
+   - 在DashScope控制台设置调用频率限制
+   - 设置每日/每月使用上限
+
+3. **监控API使用情况**
+   - 定期检查API调用日志
+   - 设置用量告警
+
+4. **使用HTTPS**
+   - 确保网站使用HTTPS协议
+   - 保护API通信安全
+
+### 相关资源
+
+- [阿里云百炼官方文档](https://help.aliyun.com/zh/dashscope/)
+- [API参考文档](https://help.aliyun.com/zh/dashscope/developer-reference/api-details)
+- [通义千问模型介绍](https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction)
+- [SDK和示例代码](https://help.aliyun.com/zh/dashscope/developer-reference/sdk-overview)
+
 ## Features
 
 - 📱 Responsive design (mobile-friendly)
@@ -134,6 +383,7 @@ Deploy your personal homepage to GitHub Pages for free hosting:
 - 📚 Dedicated sections for education and publications
 - 🔗 Social media links (GitHub, Email)
 - 🌐 Multi-language support (Chinese)
+- 💬 AI-powered chat using Alibaba Cloud Bailian API
 
 ## Customization
 
