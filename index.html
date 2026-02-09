@@ -623,9 +623,6 @@
   </div>
 </div>
 
-<!-- 引入阿里云百炼API模块 -->
-<script src="assets/js/bailian-api.js"></script>
-
 <script>
 (function() {
   // Wait for DOM to be fully loaded
@@ -637,12 +634,7 @@
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     let firstMessageSent = false;
     let conversationHistory = []; // 对话历史
-    const API_PROXY_URL = '[把你的Worker链接粘贴在这里]'; // Replace with your Worker address / 替换为您的Worker地址
-    
-    configureBailianAPI({
-      apiEndpoint: API_PROXY_URL,
-      model: 'qwen-plus'
-    });
+    const API_PROXY_URL = 'https://chat-proxy.grimmiran.workers.dev';
     
     // Function to add a message to the chat
     function addMessage(text, isUser) {
@@ -696,6 +688,12 @@
         indicator.remove();
       }
     }
+
+    function rollbackUserMessage(entry) {
+      if (conversationHistory[conversationHistory.length - 1] === entry) {
+        conversationHistory.pop();
+      }
+    }
     
     // Function to send a message
     async function sendMessage() {
@@ -723,45 +721,59 @@
       // Add typing indicator
       addTypingIndicator();
       
+      const userMessageEntry = {
+        role: 'user',
+        content: text
+      };
+
       try {
-        // 调用阿里云百炼API
-        const response = await sendMessageToBailian(text, conversationHistory);
+        conversationHistory.push(userMessageEntry);
+        const response = await fetch(API_PROXY_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ messages: conversationHistory })
+        });
+        let data;
+        try {
+          data = await response.json();
+        } catch (error) {
+          removeTypingIndicator();
+          rollbackUserMessage(userMessageEntry);
+          addMessage('抱歉，服务返回格式异常，请稍后再试。', false);
+          return;
+        }
+        const assistantReply = response.ok ? data?.choices?.[0]?.message?.content : null;
         
         // Remove typing indicator
         removeTypingIndicator();
         
-        // Add AI response
-        addMessage(response, false);
-        
-        // 更新对话历史
-        conversationHistory.push({
-          role: 'user',
-          content: text
-        });
-        conversationHistory.push({
-          role: 'assistant',
-          content: response
-        });
-        
-        // 限制对话历史长度，保留最近10轮对话
-        if (conversationHistory.length > 20) {
-          conversationHistory.splice(0, conversationHistory.length - 20);
+        if (response.ok && typeof assistantReply === 'string' && assistantReply.trim() !== '') {
+          // Add AI response
+          addMessage(assistantReply, false);
+          
+          // 更新对话历史
+          conversationHistory.push({
+            role: 'assistant',
+            content: assistantReply
+          });
+          
+          // 限制对话历史长度，保留最近10轮对话
+          if (conversationHistory.length > 20) {
+            conversationHistory.splice(0, conversationHistory.length - 20);
+          }
+        } else if (response.ok) {
+          rollbackUserMessage(userMessageEntry);
+          addMessage('抱歉，服务返回格式异常，请稍后再试。', false);
+        } else {
+          rollbackUserMessage(userMessageEntry);
+          addMessage(data?.error?.message || '抱歉，后端服务暂时不可用，请稍后再试。', false);
         }
-        
       } catch (error) {
-        // Remove typing indicator
+        rollbackUserMessage(userMessageEntry);
         removeTypingIndicator();
-        
-        // 显示错误信息
-        let errorMessage = '抱歉，我暂时无法回复。';
-        
-        if (error.message.includes('API端点未配置')) {
-          errorMessage = '提示：聊天服务尚未配置，请稍后再试或查看部署说明。';
-        } else if (error.message.includes('API请求失败')) {
-          errorMessage = '抱歉，后端服务暂时不可用，请稍后再试。';
-        }
-        
-        addMessage(errorMessage, false);
+        addMessage('抱歉，我暂时无法回复。', false);
         console.error('发送消息时出错:', error);
       } finally {
         // Re-enable input
