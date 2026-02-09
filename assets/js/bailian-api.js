@@ -65,7 +65,7 @@ function configureBailianAPI(config) {
  */
 async function sendMessageToBailian(userMessage, conversationHistory = []) {
   if (!BAILIAN_CONFIG.apiEndpoint) {
-    throw new Error('API端点未配置。请先调用 configureBailianAPI() 设置API端点。');
+    throw new Error('API端点未配置。请检查Worker部署并更新 index.html 中的地址。');
   }
   
   // 构建消息列表
@@ -138,7 +138,7 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
  */
 async function sendMessageToBailianStream(userMessage, conversationHistory = [], onChunk, onComplete, onError) {
   if (!BAILIAN_CONFIG.apiEndpoint) {
-    const error = new Error('API端点未配置。请先调用 configureBailianAPI() 设置API端点。');
+    const error = new Error('API端点未配置。请检查Worker部署并更新 index.html 中的地址。');
     if (onError) onError(error);
     return;
   }
