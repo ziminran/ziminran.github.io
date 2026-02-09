@@ -171,6 +171,8 @@ Deploy your personal homepage to GitHub Pages for free hosting:
    wrangler secret put DASHSCOPE_API_KEY
    ```
 
+   若使用旧版 Wrangler，可将 `deploy` 替换为 `publish`，或通过 `wrangler.toml` 配置名称与入口文件。
+
 3. **部署后记录 Worker 地址**，例如：
    - `https://my-chat-proxy.workers.dev/chat`
 

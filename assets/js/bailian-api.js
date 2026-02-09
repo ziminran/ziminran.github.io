@@ -120,7 +120,7 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
       return responseContent;
     }
 
-    throw new Error('API返回的数据格式不正确');
+    throw new Error('API返回的数据格式不正确: 缺少 choices[0].message.content');
     
   } catch (error) {
     console.error('阿里云百炼API调用失败:', error);
