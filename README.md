@@ -258,12 +258,12 @@ configureBailianAPI({
 1. **在页面内配置 API Key**  
    打开页面后点击右上角 **API Key** 按钮输入密钥，刷新页面后再次发送消息。
 
-2. **在代码中显式指定 qwen-flash**（仅用于测试）：
+2. **在代码中显式指定 qwen-flash**（仅用于测试，生产环境请避免硬编码）：
 
 ```javascript
 // 配置阿里云百炼API（qwen-flash）
 configureBailianAPI({
-  apiKey: 'your-api-key',
+  apiKey: 'sk-YOUR-API-KEY-HERE',
   model: 'qwen-flash',
   parameters: {
     result_format: 'message'
