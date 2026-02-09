@@ -615,6 +615,9 @@
   </div>
 </div>
 
+<!-- 引入阿里云百炼API模块 -->
+<script src="assets/js/bailian-api.js"></script>
+
 <script>
 (function() {
   // Wait for DOM to be fully loaded
@@ -625,10 +628,16 @@
     const sendBtn = document.getElementById('sendBtn');
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     let firstMessageSent = false;
+    let conversationHistory = []; // 对话历史
     
-    // Reply delay constants (in milliseconds)
-    const MIN_REPLY_DELAY_MS = 500;
-    const MAX_ADDITIONAL_DELAY_MS = 500;
+    // 配置阿里云百炼API
+    // 注意：在生产环境中，API密钥应该通过安全的方式获取，而不是直接硬编码在前端代码中
+    // 建议使用后端代理服务来调用API
+    // 示例配置：
+    // configureBailianAPI({
+    //   apiKey: 'YOUR_API_KEY_HERE',
+    //   model: 'qwen-turbo'
+    // });
     
     // Function to add a message to the chat
     function addMessage(text, isUser) {
@@ -649,12 +658,48 @@
       
       // Auto-scroll to the latest message
       chatMessages.scrollTop = chatMessages.scrollHeight;
+      
+      return contentDiv;
+    }
+    
+    // Function to add a typing indicator
+    function addTypingIndicator() {
+      const messageDiv = document.createElement('div');
+      messageDiv.className = 'chat-message system';
+      messageDiv.id = 'typing-indicator';
+      
+      const labelDiv = document.createElement('div');
+      labelDiv.className = 'chat-message-label';
+      labelDiv.textContent = 'ZIMIN RAN';
+      
+      const contentDiv = document.createElement('div');
+      contentDiv.className = 'chat-message-content';
+      contentDiv.textContent = '正在输入...';
+      
+      messageDiv.appendChild(labelDiv);
+      messageDiv.appendChild(contentDiv);
+      chatMessages.appendChild(messageDiv);
+      
+      // Auto-scroll to the latest message
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    
+    // Function to remove typing indicator
+    function removeTypingIndicator() {
+      const indicator = document.getElementById('typing-indicator');
+      if (indicator) {
+        indicator.remove();
+      }
     }
     
     // Function to send a message
-    function sendMessage() {
+    async function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
+      
+      // Disable input while processing
+      chatInput.disabled = true;
+      sendBtn.disabled = true;
       
       // Add user message
       addMessage(text, true);
@@ -666,11 +711,55 @@
         chatContainer.classList.add('fullscreen');
       }
       
-      // Auto-reply after random delay between MIN_REPLY_DELAY_MS and (MIN_REPLY_DELAY_MS + MAX_ADDITIONAL_DELAY_MS)
-      const delay = MIN_REPLY_DELAY_MS + Math.random() * MAX_ADDITIONAL_DELAY_MS;
-      setTimeout(() => {
-        addMessage('正在升级中', false);
-      }, delay);
+      // Add typing indicator
+      addTypingIndicator();
+      
+      try {
+        // 调用阿里云百炼API
+        const response = await sendMessageToBailian(text, conversationHistory);
+        
+        // Remove typing indicator
+        removeTypingIndicator();
+        
+        // Add AI response
+        addMessage(response, false);
+        
+        // 更新对话历史
+        conversationHistory.push({
+          role: 'user',
+          content: text
+        });
+        conversationHistory.push({
+          role: 'assistant',
+          content: response
+        });
+        
+        // 限制对话历史长度，保留最近10轮对话
+        if (conversationHistory.length > 20) {
+          conversationHistory = conversationHistory.slice(-20);
+        }
+        
+      } catch (error) {
+        // Remove typing indicator
+        removeTypingIndicator();
+        
+        // 显示错误信息
+        let errorMessage = '抱歉，我暂时无法回复。';
+        
+        if (error.message.includes('API密钥未配置')) {
+          errorMessage = '提示：阿里云百炼API尚未配置。请查看README.md了解如何配置API密钥。';
+        } else if (error.message.includes('API请求失败')) {
+          errorMessage = '抱歉，API调用失败，请稍后再试。';
+        }
+        
+        addMessage(errorMessage, false);
+        console.error('发送消息时出错:', error);
+      } finally {
+        // Re-enable input
+        chatInput.disabled = false;
+        sendBtn.disabled = false;
+        chatInput.focus();
+      }
     }
     
     // Toggle fullscreen
