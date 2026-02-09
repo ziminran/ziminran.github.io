@@ -184,13 +184,10 @@ Deploy your personal homepage to GitHub Pages for free hosting:
 3. **部署后记录 Worker 地址**，例如：
    - `https://my-chat-proxy.workers.dev/chat`
 
-4. **修改前端配置**，将 `apiEndpoint` 指向您的 Worker：
+4. **修改前端配置**，将 `API_PROXY_URL` 指向您的 Worker：
 
 ```javascript
-configureBailianAPI({
-  apiEndpoint: 'https://my-chat-proxy.workers.dev/chat',
-  model: 'qwen-plus'
-});
+const API_PROXY_URL = 'https://my-chat-proxy.workers.dev';
 ```
 
 ### 第三步：选择合适的模型
@@ -205,13 +202,12 @@ configureBailianAPI({
 | `qwen-max` | 最强性能 | 高难度任务、创意生成 |
 | `qwen-long` | 超长上下文 | 长文档理解 |
 
-修改模型配置：
+修改模型配置（在 `cloudflare-worker.js` 中更新 `model` 字段）：
 
 ```javascript
-configureBailianAPI({
-  apiEndpoint: 'https://my-chat-proxy.workers.dev/chat',
+const payload = {
   model: 'qwen-plus'  // 更改为您想使用的模型
-});
+};
 ```
 
 ### 如果对话框无法回复
@@ -219,23 +215,19 @@ configureBailianAPI({
 如果对话框提示“抱歉，我暂时无法回复”，请确认以下配置是否完成：
 
 1. **Worker 已部署并设置 `DASHSCOPE_API_KEY`**  
-2. **前端 `apiEndpoint` 已更新为 Worker 地址**  
+2. **前端 `API_PROXY_URL` 已更新为 Worker 地址**  
 3. **浏览器控制台中无 CORS 或网络错误**
 
 ### 第四步：自定义API参数
 
-您可以调整API参数以获得更好的效果：
+您可以在 `cloudflare-worker.js` 中调整 API 参数以获得更好的效果：
 
 ```javascript
-configureBailianAPI({
-  apiEndpoint: 'https://my-chat-proxy.workers.dev/chat',
-  model: 'qwen-plus',
-  parameters: {
-    temperature: 0.8,    // 控制随机性 (0-2)，值越高越随机
-    top_p: 0.9,         // 核采样参数 (0-1)
-    max_tokens: 1500    // 生成文本的最大长度（后端会限制上限）
-  }
-});
+const payload = {
+  temperature: 0.8,    // 控制随机性 (0-2)，值越高越随机
+  top_p: 0.9,         // 核采样参数 (0-1)
+  max_tokens: 1500    // 生成文本的最大长度（后端会限制上限）
+};
 ```
 
 **参数说明：**
@@ -263,27 +255,7 @@ configureBailianAPI({
 
 ### 高级功能：流式输出
 
-如果您想使用流式输出（逐字显示），可以使用 `sendMessageToBailianStream` 函数：
-
-```javascript
-sendMessageToBailianStream(
-  userMessage,
-  conversationHistory,
-  // 接收到文本片段时的回调
-  (chunk) => {
-    console.log('收到文本片段:', chunk);
-    // 在这里更新UI显示文本
-  },
-  // 完成时的回调
-  () => {
-    console.log('AI回复完成');
-  },
-  // 错误时的回调
-  (error) => {
-    console.error('出错:', error);
-  }
-);
-```
+当前前端示例未包含流式输出，如需逐字显示可在 Worker 与前端请求中自行扩展。
 
 ### API费用说明
 
@@ -321,11 +293,10 @@ sendMessageToBailianStream(
 
 #### 问题4：提示"API端点未配置"
 
-**原因**：未调用 `configureBailianAPI()` 或配置未生效
+**原因**：`API_PROXY_URL` 未更新或不是 `https://` 地址
 
 **解决方案**：
-- 确保在发送消息前调用了 `configureBailianAPI()` 并设置 `apiEndpoint`
-- 检查脚本加载顺序，确保 `bailian-api.js` 先加载
+- 在 `index.html` 中更新 `API_PROXY_URL` 为您的 Worker 地址
 
 ### 安全建议
 
