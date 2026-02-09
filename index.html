@@ -729,7 +729,7 @@
           },
           body: JSON.stringify({ messages: conversationHistory })
         });
-        const data = await response.json();
+        const data = await response.json().catch(() => ({}));
         const assistantReply = data?.choices?.[0]?.message?.content;
         
         // Remove typing indicator

@@ -182,12 +182,12 @@ Deploy your personal homepage to GitHub Pages for free hosting:
    ```
 
 3. **部署后记录 Worker 地址**，例如：
-   - `https://my-chat-proxy.workers.dev`
+   - `https://chat-proxy.grimmiran.workers.dev`
 
 4. **修改前端配置**，将 `API_PROXY_URL` 指向您的 Worker：
 
 ```javascript
-const API_PROXY_URL = 'https://my-chat-proxy.workers.dev';
+const API_PROXY_URL = 'https://chat-proxy.grimmiran.workers.dev';
 ```
 
 ### 第三步：选择合适的模型
