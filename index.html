@@ -748,7 +748,7 @@
       if (!apiKey) {
         const configured = promptForApiKey();
         if (!configured) {
-          addMessage('提示：请先配置 API Key 后再发送消息。', false);
+          addMessage('提示：请先点击右上角“API Key”按钮配置密钥后再发送消息。', false);
           return;
         }
       }
@@ -803,7 +803,7 @@
         let errorMessage = '抱歉，我暂时无法回复。';
         
         if (error.message.includes('API密钥未配置')) {
-          errorMessage = '提示：阿里云百炼API尚未配置。请查看README.md了解如何配置API密钥。';
+          errorMessage = '提示：阿里云百炼API尚未配置。请点击右上角“API Key”按钮输入密钥，或查看README.md了解其他配置方式。';
         } else if (error.message.includes('API请求失败')) {
           errorMessage = '抱歉，API调用失败，请稍后再试。';
         }
