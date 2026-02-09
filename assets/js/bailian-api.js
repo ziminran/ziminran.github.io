@@ -115,8 +115,7 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
       throw new Error(`API错误: ${data.error.message || data.error}`);
     }
 
-    const choice = data.choices?.[0]?.message?.content ||
-      data.output?.choices?.[0]?.message?.content;
+    const choice = data.choices?.[0]?.message?.content;
     if (choice) {
       return choice;
     }
@@ -223,8 +222,7 @@ async function sendMessageToBailianStream(userMessage, conversationHistory = [],
               throw new Error(`API错误: ${data.error.message || data.error}`);
             }
 
-            const chunk = data.choices?.[0]?.delta?.content ||
-              data.output?.choices?.[0]?.message?.content;
+            const chunk = data.choices?.[0]?.delta?.content;
             if (chunk && onChunk) {
               onChunk(chunk);
             }

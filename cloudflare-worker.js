@@ -5,7 +5,7 @@ const MAX_TOKENS = 800;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 30;
 
-const rateLimitState = new Map();
+const rateLimitState = new Map(); // 仅用于示例，生产可使用Cloudflare Rate Limiting或Durable Objects
 
 function getCorsHeaders(origin) {
   return {
@@ -67,9 +67,7 @@ export default {
       });
     }
 
-    const clientIp = request.headers.get('CF-Connecting-IP')
-      || request.headers.get('X-Forwarded-For')
-      || 'unknown';
+    const clientIp = request.headers.get('CF-Connecting-IP') || 'unknown';
     if (isRateLimited(clientIp)) {
       return new Response(JSON.stringify({ error: { message: 'Rate limit exceeded.' } }), {
         status: 429,
