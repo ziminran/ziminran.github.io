@@ -313,6 +313,46 @@ configureBailianAPI({
 4. 点击"发送"按钮
 5. 系统会调用阿里云百炼API并返回AI的回复
 
+### 新教程：一步一步排查并修正 API 调用（确保正确输出对话）
+
+如果对话没有正常返回内容，请按以下步骤定位问题并修正，直到能看到 AI 回复：
+
+1. **确认脚本已加载**
+   - 打开浏览器控制台（F12 → Console），输入 `typeof sendMessageToBailian`。
+   - 结果应为 `function`；若为 `undefined`，检查 `index.html` 中是否已加载 `assets/js/bailian-api.js`。
+
+2. **确认 API Key 已保存**
+   - 点击对话框右上角 **API Key** 按钮，输入密钥并保存。
+   - 刷新页面后发送一条消息；若仍提示未配置，说明密钥未保存，请重新输入。
+
+3. **确认配置与模型**
+   - 在控制台执行（仅用于本地测试）：
+     ```javascript
+     configureBailianAPI({
+       apiKey: 'YOUR_API_KEY_HERE',
+       model: 'qwen-flash',
+       parameters: { result_format: 'message' }
+     });
+     ```
+   - 再次发送消息，确保返回的是 `output.choices[0].message.content`。
+
+4. **检查 API 端点是否正确**
+   - 默认端点为华东 1（杭州），如在北京区请改为：
+     ```javascript
+     configureBailianAPI({
+       apiEndpoint: 'https://dashscope-beijing.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
+     });
+     ```
+
+5. **检查网络请求与返回数据**
+   - 打开 DevTools → Network，发送一条消息，查看请求状态应为 `200`。
+   - 返回数据需包含 `output.choices[0].message.content`，否则说明参数或模型配置不正确。
+
+6. **如果仍失败**
+   - 401/403：API Key 无效或权限未开通。
+   - CORS：使用后端代理方式（见上文“方式三”）。
+   - 其它错误：查看 Console 的错误信息并对应修复。
+
 ### 高级功能：流式输出
 
 如果您想使用流式输出（逐字显示），可以使用 `sendMessageToBailianStream` 函数：
