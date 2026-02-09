@@ -155,23 +155,13 @@ Deploy your personal homepage to GitHub Pages for free hosting:
 
 当前版本已改为通过Cloudflare Worker代理调用DashScope，前端不再输入API Key。请先部署Worker，并在 `index.html` 中把 `WORKER_CHAT_ENDPOINT` 修改为你的Worker `/chat` 地址。
 
-#### 方式一：Cloudflare Worker代理（推荐）
-
-1. 部署Cloudflare Worker（详见本文后续“使用后端代理”示例）
-2. 在 `index.html` 中更新 `WORKER_CHAT_ENDPOINT`
-3. 前端将通过Worker转发请求，无需在浏览器中保存API Key
-
-#### 方式二：避免前端硬编码API密钥
-
-出于安全原因，前端不再支持配置 API Key，请使用 Cloudflare Worker Secret 管理密钥。
-
-#### 方式三：使用Cloudflare Worker代理（推荐用于生产环境）
-
-为了安全起见，建议使用Cloudflare Worker来代理API调用：
+配置步骤：
 
 1. **创建Worker**：将仓库中的 `cloudflare-worker.js` 复制到Cloudflare Workers
 2. **设置密钥**：在Worker环境变量/Secret中设置 `DASHSCOPE_API_KEY`
 3. **修改前端配置**：将 `WORKER_CHAT_ENDPOINT` 指向你的Worker `/chat` 地址
+
+出于安全原因，前端不再支持配置 API Key，请使用 Cloudflare Worker Secret 管理密钥。
 
 ### 第三步：选择合适的模型
 
