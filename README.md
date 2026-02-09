@@ -342,7 +342,7 @@ configureBailianAPI({
 
 5. **检查网络请求与返回数据**
    - 打开 DevTools → Network，发送一条消息，查看请求状态应为 `200`。
-   - 点击该请求, 在 **Response/Preview** 中查看 JSON; 返回数据需包含 `output.choices[0].message.content`, 否则说明参数或模型配置不正确。
+   - 点击该请求，在 **Response/Preview** 中查看 JSON；返回数据需包含 `output.choices[0].message.content`，否则说明参数或模型配置不正确。
 
 6. **如果仍失败**
    - 401/403：API Key 无效或权限未开通。
