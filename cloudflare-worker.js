@@ -5,7 +5,7 @@ const MAX_TOKENS = 800;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 30;
 
-const rateLimitState = new Map(); // 仅用于示例，冷启动会重置，生产需使用Cloudflare Rate Limiting或Durable Objects
+const rateLimitState = new Map(); // 仅用于示例，冷启动会重置，生产必须使用Cloudflare Rate Limiting或Durable Objects
 
 function getCorsHeaders(origin) {
   return {
@@ -23,12 +23,12 @@ function isAllowedOrigin(origin) {
 
 function isRateLimited(ip) {
   const now = Date.now();
-  const entry = rateLimitState.get(ip);
+  let entry = rateLimitState.get(ip);
   if (!entry || now - entry.start >= RATE_LIMIT_WINDOW_MS) {
-    rateLimitState.set(ip, { start: now, count: 1 });
-    return false;
+    entry = { start: now, count: 0 };
   }
   entry.count += 1;
+  rateLimitState.set(ip, entry);
   return entry.count > RATE_LIMIT_MAX;
 }
 

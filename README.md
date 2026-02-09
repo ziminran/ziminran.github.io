@@ -157,17 +157,28 @@ Deploy your personal homepage to GitHub Pages for free hosting:
 
 #### 推荐方式：Cloudflare Workers 代理
 
-1. **创建 Worker（复制 `cloudflare-worker.js`）**，并在 Worker 环境变量中设置：
-   - `DASHSCOPE_API_KEY`：您的 DashScope API Key
+1. **创建 Worker（复制 `cloudflare-worker.js`）**，并安装/登录 Wrangler：
 
-2. **部署后记录 Worker 地址**，例如：
-   - `https://your-worker-subdomain.workers.dev/chat`
+   ```bash
+   npm install -g wrangler
+   wrangler login
+   ```
 
-3. **修改前端配置**，将 `apiEndpoint` 指向您的 Worker：
+2. **部署 Worker 并设置密钥**（也可在 Cloudflare Dashboard 中设置 Secret）：
+
+   ```bash
+   wrangler deploy cloudflare-worker.js --name my-chat-proxy
+   wrangler secret put DASHSCOPE_API_KEY
+   ```
+
+3. **部署后记录 Worker 地址**，例如：
+   - `https://my-chat-proxy.workers.dev/chat`
+
+4. **修改前端配置**，将 `apiEndpoint` 指向您的 Worker：
 
 ```javascript
 configureBailianAPI({
-  apiEndpoint: 'https://your-worker-subdomain.workers.dev/chat',
+  apiEndpoint: 'https://my-chat-proxy.workers.dev/chat',
   model: 'qwen-plus'
 });
 ```
@@ -188,7 +199,7 @@ configureBailianAPI({
 
 ```javascript
 configureBailianAPI({
-  apiEndpoint: 'https://your-worker-subdomain.workers.dev/chat',
+  apiEndpoint: 'https://my-chat-proxy.workers.dev/chat',
   model: 'qwen-plus'  // 更改为您想使用的模型
 });
 ```
@@ -207,7 +218,7 @@ configureBailianAPI({
 
 ```javascript
 configureBailianAPI({
-  apiEndpoint: 'https://your-worker-subdomain.workers.dev/chat',
+  apiEndpoint: 'https://my-chat-proxy.workers.dev/chat',
   model: 'qwen-plus',
   parameters: {
     temperature: 0.8,    // 控制随机性 (0-2)，值越高越随机

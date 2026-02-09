@@ -116,7 +116,7 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
     }
 
     const responseContent = data.choices?.[0]?.message?.content;
-    if (responseContent) {
+    if (typeof responseContent === 'string') {
       return responseContent;
     }
 
@@ -223,7 +223,7 @@ async function sendMessageToBailianStream(userMessage, conversationHistory = [],
             }
 
             const chunkContent = data.choices?.[0]?.delta?.content;
-            if (chunkContent && onChunk) {
+            if (typeof chunkContent === 'string' && onChunk) {
               onChunk(chunkContent);
             }
           } catch (parseError) {
