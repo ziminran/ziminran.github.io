@@ -454,6 +454,26 @@
   .chat-fullscreen-btn:hover {
     color: #000;
   }
+
+  .chat-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4em;
+  }
+
+  .chat-api-key-btn {
+    background: #fff;
+    border: 1px solid #a2a9b1;
+    color: #0645ad;
+    font-size: 0.75em;
+    padding: 0.25em 0.6em;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .chat-api-key-btn:hover {
+    background: #e8f4f8;
+  }
   
   .chat-messages {
     padding: 1em;
@@ -590,7 +610,10 @@
         <span class="chat-header-title">💬 Chat</span>
         <span class="chat-badge">RAG-enhanced</span>
       </div>
-      <button class="chat-fullscreen-btn" id="fullscreenBtn" title="Toggle fullscreen">⛶</button>
+      <div class="chat-header-actions">
+        <button class="chat-api-key-btn" id="apiKeyBtn" title="设置API Key">API Key</button>
+        <button class="chat-fullscreen-btn" id="fullscreenBtn" title="Toggle fullscreen">⛶</button>
+      </div>
     </div>
     
     <div class="chat-messages" id="chatMessages">
@@ -627,17 +650,26 @@
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendBtn');
     const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const apiKeyBtn = document.getElementById('apiKeyBtn');
     let firstMessageSent = false;
     let conversationHistory = []; // 对话历史
+    const API_KEY_STORAGE_KEY = 'bailianApiKey';
+    let apiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
     
     // 配置阿里云百炼API
-    // 注意：在生产环境中，API密钥应该通过安全的方式获取，而不是直接硬编码在前端代码中
-    // 建议使用后端代理服务来调用API
-    // 示例配置：
-    // configureBailianAPI({
-    //   apiKey: 'YOUR_API_KEY_HERE',
-    //   model: 'qwen-turbo'
-    // });
+    // 注意：API密钥会保存在本地浏览器中，请勿在公共设备上保存
+    function configureApiKey(key) {
+      apiKey = key;
+      localStorage.setItem(API_KEY_STORAGE_KEY, apiKey);
+      configureBailianAPI({
+        apiKey: apiKey,
+        model: 'qwen-flash'
+      });
+    }
+
+    if (apiKey) {
+      configureApiKey(apiKey);
+    }
     
     // Function to add a message to the chat
     function addMessage(text, isUser) {
@@ -660,6 +692,22 @@
       chatMessages.scrollTop = chatMessages.scrollHeight;
       
       return contentDiv;
+    }
+
+    function promptForApiKey() {
+      const inputKey = window.prompt('请输入阿里云百炼 API Key（仅保存在本地浏览器）');
+      if (!inputKey) {
+        return false;
+      }
+
+      const trimmedKey = inputKey.trim();
+      if (!trimmedKey) {
+        return false;
+      }
+
+      configureApiKey(trimmedKey);
+      addMessage('✅ API Key 已保存，可以开始对话。', false);
+      return true;
     }
     
     // Function to add a typing indicator
@@ -696,6 +744,14 @@
     async function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
+
+      if (!apiKey) {
+        const configured = promptForApiKey();
+        if (!configured) {
+          addMessage('提示：请先配置 API Key 后再发送消息。', false);
+          return;
+        }
+      }
       
       // Disable input while processing
       chatInput.disabled = true;
@@ -776,6 +832,11 @@
     
     // Event listeners
     sendBtn.addEventListener('click', sendMessage);
+
+    apiKeyBtn.addEventListener('click', () => {
+      promptForApiKey();
+      chatInput.focus();
+    });
     
     chatInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
