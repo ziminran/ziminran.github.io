@@ -329,7 +329,7 @@ configureBailianAPI({
    - 通过页面 **API Key** 按钮完成密钥配置。
    - 优先在 `index.html` 的聊天脚本中查找 `configureBailianAPI` 调用（位于对话初始化部分）。
    - 若未显式配置，请查看 `assets/js/bailian-api.js` 中的默认 `BAILIAN_CONFIG`，确认 `model` 为 `qwen-flash`，且 `parameters.result_format` 为 `message`。
-   - ⚠️ 请勿在控制台输入 API Key，也不要分享包含密钥的截图或日志。
+   - ⚠️ 请勿在控制台输入 API Key，也不要分享包含密钥的截图或日志；避免将密钥提交到版本库或写入明文文件，可使用后端代理或环境变量管理。
    - 再次发送消息，确保返回的是 `output.choices[0].message.content`。
 
 4. **检查 API 端点是否正确**
@@ -346,7 +346,7 @@ configureBailianAPI({
    - 点击该请求，在 **Response/Preview** 中查看 JSON；返回数据需包含 `output.choices[0].message.content`，否则说明参数或模型配置不正确。
 
 6. **如果仍失败**
-   - 401/403：API Key 无效或权限未开通。
+   - 401/403：API Key 无效或权限未开通；检查 Key 格式、控制台服务是否已激活，以及账号状态/额度。
    - CORS：使用后端代理方式（见上文“第二步：配置API密钥”中的“方式三：使用后端代理（推荐用于生产环境）”）。
    - 其它错误：查看 Console 的错误信息并对应修复。
 
