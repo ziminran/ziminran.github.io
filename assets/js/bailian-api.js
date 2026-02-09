@@ -3,52 +3,30 @@
  * Alibaba Cloud Bailian API Module
  * 
  * 使用说明：
- * 1. 在使用前需要配置API密钥和应用ID
+ * 1. 在使用前需要配置Cloudflare Worker代理地址
  * 2. 调用 sendMessageToBailian() 函数发送消息
  * 3. 返回的Promise包含AI的回复
  */
 
 // API配置
 const BAILIAN_CONFIG = {
-  // API端点 - 根据您的区域选择正确的endpoint
-  // 华东1（杭州）: https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation
-  // 华北2（北京）: https://dashscope-beijing.aliyuncs.com/api/v1/services/aigc/text-generation/generation
-  apiEndpoint: 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
-  
-  // API密钥 - 从环境变量或配置文件中获取，不要直接硬编码
-  // 获取方式：https://help.aliyun.com/zh/dashscope/developer-reference/activate-dashscope-and-create-an-api-key
-  apiKey: '',  // 请在此处填入您的API Key，或通过配置方法设置
-  
-  // 模型名称 - 可选的模型包括:
-  // - qwen-flash: 通义千问极速版，低延迟输出
-  // - qwen-turbo: 通义千问超大规模语言模型，适用于广泛的自然语言理解和生成任务
-  // - qwen-plus: 通义千问增强版，平衡了响应速度与性能
-  // - qwen-max: 通义千问最强版本，适用于复杂任务
-  model: 'qwen-turbo',
+  // Cloudflare Worker代理端点
+  // 示例: https://<worker-name>.<account>.workers.dev/chat
+  apiEndpoint: 'https://ziminran-chat-proxy.ziminran.workers.dev/chat',
   
   // 请求参数
   parameters: {
     temperature: 0.8,     // 控制随机性 (0-2)，较高的值会使输出更加随机
-    top_p: 0.9,          // 核采样参数 (0-1)
-    max_tokens: 1500,    // 生成文本的最大长度
-    result_format: 'message'  // 返回格式
+    max_tokens: 500      // 生成文本的最大长度
   }
 };
 
 /**
  * 配置阿里云百炼API
  * @param {Object} config - 配置对象
- * @param {string} config.apiKey - API密钥
- * @param {string} config.model - 模型名称（可选）
  * @param {string} config.apiEndpoint - API端点（可选）
  */
 function configureBailianAPI(config) {
-  if (config.apiKey) {
-    BAILIAN_CONFIG.apiKey = config.apiKey;
-  }
-  if (config.model) {
-    BAILIAN_CONFIG.model = config.model;
-  }
   if (config.apiEndpoint) {
     BAILIAN_CONFIG.apiEndpoint = config.apiEndpoint;
   }
@@ -64,11 +42,6 @@ function configureBailianAPI(config) {
  * @returns {Promise<string>} - AI回复
  */
 async function sendMessageToBailian(userMessage, conversationHistory = []) {
-  // 检查API密钥是否已配置
-  if (!BAILIAN_CONFIG.apiKey) {
-    throw new Error('API密钥未配置。请先调用 configureBailianAPI() 设置API密钥。');
-  }
-  
   // 构建消息列表
   const messages = [
     {
@@ -82,13 +55,11 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
     }
   ];
   
-  // 构建请求体
+  // 构建请求体（OpenAI兼容格式）
   const requestBody = {
-    model: BAILIAN_CONFIG.model,
-    input: {
-      messages: messages
-    },
-    parameters: BAILIAN_CONFIG.parameters
+    messages: messages,
+    max_tokens: BAILIAN_CONFIG.parameters.max_tokens,
+    temperature: BAILIAN_CONFIG.parameters.temperature
   };
   
   try {
@@ -96,9 +67,7 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
     const response = await fetch(BAILIAN_CONFIG.apiEndpoint, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${BAILIAN_CONFIG.apiKey}`,
-        'X-DashScope-SSE': 'disable'  // 禁用SSE流式输出
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(requestBody)
     });
@@ -116,13 +85,17 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
     const data = await response.json();
     
     // 检查API返回的错误
-    if (data.code && data.code !== '200' && data.code !== 200) {
-      throw new Error(`API错误: ${data.code} - ${data.message}`);
+    if (data.error) {
+      const errorMessage =
+        typeof data.error === 'string'
+          ? data.error
+          : (data.error.message || 'API返回错误');
+      throw new Error(errorMessage);
     }
     
     // 提取AI的回复
-    if (data.output && data.output.choices && data.output.choices.length > 0) {
-      const assistantMessage = data.output.choices[0].message;
+    if (data.choices && data.choices.length > 0) {
+      const assistantMessage = data.choices[0].message;
       return assistantMessage.content;
     } else {
       throw new Error('API返回的数据格式不正确');
@@ -143,112 +116,12 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
  * @param {Function} onError - 错误时的回调函数
  */
 async function sendMessageToBailianStream(userMessage, conversationHistory = [], onChunk, onComplete, onError) {
-  // 检查API密钥是否已配置
-  if (!BAILIAN_CONFIG.apiKey) {
-    const error = new Error('API密钥未配置。请先调用 configureBailianAPI() 设置API密钥。');
-    if (onError) onError(error);
-    return;
-  }
-  
-  // 构建消息列表
-  const messages = [
-    {
-      role: 'system',
-      content: '你是Zimin Ran的AI助手。你可以回答关于Zimin Ran的教育背景、研究方向和发表论文的问题。请友好、专业地回答用户的问题。'
-    },
-    ...conversationHistory,
-    {
-      role: 'user',
-      content: userMessage
-    }
-  ];
-  
-  // 构建请求体
-  const requestBody = {
-    model: BAILIAN_CONFIG.model,
-    input: {
-      messages: messages
-    },
-    parameters: {
-      ...BAILIAN_CONFIG.parameters,
-      incremental_output: true  // 启用增量输出
-    }
-  };
-  
   try {
-    // 发送API请求
-    const response = await fetch(BAILIAN_CONFIG.apiEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${BAILIAN_CONFIG.apiKey}`,
-        'X-DashScope-SSE': 'enable'  // 启用SSE流式输出
-      },
-      body: JSON.stringify(requestBody)
-    });
-    
-    // 检查响应状态
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(
-        `API请求失败: ${response.status} ${response.statusText}\n` +
-        `详情: ${JSON.stringify(errorData)}`
-      );
-    }
-    
-    // 处理流式响应
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder();
-    let buffer = '';
-    
-    while (true) {
-      const { done, value } = await reader.read();
-      
-      if (done) {
-        if (onComplete) onComplete();
-        break;
-      }
-      
-      // 解码数据
-      buffer += decoder.decode(value, { stream: true });
-      
-      // 处理SSE事件
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || ''; // 保留不完整的行
-      
-      for (const line of lines) {
-        if (line.startsWith('data:')) {
-          const jsonStr = line.substring(5).trim();
-          
-          if (jsonStr === '[DONE]') {
-            if (onComplete) onComplete();
-            return;
-          }
-          
-          try {
-            const data = JSON.parse(jsonStr);
-            
-            // 检查错误
-            if (data.code && data.code !== '200' && data.code !== 200) {
-              throw new Error(`API错误: ${data.code} - ${data.message}`);
-            }
-            
-            // 提取文本片段
-            if (data.output && data.output.choices && data.output.choices.length > 0) {
-              const choice = data.output.choices[0];
-              if (choice.message && choice.message.content) {
-                if (onChunk) onChunk(choice.message.content);
-              }
-            }
-          } catch (parseError) {
-            console.warn('解析SSE数据失败:', parseError, jsonStr);
-          }
-        }
-      }
-    }
-    
+    const responseText = await sendMessageToBailian(userMessage, conversationHistory);
+    if (onChunk) onChunk(responseText);
+    if (onComplete) onComplete();
   } catch (error) {
-    console.error('阿里云百炼API流式调用失败:', error);
+    console.error('阿里云百炼API调用失败:', error);
     if (onError) onError(error);
   }
 }

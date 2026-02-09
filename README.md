@@ -151,84 +151,27 @@ Deploy your personal homepage to GitHub Pages for free hosting:
    - 复制生成的API Key并妥善保管（不要分享给他人）
    - 详细步骤参考：[官方文档](https://help.aliyun.com/zh/dashscope/developer-reference/activate-dashscope-and-create-an-api-key)
 
-### 第二步：配置API密钥
+### 第二步：配置Cloudflare Worker代理（推荐）
 
-有三种方式配置API密钥：
+当前版本已改为通过Cloudflare Worker代理调用DashScope，前端不再输入API Key。请先部署Worker，并在 `index.html` 中把 `WORKER_CHAT_ENDPOINT` 修改为你的Worker `/chat` 地址。
 
-#### 方式一：在页面内配置（推荐）
+#### 方式一：Cloudflare Worker代理（推荐）
 
-1. 打开主页，找到“Ask Zimin Ran anything”对话框
-2. 点击右上角 **API Key** 按钮
-3. 在弹窗中输入您的API Key（仅保存在本地浏览器）
+1. 部署Cloudflare Worker（详见本文后续“使用后端代理”示例）
+2. 在 `index.html` 中更新 `WORKER_CHAT_ENDPOINT`
+3. 前端将通过Worker转发请求，无需在浏览器中保存API Key
 
-#### 方式二：直接在代码中配置（仅用于测试）
+#### 方式二：避免前端硬编码API密钥
 
-**⚠️ 警告：不建议在生产环境中将API密钥硬编码在前端代码中，这会导致安全风险。**
+出于安全原因，前端不再支持配置 API Key，请使用 Cloudflare Worker Secret 管理密钥。
 
-编辑 `index.html` 文件，找到以下代码段：
+#### 方式三：使用Cloudflare Worker代理（推荐用于生产环境）
 
-```javascript
-// 配置阿里云百炼API
-// configureBailianAPI({
-//   apiKey: 'YOUR_API_KEY_HERE',
-//   model: 'qwen-turbo'
-// });
-```
+为了安全起见，建议使用Cloudflare Worker来代理API调用：
 
-取消注释并填入您的API密钥：
-
-```javascript
-// 配置阿里云百炼API
-configureBailianAPI({
-  apiKey: 'sk-your-actual-api-key-here',  // 替换为您的真实API Key
-  model: 'qwen-turbo'  // 可选：qwen-turbo, qwen-plus, qwen-max
-});
-```
-
-#### 方式三：使用后端代理（推荐用于生产环境）
-
-为了安全起见，建议创建一个后端服务来代理API调用：
-
-1. **创建后端API端点**（例如使用Node.js + Express）：
-
-```javascript
-// server.js
-const express = require('express');
-const axios = require('axios');
-const app = express();
-
-app.use(express.json());
-
-app.post('/api/chat', async (req, res) => {
-  try {
-    const response = await axios.post(
-      'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation',
-      req.body,
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${process.env.DASHSCOPE_API_KEY}`,
-          'X-DashScope-SSE': 'disable'
-        }
-      }
-    );
-    res.json(response.data);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.listen(3000, () => console.log('Server running on port 3000'));
-```
-
-2. **修改前端配置**，将 `apiEndpoint` 指向您的后端：
-
-```javascript
-configureBailianAPI({
-  apiEndpoint: '/api/chat',  // 指向您的后端API
-  apiKey: 'dummy'  // 不需要真实的key，后端会处理
-});
-```
+1. **创建Worker**：将仓库中的 `cloudflare-worker.js` 复制到Cloudflare Workers
+2. **设置密钥**：在Worker环境变量/Secret中设置 `DASHSCOPE_API_KEY`
+3. **修改前端配置**：将 `WORKER_CHAT_ENDPOINT` 指向你的Worker `/chat` 地址
 
 ### 第三步：选择合适的模型
 
@@ -242,36 +185,18 @@ configureBailianAPI({
 | `qwen-max` | 最强性能 | 高难度任务、创意生成 |
 | `qwen-long` | 超长上下文 | 长文档理解 |
 
-修改模型配置：
+修改模型配置：在 `cloudflare-worker.js` 中调整 `model: 'qwen-plus'` 为你需要的模型名称。
 
-```javascript
-configureBailianAPI({
-  apiKey: 'your-api-key',
-  model: 'qwen-plus'  // 更改为您想使用的模型
-});
-```
+### 使用 qwen-plus 让对话框正常回复
 
-### 使用 qwen-flash 让对话框正常回复
+如果对话框提示“抱歉，我暂时无法回复”，请确认以下配置是否完成（本项目默认使用 `qwen-plus`）：
 
-如果对话框提示“抱歉，我暂时无法回复”，请确认以下配置是否完成（本项目默认使用 `qwen-flash`）：
-
-1. **在页面内配置 API Key**  
-   打开页面后点击右上角 **API Key** 按钮输入密钥，刷新页面后再次发送消息。
-
-2. **在代码中显式指定 qwen-flash**（仅用于测试，生产环境请避免硬编码）：
-
-```javascript
-// 配置阿里云百炼API（qwen-flash）
-configureBailianAPI({
-  apiKey: 'sk-YOUR-API-KEY-HERE',
-  model: 'qwen-flash',
-  parameters: {
-    result_format: 'message'
-  }
-});
-```
-
-3. **使用后端代理时**，确保请求体包含 `model: 'qwen-flash'` 且 `parameters.result_format` 为 `message`。
+1. **确认 Worker Secret 已设置**  
+   在Cloudflare Worker中设置 `DASHSCOPE_API_KEY`。
+2. **确认前端指向 Worker**  
+   `WORKER_CHAT_ENDPOINT` 必须指向 Worker `/chat`。
+3. **更换模型时**  
+   在 `cloudflare-worker.js` 中更新 `model` 字段。
 
 ### 第四步：自定义API参数
 
@@ -279,13 +204,9 @@ configureBailianAPI({
 
 ```javascript
 configureBailianAPI({
-  apiKey: 'your-api-key',
-  model: 'qwen-turbo',
   parameters: {
     temperature: 0.8,    // 控制随机性 (0-2)，值越高越随机
-    top_p: 0.9,         // 核采样参数 (0-1)
-    max_tokens: 1500,   // 生成文本的最大长度
-    result_format: 'message'
+    max_tokens: 500     // 生成文本的最大长度
   }
 });
 ```
@@ -348,20 +269,20 @@ sendMessageToBailianStream(
 
 #### 问题1：API调用失败，返回401错误
 
-**原因**：API密钥无效或未配置
+**原因**：Worker Secret中的API密钥无效或未配置
 
 **解决方案**：
-- 检查API密钥是否正确复制
+- 检查 `DASHSCOPE_API_KEY` 是否正确配置
 - 确认API密钥在DashScope控制台中处于启用状态
-- 验证 `configureBailianAPI()` 是否正确调用
+- 验证Worker是否成功部署
 
 #### 问题2：CORS跨域错误
 
-**原因**：前端直接调用API时可能遇到跨域问题
+**原因**：Worker CORS 配置或来源限制不匹配
 
 **解决方案**：
-- 使用后端代理（推荐方式三）
-- 或在本地开发时使用CORS代理
+- 检查Worker中的允许来源设置
+- 确保使用HTTPS访问GitHub Pages
 
 #### 问题3：API返回空响应
 
