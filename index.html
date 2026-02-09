@@ -688,6 +688,12 @@
         indicator.remove();
       }
     }
+
+    function rollbackUserMessage(entry) {
+      if (conversationHistory[conversationHistory.length - 1] === entry) {
+        conversationHistory.pop();
+      }
+    }
     
     // Function to send a message
     async function sendMessage() {
@@ -729,7 +735,15 @@
           },
           body: JSON.stringify({ messages: conversationHistory })
         });
-        const data = await response.json().catch(() => ({}));
+        let data;
+        try {
+          data = await response.json();
+        } catch (error) {
+          removeTypingIndicator();
+          rollbackUserMessage(userMessageEntry);
+          addMessage('抱歉，服务返回格式异常，请稍后再试。', false);
+          return;
+        }
         const assistantReply = data?.choices?.[0]?.message?.content;
         
         // Remove typing indicator
@@ -750,20 +764,14 @@
             conversationHistory.splice(0, conversationHistory.length - 20);
           }
         } else if (response.ok) {
-          if (conversationHistory[conversationHistory.length - 1] === userMessageEntry) {
-            conversationHistory.pop();
-          }
+          rollbackUserMessage(userMessageEntry);
           addMessage('抱歉，服务返回格式异常，请稍后再试。', false);
         } else {
-          if (conversationHistory[conversationHistory.length - 1] === userMessageEntry) {
-            conversationHistory.pop();
-          }
+          rollbackUserMessage(userMessageEntry);
           addMessage(data?.error?.message || '抱歉，后端服务暂时不可用，请稍后再试。', false);
         }
       } catch (error) {
-        if (conversationHistory[conversationHistory.length - 1] === userMessageEntry) {
-          conversationHistory.pop();
-        }
+        rollbackUserMessage(userMessageEntry);
         removeTypingIndicator();
         addMessage('抱歉，我暂时无法回复。', false);
         console.error('发送消息时出错:', error);
