@@ -749,7 +749,7 @@
         // Remove typing indicator
         removeTypingIndicator();
         
-        if (response.ok && typeof assistantReply === 'string') {
+        if (response.ok && typeof assistantReply === 'string' && assistantReply.trim() !== '') {
           // Add AI response
           addMessage(assistantReply, false);
           
