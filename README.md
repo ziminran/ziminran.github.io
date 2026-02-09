@@ -251,6 +251,28 @@ configureBailianAPI({
 });
 ```
 
+### 使用 qwen-flash 让对话框正常回复
+
+如果对话框提示“抱歉，我暂时无法回复”，请确认以下配置是否完成（本项目默认使用 `qwen-flash`）：
+
+1. **在页面内配置 API Key**  
+   打开页面后点击右上角 **API Key** 按钮输入密钥，刷新页面后再次发送消息。
+
+2. **在代码中显式指定 qwen-flash**（仅用于测试，生产环境请避免硬编码）：
+
+```javascript
+// 配置阿里云百炼API（qwen-flash）
+configureBailianAPI({
+  apiKey: 'sk-YOUR-API-KEY-HERE',
+  model: 'qwen-flash',
+  parameters: {
+    result_format: 'message'
+  }
+});
+```
+
+3. **使用后端代理时**，确保请求体包含 `model: 'qwen-flash'` 且 `parameters.result_format` 为 `message`。
+
 ### 第四步：自定义API参数
 
 您可以调整API参数以获得更好的效果：
