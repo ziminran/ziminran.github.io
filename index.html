@@ -736,7 +736,7 @@
         
         // 限制对话历史长度，保留最近10轮对话
         if (conversationHistory.length > 20) {
-          conversationHistory = conversationHistory.slice(-20);
+          conversationHistory.splice(0, conversationHistory.length - 20);
         }
         
       } catch (error) {

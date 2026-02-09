@@ -115,7 +115,7 @@ async function sendMessageToBailian(userMessage, conversationHistory = []) {
     const data = await response.json();
     
     // 检查API返回的错误
-    if (data.code && data.code !== '200') {
+    if (data.code && data.code !== '200' && data.code !== 200) {
       throw new Error(`API错误: ${data.code} - ${data.message}`);
     }
     
@@ -228,7 +228,7 @@ async function sendMessageToBailianStream(userMessage, conversationHistory = [],
             const data = JSON.parse(jsonStr);
             
             // 检查错误
-            if (data.code && data.code !== '200') {
+            if (data.code && data.code !== '200' && data.code !== 200) {
               throw new Error(`API错误: ${data.code} - ${data.message}`);
             }
             
