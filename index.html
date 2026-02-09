@@ -637,7 +637,7 @@
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     let firstMessageSent = false;
     let conversationHistory = []; // 对话历史
-    const CHAT_API_ENDPOINT = 'https://your-worker-subdomain.workers.dev/chat'; // 替换为您的Worker地址，例如：https://my-chat-proxy.workers.dev/chat
+    const CHAT_API_ENDPOINT = ''; // 替换为您的Worker地址，例如：https://my-chat-proxy.workers.dev/chat
     
     configureBailianAPI({
       apiEndpoint: CHAT_API_ENDPOINT,
@@ -701,8 +701,8 @@
     async function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
-      if (CHAT_API_ENDPOINT.includes('your-worker-subdomain')) {
-        addMessage('提示：请先在代码中替换您的Worker地址后再使用聊天功能。', false);
+      if (!CHAT_API_ENDPOINT || !CHAT_API_ENDPOINT.startsWith('https://')) {
+        addMessage('提示：请先在代码中配置正确的Worker地址后再使用聊天功能。', false);
         return;
       }
 

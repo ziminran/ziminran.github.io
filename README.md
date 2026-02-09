@@ -167,7 +167,7 @@ Deploy your personal homepage to GitHub Pages for free hosting:
 2. **部署 Worker 并设置密钥**（也可在 Cloudflare Dashboard 中设置 Secret）：
 
    ```bash
-   wrangler deploy cloudflare-worker.js --name my-chat-proxy
+   wrangler deploy --name my-chat-proxy cloudflare-worker.js
    wrangler secret put DASHSCOPE_API_KEY
    ```
 

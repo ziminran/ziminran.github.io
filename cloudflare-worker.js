@@ -5,7 +5,7 @@ const MAX_TOKENS = 800;
 const RATE_LIMIT_WINDOW_MS = 60_000;
 const RATE_LIMIT_MAX = 30;
 
-const rateLimitState = new Map(); // 仅用于示例，冷启动会重置，生产必须使用Cloudflare Rate Limiting或Durable Objects
+const rateLimitState = new Map(); // ⚠️仅用于示例，冷启动会重置，生产必须使用Cloudflare Rate Limiting或Durable Objects
 
 function getCorsHeaders(origin) {
   return {
