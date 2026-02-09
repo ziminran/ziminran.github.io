@@ -332,7 +332,7 @@ configureBailianAPI({
    - 再次发送消息，确保返回的是 `output.choices[0].message.content`。
 
 4. **检查 API 端点是否正确**
-   - 默认端点为华东 1 (杭州)，如在北京区请改为（可在已配置 API Key 后单独执行）：
+   - 默认端点为华东 1 (杭州)，如在北京区请改为（可在已配置 API Key 后单独执行，且仅更新端点配置）：
      ```javascript
      configureBailianAPI({
        apiEndpoint: 'https://dashscope-beijing.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
@@ -345,7 +345,7 @@ configureBailianAPI({
 
 6. **如果仍失败**
    - 401/403：API Key 无效或权限未开通。
-   - CORS：使用后端代理方式（见上文“方式三”）。
+   - CORS：使用后端代理方式（见上文“方式三：使用后端代理（推荐用于生产环境）”）。
    - 其它错误：查看 Console 的错误信息并对应修复。
 
 ### 高级功能：流式输出
