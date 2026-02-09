@@ -332,7 +332,7 @@ configureBailianAPI({
    - 再次发送消息，确保返回的是 `output.choices[0].message.content`。
 
 4. **检查 API 端点是否正确**
-   - 默认端点为华东 1 (杭州)，如在北京区请改为（可在已配置 API Key 后单独执行，且仅更新端点配置）：
+   - 默认端点为华东 1 (杭州)，如在北京区请改为（可在 `index.html` 的 `configureBailianAPI` 调用处加入以下配置，且仅更新端点配置）：
      ```javascript
      configureBailianAPI({
        apiEndpoint: 'https://dashscope-beijing.aliyuncs.com/api/v1/services/aigc/text-generation/generation'
@@ -342,7 +342,7 @@ configureBailianAPI({
 
 5. **检查网络请求与返回数据**
    - 打开 DevTools → Network，发送一条消息，查看请求状态应为 `200`。
-   - 点击该请求，在 **Response/Preview** 中查看 JSON；返回数据需包含 `output.choices[0].message.content`，否则说明参数或模型配置不正确。
+   - 点击该请求, 在 **Response/Preview** 中查看 JSON; 返回数据需包含 `output.choices[0].message.content`, 否则说明参数或模型配置不正确。
 
 6. **如果仍失败**
    - 401/403：API Key 无效或权限未开通。
