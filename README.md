@@ -318,8 +318,8 @@ configureBailianAPI({
 如果对话没有正常返回内容，请按以下步骤定位问题并修正，直到能看到 AI 回复：
 
 1. **确认脚本已加载**
-   - 打开浏览器控制台，按 F12 切换到 Console 标签后输入 `typeof sendMessageToBailian`。
-   - 结果应为 `function`；若为 `undefined`，检查 `index.html` 中是否已加载 `assets/js/bailian-api.js`。
+   - 打开浏览器控制台，按 F12 切换到 Console 标签后输入 `typeof sendMessageToBailian` 并回车
+   - 结果应为 `function`。若为 `undefined`，检查 `index.html` 中是否已加载 `assets/js/bailian-api.js`。
 
 2. **确认 API Key 已保存**
    - 点击对话框右上角 **API Key** 按钮，输入并保存密钥。
@@ -347,7 +347,7 @@ configureBailianAPI({
 
 6. **如果仍失败**
    - 401/403： API Key 无效或权限未开通；检查 Key 格式、控制台服务是否已激活，以及账号状态/额度。
-   - CORS： 使用后端代理方式（见上文“第二步：配置API密钥”中的“方式三：使用后端代理（推荐用于生产环境）”）。
+   - CORS： 使用后端代理方式（见上文《第二步：配置API密钥》小节中的《方式三：使用后端代理（推荐用于生产环境）》）。
    - 其它错误： 查看 Console 的错误信息并对应修复。
 
 ### 高级功能：流式输出
