@@ -127,6 +127,206 @@ Deploy your personal homepage to GitHub Pages for free hosting:
    - Or add a `CNAME` record pointing to `username.github.io`
 4. In GitHub repository settings under Pages, enter your custom domain and enable HTTPS
 
+## 阿里云百炼API集成教程
+
+本项目集成了阿里云百炼（Bailian）API，为个人主页添加了智能对话功能。以下是详细的配置和使用教程。
+
+### 什么是阿里云百炼？
+
+阿里云百炼（DashScope）是阿里云推出的大模型服务平台，提供了通义千问（Qwen）等先进的大语言模型API。通过百炼API，您可以轻松地将AI对话功能集成到您的网站中。
+
+### 第一步：获取API密钥
+
+1. **注册阿里云账号**
+   - 访问 [阿里云官网](https://www.aliyun.com/) 注册账号
+   - 如果已有账号，直接登录
+
+2. **开通DashScope服务**
+   - 访问 [DashScope控制台](https://dashscope.console.aliyun.com/)
+   - 首次使用需要开通服务（提供免费额度）
+
+3. **创建API Key**
+   - 在DashScope控制台，进入"API-KEY管理"页面
+   - 点击"创建新的API-KEY"
+   - 复制生成的API Key并妥善保管（不要分享给他人）
+   - 详细步骤参考：[官方文档](https://help.aliyun.com/zh/dashscope/developer-reference/activate-dashscope-and-create-an-api-key)
+
+### 第二步：配置API密钥
+
+为了安全起见，本项目不再提供前端 API Key 输入框。请使用后端代理（推荐 Cloudflare Workers）在服务端保存密钥并转发请求。
+
+#### 推荐方式：Cloudflare Workers 代理
+
+1. **创建 Worker（复制 `cloudflare-worker.js`）**，并安装/登录 Wrangler：
+
+   ```bash
+   npm install -g wrangler
+   wrangler login
+   ```
+
+2. **部署 Worker 并设置密钥**（也可在 Cloudflare Dashboard 中设置 Secret）：
+
+   ```bash
+   wrangler deploy --name my-chat-proxy cloudflare-worker.js
+   wrangler secret put DASHSCOPE_API_KEY
+   ```
+
+   若使用旧版 Wrangler，可将 `deploy` 替换为 `publish`，或通过 `wrangler.toml` 配置名称与入口文件。
+
+   示例 `wrangler.toml`：
+
+   ```toml
+   name = "my-chat-proxy"
+   main = "cloudflare-worker.js"
+   compatibility_date = "2024-01-01"
+   ```
+
+3. **部署后记录 Worker 地址**，例如：
+   - `https://chat-proxy.grimmiran.workers.dev`
+
+4. **修改前端配置**，将 `API_PROXY_URL` 指向您的 Worker：
+
+```javascript
+const API_PROXY_URL = 'https://chat-proxy.grimmiran.workers.dev';
+```
+
+### 第三步：选择合适的模型
+
+阿里云百炼提供多个模型选项：
+
+| 模型名称 | 特点 | 适用场景 |
+|---------|------|---------|
+| `qwen-flash` | 极速响应 | 低延迟对话、快速问答 |
+| `qwen-turbo` | 快速响应，成本低 | 一般对话、快速问答 |
+| `qwen-plus` | 性能均衡 | 复杂对话、专业问答 |
+| `qwen-max` | 最强性能 | 高难度任务、创意生成 |
+| `qwen-long` | 超长上下文 | 长文档理解 |
+
+修改模型配置（在 `cloudflare-worker.js` 中更新 `model` 字段）：
+
+```javascript
+const payload = {
+  model: 'qwen-plus',  // 更改为您想使用的模型
+  messages,
+  max_tokens: maxTokens
+};
+```
+
+### 如果对话框无法回复
+
+如果对话框提示“抱歉，我暂时无法回复”，请确认以下配置是否完成：
+
+1. **Worker 已部署并设置 `DASHSCOPE_API_KEY`**  
+2. **前端 `API_PROXY_URL` 已更新为 Worker 地址**  
+3. **浏览器控制台中无 CORS 或网络错误**
+
+### 第四步：自定义API参数
+
+您可以在 `cloudflare-worker.js` 中调整 API 参数以获得更好的效果：
+
+```javascript
+const payload = {
+  model: 'qwen-plus',
+  messages,
+  max_tokens: 1500,    // 生成文本的最大长度（后端会限制上限）
+  temperature: 0.8,    // 控制随机性 (0-2)，值越高越随机
+  top_p: 0.9           // 核采样参数 (0-1)
+};
+```
+
+**参数说明：**
+
+- **temperature**: 控制输出的随机性
+  - 0.1-0.5: 更确定、更一致的输出（适合事实性问答）
+  - 0.6-0.9: 平衡创造性和一致性
+  - 1.0-2.0: 更有创意、更多样化的输出（适合创意写作）
+
+- **top_p**: 核采样，控制词汇选择范围
+  - 0.1-0.5: 更保守的词汇选择
+  - 0.7-0.95: 平衡的词汇选择（推荐）
+  - 0.95-1.0: 更广泛的词汇选择
+
+- **max_tokens**: 限制生成文本的长度
+  - 建议范围：500-2000
+
+### 第五步：测试对话功能
+
+1. 在浏览器中打开您的个人主页
+2. 找到"Ask Zimin Ran anything"对话框
+3. 输入一条消息，例如："你好"
+4. 点击"发送"按钮
+5. 系统会调用阿里云百炼API并返回AI的回复
+
+### 高级功能：流式输出
+
+当前前端示例未包含流式输出，如需逐字显示可在 Worker 与前端请求中自行扩展。
+
+### API费用说明
+
+阿里云百炼提供：
+- **免费额度**：新用户可获得一定量的免费调用额度
+- **按量计费**：超出免费额度后按实际使用量计费
+- **定价**：不同模型价格不同，详见[官方定价页面](https://help.aliyun.com/zh/dashscope/developer-reference/tongyi-thousand-questions-metering-and-billing)
+
+### 故障排查
+
+#### 问题1：API调用失败，返回401错误
+
+**原因**：Worker 未设置 `DASHSCOPE_API_KEY` 或密钥无效
+
+**解决方案**：
+- 检查 Cloudflare Worker 的环境变量配置
+- 确认API密钥在DashScope控制台中处于启用状态
+
+#### 问题2：CORS跨域错误
+
+**原因**：Worker 未允许 `https://ziminran.github.io` 作为跨域来源
+
+**解决方案**：
+- 检查 Worker 代码中的 `Access-Control-Allow-Origin` 设置
+- 确认请求来源为 `https://ziminran.github.io`
+
+#### 问题3：API返回空响应
+
+**原因**：请求参数不正确或网络问题
+
+**解决方案**：
+- 检查浏览器控制台的错误信息
+- 验证API端点URL是否正确
+- 确认网络连接正常
+
+#### 问题4：提示"API端点未配置"
+
+**原因**：`API_PROXY_URL` 未更新或不是 `https://` 地址
+
+**解决方案**：
+- 在 `index.html` 中更新 `API_PROXY_URL` 为您的 Worker 地址
+
+### 安全建议
+
+1. **不要在前端硬编码API密钥**
+   - 使用环境变量或配置文件
+   - 通过后端代理调用API
+
+2. **设置API密钥使用限制**
+   - 在DashScope控制台设置调用频率限制
+   - 设置每日/每月使用上限
+
+3. **监控API使用情况**
+   - 定期检查API调用日志
+   - 设置用量告警
+
+4. **使用HTTPS**
+   - 确保网站使用HTTPS协议
+   - 保护API通信安全
+
+### 相关资源
+
+- [阿里云百炼官方文档](https://help.aliyun.com/zh/dashscope/)
+- [API参考文档](https://help.aliyun.com/zh/dashscope/developer-reference/api-details)
+- [通义千问模型介绍](https://help.aliyun.com/zh/dashscope/developer-reference/model-introduction)
+- [SDK和示例代码](https://help.aliyun.com/zh/dashscope/developer-reference/sdk-overview)
+
 ## Features
 
 - 📱 Responsive design (mobile-friendly)
@@ -134,6 +334,7 @@ Deploy your personal homepage to GitHub Pages for free hosting:
 - 📚 Dedicated sections for education and publications
 - 🔗 Social media links (GitHub, Email)
 - 🌐 Multi-language support (Chinese)
+- 💬 AI-powered chat using Alibaba Cloud Bailian API
 
 ## Customization
 
