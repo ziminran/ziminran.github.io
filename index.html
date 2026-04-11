@@ -319,6 +319,24 @@
       background: #f8f9fa;
     }
 
+    /* Language switch */
+    .lang-switch {
+      background: none;
+      border: 1px solid #a2a9b1;
+      border-radius: 3px;
+      padding: 0.2em 0.6em;
+      font-size: 0.85em;
+      cursor: pointer;
+      color: #0645ad;
+      margin-left: 1.5em;
+      font-family: inherit;
+    }
+    .lang-switch:hover {
+      background: #eaecf0;
+    }
+    body.lang-en .lang-zh { display: none; }
+    body.lang-zh .lang-en { display: none; }
+
     /* Hide TOC in content when sidebar exists */
     .toc { display: none; }
 
@@ -344,51 +362,58 @@
     }
   </style>
 </head>
-<body>
+<body class="lang-en">
   <header class="wiki-header">
     <div class="wiki-header-inner">
-      <a href="/" class="wiki-logo">Personal Homepage</a>
+      <a href="/" class="wiki-logo"><span class="lang-en">Personal Homepage</span><span class="lang-zh">个人主页</span></a>
       <nav class="wiki-nav">
-        <a href="#about">About</a>
-        <a href="#publications">Publications</a>
-        <a href="#contact">Contact</a>
+        <a href="#about"><span class="lang-en">Profile</span><span class="lang-zh">个人简介</span></a>
+        <a href="#publications"><span class="lang-en">Publications</span><span class="lang-zh">发表论文</span></a>
+        <a href="#contact"><span class="lang-en">Contact</span><span class="lang-zh">联系方式</span></a>
+        <button class="lang-switch" id="langSwitch" onclick="toggleLang()">
+          <span class="lang-en">中文</span><span class="lang-zh">EN</span>
+        </button>
       </nav>
     </div>
   </header>
 
   <div class="wiki-wrapper">
     <aside class="wiki-sidebar">
-      <div class="wiki-sidebar-title">Contents</div>
+      <div class="wiki-sidebar-title"><span class="lang-en">Contents</span><span class="lang-zh">目录</span></div>
       <ul>
-        <li><a href="#">(Top)</a></li>
-        <li><a href="#about">About</a></li>
-        <li><a href="#publications">Publications</a></li>
-        <li><a href="#contact">Contact</a></li>
+        <li><a href="#"><span class="lang-en">(Top)</span><span class="lang-zh">(顶部)</span></a></li>
+        <li><a href="#about"><span class="lang-en">Profile</span><span class="lang-zh">个人简介</span></a></li>
+        <li><a href="#publications"><span class="lang-en">Publications</span><span class="lang-zh">发表论文</span></a></li>
+        <li><a href="#contact"><span class="lang-en">Contact</span><span class="lang-zh">联系方式</span></a></li>
       </ul>
     </aside>
 
     <main class="wiki-content">
-      <h1 class="wiki-title">Zimin Ran</h1>
+      <h1 class="wiki-title"><span class="lang-en">Zimin Ran</span><span class="lang-zh">冉子民</span></h1>
 
-<p><b>Zimin Ran</b> is a <b>Ph.D. candidate</b> in Computer Science at the <b>University of Technology Sydney</b>, with research focus on computer vision and machine learning.</p>
+<p class="lang-en"><b>Zimin Ran</b> is a <b>Ph.D. candidate</b> in Computer Science at the <b>University of Technology Sydney</b>, under the supervision of <b>Prof. Linchao Zhu</b> of Zhejiang University. Her research focuses on digital humans and multimodal large models. Rather than viewing AI as a purely academic pursuit, she is committed to translating cutting-edge AI into practical solutions for industry and real-world applications. Her interdisciplinary background enables her to combine strong technical vision and judgment with sound business sense, a solid foundation in finance, clear risk awareness, and an informed understanding of legal and compliance frameworks.</p>
+<p class="lang-zh"><b>冉子民</b>，<b>悉尼科技大学</b>计算机科学<b>博士研究生</b>，师从浙江大学<b>朱霖潮教授</b>。研究方向为数字人与多模态大模型。她不将 AI 视为纯粹的学术研究，而是致力于将前沿 AI 技术转化为产业和现实场景中的实际解决方案。她的跨学科背景使她兼具技术视野与判断力、扎实的金融基础、良好的商业敏感度、清晰的风险意识，以及对法律合规框架的深入理解。</p>
 
-<h2 id="about">About</h2>
+<h2 id="about"><span class="lang-en">Profile</span><span class="lang-zh">个人简介</span></h2>
 
-<p>Welcome to my personal homepage! I am a passionate researcher dedicated to advancing the field of computer vision and deep learning.</p>
-
-<h3>Education</h3>
+<h3><span class="lang-en">Education</span><span class="lang-zh">教育经历</span></h3>
 <ul>
-  <li><b>Ph.D.</b> - Computer Science, University of Technology Sydney (2023-Present)</li>
-  <li><b>Master's Degree</b> - Data Science, University of Sydney (2021-2023)</li>
-  <li><b>Double Bachelor's Degree</b> - Accounting and Finance, Liaoning University (211) and De Montfort University, UK (2017-2021)</li>
+  <li><b><span class="lang-en">Ph.D.</span><span class="lang-zh">博士</span></b> - <span class="lang-en">Computer Science, University of Technology Sydney (2022–Present)</span><span class="lang-zh">计算机科学，悉尼科技大学（2022–至今）</span></li>
+  <li><b><span class="lang-en">Master's Degree</span><span class="lang-zh">硕士</span></b> - <span class="lang-en">Data Science, University of Sydney (2019–2021)</span><span class="lang-zh">数据科学，悉尼大学（2019–2021）</span></li>
+  <li><b><span class="lang-en">Double Bachelor's Degree</span><span class="lang-zh">双学士学位</span></b> - <span class="lang-en">Accounting and Finance (2014–2018)</span><span class="lang-zh">会计与金融（2014–2018）</span>
+    <ul>
+      <li><span class="lang-en">Liaoning University (211)</span><span class="lang-zh">辽宁大学（211）</span></li>
+      <li><span class="lang-en">De Montfort University, UK (First Class Honours)</span><span class="lang-zh">英国德蒙福特大学（一等学位）</span></li>
+    </ul>
+  </li>
 </ul>
 
-<h3>Research Interests</h3>
+<h3><span class="lang-en">Research Interests</span><span class="lang-zh">研究方向</span></h3>
 <ul>
-  <li>Computer Vision</li>
-  <li>Deep Learning</li>
-  <li>Visual Representation Learning</li>
-  <li>Skin Tone Estimation</li>
+  <li><span class="lang-en">Digital Humans</span><span class="lang-zh">数字人</span></li>
+  <li><span class="lang-en">Multimodal Large Models</span><span class="lang-zh">多模态大模型</span></li>
+  <li><span class="lang-en">AI for Real-World Applications</span><span class="lang-zh">AI 落地应用</span></li>
+  <li><span class="lang-en">Reshaping Traditional Industries with AI</span><span class="lang-zh">AI 重塑传统行业</span></li>
 </ul>
 
 <!-- Chat Dialog Component -->
@@ -588,13 +613,13 @@
 </style>
 
 <div class="chat-section">
-  <h2 class="chat-section-title">Ask Zimin Ran anything</h2>
+  <h2 class="chat-section-title"><span class="lang-en">Chat with Zimin</span><span class="lang-zh">与子民对话</span></h2>
   
   <div class="chat-container" id="chatContainer">
     <div class="chat-header">
       <div class="chat-header-left">
-        <span class="chat-header-title">💬 Chat</span>
-        <span class="chat-badge">RAG-enhanced</span>
+        <span class="chat-header-title"><span class="lang-en">💬 Chat</span><span class="lang-zh">💬 对话</span></span>
+        <span class="chat-badge"><span class="lang-en">RAG-enhanced</span><span class="lang-zh">RAG 增强</span></span>
       </div>
       <div class="chat-header-actions">
         <button class="chat-fullscreen-btn" id="fullscreenBtn" title="Toggle fullscreen">⛶</button>
@@ -605,7 +630,7 @@
       <div class="chat-message system">
         <div class="chat-message-label">ZIMIN RAN</div>
         <div class="chat-message-content">
-          你好！欢迎来到子民的主页，有什么可以帮你的吗？
+          你好！欢迎来到子民的主页，今天聊点什么？😊
         </div>
       </div>
     </div>
@@ -615,10 +640,10 @@
         type="text" 
         class="chat-input" 
         id="chatInput" 
-        placeholder="输入您的消息..."
+        placeholder="Type your message..."
         autocomplete="off"
       >
-      <button class="chat-send-btn" id="sendBtn">发送</button>
+      <button class="chat-send-btn" id="sendBtn"><span class="lang-en">Send</span><span class="lang-zh">发送</span></button>
     </div>
   </div>
 </div>
@@ -634,7 +659,7 @@
     const fullscreenBtn = document.getElementById('fullscreenBtn');
     let firstMessageSent = false;
     let conversationHistory = []; // 对话历史
-    const API_PROXY_URL = 'https://ziminran-github-io.vercel.app/api/chat';
+    const API_PROXY_URL = 'http://127.0.0.1:8000/api/chat';
     
     // Function to add a message to the chat
     function addMessage(text, isUser) {
@@ -699,7 +724,7 @@
     async function sendMessage() {
       const text = chatInput.value.trim();
       if (!text) return;
-      if (!API_PROXY_URL || !API_PROXY_URL.startsWith('https://')) {
+      if (!API_PROXY_URL) {
         addMessage('提示：请先在代码中配置正确的Worker地址后再使用聊天功能。', false);
         return;
       }
@@ -812,10 +837,23 @@
 })();
 </script>
 
-<h2 id="publications">Publications</h2>
+<h2 id="publications"><span class="lang-en">Publications</span><span class="lang-zh">发表论文</span></h2>
 
 <div class="publications">
   <ol class="bibliography">
+    <li>
+      <div class="pub-entry">
+        <div class="title">
+          <span>NPTFace: Native Pose-aligned Transformer for Face Recognition</span>
+        </div>
+        <div class="author">
+          <span><b>Zimin Ran</b>, Xuhan Zhu, Xiang An, Xingyu Ren, Kaicheng Yang, Feilong Tang, Zhichao Chen, Yumeng Wang, Ziyong Feng, Xianzhi Wang, Yin Xie, Linchao Zhu, Jiankang Deng</span>
+        </div>
+        <div class="periodical">
+          <span class="genre-tag">CVPRW 2026</span>
+        </div>
+      </div>
+    </li>
     <li>
       <div class="pub-entry">
         <div class="title">
@@ -858,42 +896,39 @@
   </ol>
 </div>
 
-<h2 id="contact">Contact</h2>
+<h2 id="contact"><span class="lang-en">Contact</span><span class="lang-zh">联系方式</span></h2>
 
 <ul>
   <li><a href="https://github.com/ziminran" target="_blank"><i class="fab fa-github"></i> GitHub: ziminran</a></li>
-  <li><a href="mailto:ziminran@example.com"><i class="fas fa-envelope"></i> Email: ziminran@example.com</a></li>
+  <li><a href="mailto:grimmiran@gmail.com"><i class="fas fa-envelope"></i> Email: grimmiran@gmail.com</a></li>
 </ul>
-
-<hr />
-
-<p><em>This page is designed in <a href="https://en.wikipedia.org/">Wikipedia</a> style.</em></p>
 
     </main>
 
     <aside class="wiki-infobox-container">
       <div class="infobox">
-        <div class="infobox-title">Zimin Ran</div>
+        <div class="infobox-title"><span class="lang-en">Zimin Ran</span><span class="lang-zh">冉子民</span></div>
         
         <img src="assets/img/profile_pic.svg" alt="Zimin Ran" onerror="this.style.display='none'">
-        <div class="infobox-caption">Ph.D. Candidate</div>
+        <div class="infobox-caption"><span class="lang-en">Ph.D. Candidate</span><span class="lang-zh">博士研究生</span></div>
         
         <div class="infobox-row">
-          <span class="infobox-label">Position</span><br>
-          Ph.D. Candidate
+          <span class="infobox-label"><span class="lang-en">Position</span><span class="lang-zh">职位</span></span><br>
+          <span class="lang-en">Ph.D. Candidate</span><span class="lang-zh">博士研究生</span>
         </div>
         <div class="infobox-row">
-          <span class="infobox-label">Education</span><br>
-          Ph.D. - Computer Science (UTS)<br>
-          M.Sc. - Data Science (USYD)
+          <span class="infobox-label"><span class="lang-en">Education</span><span class="lang-zh">教育</span></span><br>
+          <span class="lang-en">Ph.D. - Computer Science (UTS)<br>
+          M.Sc. - Data Science (USYD)</span><span class="lang-zh">博士 - 计算机科学（悉尼科技大学）<br>
+          硕士 - 数据科学（悉尼大学）</span>
         </div>
         <div class="infobox-row">
-          <span class="infobox-label">Research</span><br>
-          Computer Vision, Deep Learning
+          <span class="infobox-label"><span class="lang-en">Research</span><span class="lang-zh">研究方向</span></span><br>
+          <span class="lang-en">Digital Humans, Multimodal Large Models</span><span class="lang-zh">数字人、多模态大模型</span>
         </div>
         <div class="infobox-row">
-          <span class="infobox-label">Interests</span><br>
-          Visual Representation Learning
+          <span class="infobox-label"><span class="lang-en">Interests</span><span class="lang-zh">兴趣领域</span></span><br>
+          <span class="lang-en">AI for Real-World Applications</span><span class="lang-zh">AI 落地应用</span>
         </div>
         
         <div class="infobox-row">
@@ -902,15 +937,32 @@
         </div>
         
         <div class="infobox-row">
-          <span class="infobox-label">Email</span><br>
-          <a href="mailto:ziminran@example.com"><i class="fas fa-envelope"></i> Contact</a>
+          <span class="infobox-label"><span class="lang-en">Email</span><span class="lang-zh">邮箱</span></span><br>
+          <a href="mailto:grimmiran@gmail.com"><i class="fas fa-envelope"></i> <span class="lang-en">Contact</span><span class="lang-zh">联系</span></a>
         </div>
       </div>
     </aside>
   </div>
 
   <footer class="wiki-footer">
-    Last updated: February 8, 2026.
+    <span class="lang-en">Last updated: February 8, 2026.</span><span class="lang-zh">最后更新：2026年2月8日。</span>
   </footer>
+  <script>
+    function toggleLang() {
+      var body = document.body;
+      var chatInput = document.getElementById('chatInput');
+      if (body.classList.contains('lang-en')) {
+        body.classList.remove('lang-en');
+        body.classList.add('lang-zh');
+        document.documentElement.lang = 'zh';
+        if (chatInput) chatInput.placeholder = '输入您的消息...';
+      } else {
+        body.classList.remove('lang-zh');
+        body.classList.add('lang-en');
+        document.documentElement.lang = 'en';
+        if (chatInput) chatInput.placeholder = 'Type your message...';
+      }
+    }
+  </script>
 </body>
 </html>
