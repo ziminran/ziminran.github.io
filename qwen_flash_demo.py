@@ -7,7 +7,7 @@ import requests
 import json
 
 # API 配置
-API_KEY = "sk-0b8ef38f991c450ca9e56a45f9c1b324"
+API_KEY = ""
 API_URL = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
 
 def chat_with_qwen(prompt, model="qwen-turbo", stream=False):
