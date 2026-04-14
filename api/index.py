@@ -96,7 +96,7 @@ async def chat_proxy(request: ChatRequest):
     ] + [msg.dict() for msg in request.messages]
 
     payload = {
-        "model": "qwen-plus",
+        "model": "qwen-plus-2025-07-28",
         "messages": messages_with_system,
         "stream": False 
     }
