@@ -27,7 +27,7 @@
 
   // Scroll reveal: content stays visible without JS or with reduced motion.
   if (!matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
-    const revealTargets = document.querySelectorAll('.section-heading, .research-hero, .research-map, .research-stage, .research-next, .about-grid > *, .bibliography > li, .investing-card, .investing-stats, .chat-section, .contact-section');
+    const revealTargets = document.querySelectorAll('.section-heading, .research-hero, .research-map, .research-stage, .research-next, .about-grid > *, .bibliography > li, .investing-card, .investing-stats, .contact-section');
     const observer = new IntersectionObserver(entries => entries.forEach(entry => {
       if (!entry.isIntersecting) return;
       entry.target.classList.add('is-visible');

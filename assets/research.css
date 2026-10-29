@@ -7,7 +7,7 @@
 .research-hero, .research-map, .research-stage:nth-of-type(-n+3), .research-next { grid-column: 1 / -1; }
 .research-hero { position: relative; padding: 0 0 34px; max-width: 850px; }
 .research-eyebrow { color: #7793aa; font: 10px/1.8 var(--mono); letter-spacing: .15em; text-transform: uppercase; }
-.research-hero .research-eyebrow::before { content: '01 / '; color: var(--accent); }
+.research-hero .research-eyebrow::before { content: '02 / '; color: var(--accent); }
 .research-hero h2 { font-size: clamp(32px, 3.4vw, 46px); line-height: 1.2; letter-spacing: -.045em; max-width: 850px; margin: 15px 0 20px; font-weight: 500; }
 .research-hero h2 .lang-zh br { display: none; }
 .research-hero p { font-size: 13px; max-width: 710px; color: #8b9fb3; line-height: 1.95; }
