@@ -3,357 +3,316 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080b11">
+  <meta name="theme-color" content="#050505">
   <title>Zimin Ran — Vision, Humans &amp; Multimodal Intelligence</title>
   <meta name="description" content="Zimin Ran — exploring visual representations, digital humans, and open multimodal intelligence. Research, papers, and films.">
   <link rel="icon" href="assets/img/mark.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/site.css">
-  <link rel="stylesheet" href="assets/research.css">
+  <link rel="stylesheet" href="assets/home.css">
+  <script>document.documentElement.classList.add('js');</script>
   <script src="assets/js/research.js" defer></script>
-  <script src="assets/js/experience.js" defer></script>
+  <script src="assets/js/home.js" defer></script>
 </head>
 <body class="lang-en">
-  <a href="#main" class="skip-link">Skip to content / 跳转到内容</a>
-  <header class="site-header">
-    <div class="header-inner container">
-      <a class="brand" href="#top" aria-label="Zimin Ran — home">
-        <span class="brand-mark" aria-hidden="true">ZR</span>
-        <span class="brand-name">Zimin Ran<small>VISION &amp; INTELLIGENCE</small></span>
-      </a>
-      <nav class="site-nav" aria-label="Main navigation / 主导航">
-        <a href="#about"><span class="lang-en">About</span><span class="lang-zh">关于</span></a>
-        <a href="#research"><span class="lang-en">Research</span><span class="lang-zh">研究</span></a>
-        <a href="#investing"><span class="lang-en">Investing</span><span class="lang-zh">投研</span></a>
-        <a href="#publications"><span class="lang-en">Publications</span><span class="lang-zh">论文</span></a>
-        <a href="#contact"><span class="lang-en">Contact</span><span class="lang-zh">联系</span></a>
-        <button class="lang-switch" id="langSwitch" onclick="toggleLang()"><span class="lang-en">中文</span><span class="lang-zh">EN</span></button>
-      </nav>
-    </div>
-    <div class="scroll-progress" aria-hidden="true"></div>
+  <header class="nav" id="nav">
+    <a class="wordmark" href="#top" aria-label="Zimin Ran — home">Zimin Ran</a>
+    <nav class="nav-links label" aria-label="Main navigation / 主导航">
+      <a href="#about"><span class="lang-en">About</span><span class="lang-zh">关于</span></a>
+      <a href="#research"><span class="lang-en">Research</span><span class="lang-zh">研究</span></a>
+      <a href="#investing"><span class="lang-en">Investing</span><span class="lang-zh">投研</span></a>
+      <a href="#publications"><span class="lang-en">Publications</span><span class="lang-zh">论文</span></a>
+      <a href="#contact"><span class="lang-en">Contact</span><span class="lang-zh">联系</span></a>
+      <button class="lang-btn label" type="button" data-lang-toggle><span class="lang-en">中文</span><span class="lang-zh">EN</span></button>
+      <button class="menu-btn label" type="button" aria-expanded="false" aria-controls="menu" data-menu-open><span class="lang-en">Menu</span><span class="lang-zh">菜单</span></button>
+    </nav>
   </header>
 
-  <main id="main" class="container">
+  <div class="menu" id="menu" role="dialog" aria-modal="true" aria-label="Menu / 菜单">
+    <button class="menu-btn label menu-close" type="button" data-menu-close><span class="lang-en">Close</span><span class="lang-zh">关闭</span></button>
+    <ol>
+      <li><a href="#about"><span>01</span><span class="lang-en">About</span><span class="lang-zh">关于</span></a></li>
+      <li><a href="#research"><span>02</span><span class="lang-en">Research</span><span class="lang-zh">研究</span></a></li>
+      <li><a href="#publications"><span>03</span><span class="lang-en">Publications</span><span class="lang-zh">论文</span></a></li>
+      <li><a href="#investing"><span>04</span><span class="lang-en">Investing</span><span class="lang-zh">投研</span></a></li>
+      <li><a href="#contact"><span>05</span><span class="lang-en">Contact</span><span class="lang-zh">联系</span></a></li>
+    </ol>
+    <button class="lang-btn label" type="button" data-lang-toggle><span class="lang-en">中文</span><span class="lang-zh">EN</span></button>
+  </div>
+
+  <main id="main">
     <section class="hero" id="top" aria-labelledby="hero-title">
-      <div class="hero-copy">
-        <div class="eyebrow"><span class="status-dot" aria-hidden="true"></span><span class="lang-en">ZIMIN RAN / COMPUTER VISION RESEARCHER</span><span class="lang-zh">冉子民 / 计算机视觉研究者</span></div>
-        <h1 class="hero-title" id="hero-title"><span class="lang-en">Seeing beyond<br><span class="quiet">the visible.</span></span><span class="lang-zh">感知真实。<br><span class="quiet">理解世界。</span></span></h1>
-        <p class="hero-description"><span class="lang-en">I explore how machines <strong>see, understand, and connect.</strong> My research bridges visual representations, digital humans, and open multimodal intelligence.</span><span class="lang-zh">探索机器如何<strong>感知、理解与连接</strong>。我的研究连接视觉表征、数字人与开放多模态智能，让前沿技术走向真实世界。</span></p>
-        <div class="hero-actions">
-          <a class="button button-primary" href="#research"><span class="lang-en">Explore research</span><span class="lang-zh">探索我的研究</span><span aria-hidden="true">↗</span></a>
-          <a class="button button-secondary" href="assets/research/rice.mp4" data-video="rice"><span aria-hidden="true">▷</span><span class="lang-en">Watch the films</span><span class="lang-zh">观看论文视频</span></a>
+      <canvas id="field" aria-hidden="true"></canvas>
+      <div class="hero-inner">
+        <div>
+          <div class="hero-eyebrow label"><span class="dot" aria-hidden="true"></span><span class="lang-en">Zimin Ran / Computer Vision Researcher</span><span class="lang-zh">冉子民 / 计算机视觉研究者</span></div>
+          <h1 class="hero-title" id="hero-title"><span class="lang-en">Seeing beyond<br><span class="quiet">the visible.</span></span><span class="lang-zh">感知真实。<br><span class="quiet">理解世界。</span></span></h1>
+          <p class="hero-desc"><span class="lang-en">I explore how machines <strong>see, understand, and connect.</strong> My research bridges visual representations, digital humans, and open multimodal intelligence.</span><span class="lang-zh">探索机器如何<strong>感知、理解与连接</strong>。我的研究连接视觉表征、数字人与开放多模态智能，让前沿技术走向真实世界。</span></p>
+          <div class="hero-actions">
+            <a class="arrow-link" href="#research"><span class="lang-en">Explore research</span><span class="lang-zh">探索我的研究</span><span aria-hidden="true">↗</span></a>
+            <a class="arrow-link ghost" href="assets/research/rice.mp4" data-video="rice"><span aria-hidden="true">▷</span><span class="lang-en">Watch the films</span><span class="lang-zh">观看论文视频</span></a>
+          </div>
         </div>
-      </div>
-      <div class="hero-art" aria-hidden="true">
-        <canvas id="visionCanvas"></canvas>
-        <div class="orb-label orb-label-image">IMAGE<span>spatial representations</span></div>
-        <div class="orb-label orb-label-video">VIDEO<span>temporal understanding</span></div>
-        <div class="orb-label orb-label-language">LANGUAGE<span>multimodal connections</span></div>
-        <div class="orb-coordinate">REPRESENTATION SPACE<br>VISION × TIME × LANGUAGE</div>
-      </div>
-      <div class="hero-bottom">
-        <div class="hero-tags"><span>DIGITAL HUMANS</span><span>MULTIMODAL LEARNING</span><span>OPEN RESEARCH</span></div>
-        <a class="hero-scroll" href="#about"><span>SCROLL TO EXPLORE</span><span aria-hidden="true">↓</span></a>
+        <div class="hero-side label">
+          <div class="hero-tags"><span>Digital Humans</span><span>Multimodal Learning</span><span>Open Research</span></div>
+          <a class="hero-scroll" href="#about"><span class="lang-en">Scroll to explore</span><span class="lang-zh">向下探索</span><i aria-hidden="true">↓</i></a>
+        </div>
       </div>
     </section>
 
-    <section id="about" aria-labelledby="about-title">
-      <div class="section-heading">
-        <div><div class="eyebrow">01 / <span class="lang-en">THE PERSON BEHIND THE RESEARCH</span><span class="lang-zh">研究背后的我</span></div><h2 id="about-title"><span class="lang-en">Curiosity, across disciplines.</span><span class="lang-zh">跨越学科，保持好奇。</span></h2></div>
-      </div>
+    <section class="sec sec-light" id="about" aria-labelledby="about-title">
       <div class="about-grid">
-        <div class="about-bio">
-<p class="lang-en"><b>Zimin Ran</b> holds a <b>Ph.D. in Computer Science</b> from the <b>University of Technology Sydney</b>, under the supervision of <b>Prof. Linchao Zhu</b> (formerly Assistant Professor at UTS, now Professor at Zhejiang University). Her research focuses on digital humans and multimodal large models. Rather than viewing AI as a purely academic pursuit, she is committed to translating cutting-edge AI into practical solutions for industry and real-world applications. Her interdisciplinary background enables her to combine strong technical vision and judgment with sound business sense, a solid foundation in finance, clear risk awareness, and an informed understanding of legal and compliance frameworks.</p>
-<p class="lang-zh"><b>冉子民</b>，<b>悉尼科技大学</b>计算机科学<b>博士</b>，师从<b>朱霖潮教授</b>（原 UTS 助理教授，现浙江大学教授）。研究方向为数字人与多模态大模型。她不将 AI 视为纯粹的学术研究，而是致力于将前沿 AI 技术转化为产业和现实场景中的实际解决方案。她的跨学科背景使她兼具技术视野与判断力、扎实的金融基础、良好的商业敏感度、清晰的风险意识，以及对法律合规框架的深入理解。</p>
-          <div class="about-signature"><div class="about-monogram" aria-hidden="true">ZR</div><div><strong><span class="lang-en">Zimin Ran</span><span class="lang-zh">冉子民</span></strong><small>Ph.D. · University of Technology Sydney</small></div></div>
-          <div class="interest-tags"><span>Digital Humans</span><span>Multimodal Models</span><span>AI for Industry</span><span class="lang-en">Embodied AI</span><span class="lang-zh">具身智能</span></div>
+        <div class="reveal">
+          <div class="sec-label label"><span class="dot" aria-hidden="true"></span>01 / <span class="lang-en">The person behind the research</span><span class="lang-zh">研究背后的我</span></div>
+          <h2 class="sec-title" id="about-title"><span class="lang-en">Curiosity, across disciplines.</span><span class="lang-zh">跨越学科，保持好奇。</span></h2>
+          <div class="signature">
+            <div class="monogram" aria-hidden="true">ZR</div>
+            <div><strong><span class="lang-en">Zimin Ran</span><span class="lang-zh">冉子民</span></strong><small>Ph.D. · University of Technology Sydney</small></div>
+          </div>
+          <div class="tags"><span>Digital Humans</span><span>Multimodal Models</span><span>AI for Industry</span><span class="lang-en">Embodied AI</span><span class="lang-zh">具身智能</span></div>
         </div>
-        <div class="education-panel">
-          <h3><span class="lang-en">EDUCATION / BACKGROUND</span><span class="lang-zh">教育经历 / 学术背景</span></h3>
-<ul>
-  <li><b><span class="lang-en">Ph.D.</span><span class="lang-zh">博士</span></b> - <span class="lang-en">Computer Science, University of Technology Sydney (2022–2026)</span><span class="lang-zh">计算机科学，悉尼科技大学（2022–2026）</span></li>
-  <li><b><span class="lang-en">Master of Data Science</span><span class="lang-zh">数据科学硕士（Master of Data Science）</span></b> - <span class="lang-en">University of Sydney (2019–2020)</span><span class="lang-zh">悉尼大学（2019–2020）</span>
-    <ul>
-      <li><span class="lang-en">Received a direct Ph.D. offer from UTS during the master's and left after one semester to prepare for doctoral study.</span><span class="lang-zh">硕士在读期间获得悉尼科技大学直博 offer，修读半年后离校，准备博士入学。</span></li>
-    </ul>
-  </li>
-  <li><b><span class="lang-en">Double Bachelor's Degree</span><span class="lang-zh">双学士学位</span></b> - <span class="lang-en">Accounting and Finance (2014–2018)</span><span class="lang-zh">会计与金融（2014–2018）</span>
-    <ul>
-      <li><span class="lang-en">Liaoning University (211)</span><span class="lang-zh">辽宁大学（211）</span></li>
-      <li><span class="lang-en">De Montfort University, UK (First Class Honours)</span><span class="lang-zh">英国德蒙福特大学（一等学位）</span></li>
-    </ul>
-  </li>
-</ul>
+        <div class="about-bio reveal">
+          <p class="lang-en"><b>Zimin Ran</b> holds a <b>Ph.D. in Computer Science</b> from the <b>University of Technology Sydney</b>, under the supervision of <b>Prof. Linchao Zhu</b> (formerly Assistant Professor at UTS, now Professor at Zhejiang University). Her research focuses on digital humans and multimodal large models. Rather than viewing AI as a purely academic pursuit, she is committed to translating cutting-edge AI into practical solutions for industry and real-world applications. Her interdisciplinary background enables her to combine strong technical vision and judgment with sound business sense, a solid foundation in finance, clear risk awareness, and an informed understanding of legal and compliance frameworks.</p>
+          <p class="lang-zh"><b>冉子民</b>，<b>悉尼科技大学</b>计算机科学<b>博士</b>，师从<b>朱霖潮教授</b>（原 UTS 助理教授，现浙江大学教授）。研究方向为数字人与多模态大模型。她不将 AI 视为纯粹的学术研究，而是致力于将前沿 AI 技术转化为产业和现实场景中的实际解决方案。她的跨学科背景使她兼具技术视野与判断力、扎实的金融基础、良好的商业敏感度、清晰的风险意识，以及对法律合规框架的深入理解。</p>
+          <div class="rows-title label" style="margin-top:48px"><span class="lang-en">Education / Background</span><span class="lang-zh">教育经历 / 学术背景</span></div>
+          <ol class="rows">
+            <li><span class="n">01</span><div><b><span class="lang-en">Ph.D.</span><span class="lang-zh">博士</span></b><span class="meta"><span class="lang-en">Computer Science, University of Technology Sydney (2022–2026)</span><span class="lang-zh">计算机科学，悉尼科技大学（2022–2026）</span></span></div></li>
+            <li><span class="n">02</span><div><b><span class="lang-en">Master of Data Science</span><span class="lang-zh">数据科学硕士（Master of Data Science）</span></b><span class="meta"><span class="lang-en">University of Sydney (2019–2020)</span><span class="lang-zh">悉尼大学（2019–2020）</span></span><small><span class="lang-en">Received a direct Ph.D. offer from UTS during the master's and left after one semester to prepare for doctoral study.</span><span class="lang-zh">硕士在读期间获得悉尼科技大学直博 offer，修读半年后离校，准备博士入学。</span></small></div></li>
+            <li><span class="n">03</span><div><b><span class="lang-en">Double Bachelor's Degree</span><span class="lang-zh">双学士学位</span></b><span class="meta"><span class="lang-en">Accounting and Finance (2014–2018)</span><span class="lang-zh">会计与金融（2014–2018）</span></span><small><span class="lang-en">Liaoning University (211) · De Montfort University, UK (First Class Honours)</span><span class="lang-zh">辽宁大学（211）· 英国德蒙福特大学（一等学位）</span></small></div></li>
+          </ol>
         </div>
       </div>
     </section>
 
-<section class="research-route" id="research" aria-labelledby="research-title">
-  <div class="research-hero">
-    <div class="research-eyebrow"><span class="lang-en">Research trajectory</span><span class="lang-zh">研究主线</span></div>
-    <h2 id="research-title"><span class="lang-en">From visual representations to open multimodal intelligence</span><span class="lang-zh">从视觉表征<br>到开放多模态智能</span></h2>
-    <p class="lang-en">My research connects a central question across scales: how can machines learn meaningful visual structure, perceive people reliably, and turn image and video understanding into accessible multimodal systems?</p>
-    <p class="lang-zh">我的研究围绕一个逐层展开的问题：如何让机器学到有意义的视觉结构，可靠地感知人，并将图像与视频理解转化为开放、可复现的多模态系统？</p>
-    <div class="research-hero-meta">
-      <span><span class="lang-en">5 connected research themes</span><span class="lang-zh">五个递进的研究层次</span></span>
-      <span><span class="lang-en">5 research films · click a paper to watch</span><span class="lang-zh">五部研究视频 · 点击对应工作即可观看</span></span>
-    </div>
-  </div>
+    <section class="sec sec-dark" id="research" aria-labelledby="research-title">
+      <div class="sec-head reveal">
+        <div>
+          <div class="sec-label label"><span class="dot" aria-hidden="true"></span>02 / <span class="lang-en">Research trajectory</span><span class="lang-zh">研究主线</span></div>
+          <h2 class="sec-title" id="research-title"><span class="lang-en">From visual representations to open multimodal intelligence</span><span class="lang-zh">从视觉表征到开放多模态智能</span></h2>
+        </div>
+        <div>
+          <p class="sec-intro"><span class="lang-en">My research connects a central question across scales: how can machines learn meaningful visual structure, perceive people reliably, and turn image and video understanding into accessible multimodal systems?</span><span class="lang-zh">我的研究围绕一个逐层展开的问题：如何让机器学到有意义的视觉结构，可靠地感知人，并将图像与视频理解转化为开放、可复现的多模态系统？</span></p>
+          <div class="rmeta label"><span><span class="dot" aria-hidden="true"></span><span class="lang-en">5 connected research themes</span><span class="lang-zh">五个递进的研究层次</span></span><span><span class="dot" aria-hidden="true"></span><span class="lang-en">5 research films · click a paper to watch</span><span class="lang-zh">五部研究视频 · 点击对应工作即可观看</span></span></div>
+        </div>
+      </div>
 
-  <nav class="research-map" aria-label="Research trajectory / 研究路线">
-    <a href="#research-representations"><span class="research-map-number">01</span><span class="lang-en">Visual foundations</span><span class="lang-zh">视觉表征基础</span></a>
-    <a href="#research-people"><span class="research-map-number">02</span><span class="lang-en">Reliable human perception</span><span class="lang-zh">可靠的人体感知</span></a>
-    <a href="#research-unified"><span class="research-map-number">03</span><span class="lang-en">Unified image &amp; video</span><span class="lang-zh">图像与视频统一理解</span></a>
-    <a href="#research-training"><span class="research-map-number">04</span><span class="lang-en">Open multimodal training</span><span class="lang-zh">开放多模态训练</span></a>
-    <a href="#research-open-models"><span class="research-map-number">05</span><span class="lang-en">Open-source practice</span><span class="lang-zh">开源模型实践</span></a>
-  </nav>
+      <nav class="rmap label reveal" aria-label="Research trajectory / 研究路线">
+        <a href="#research-representations"><span>01</span><span class="lang-en">Visual foundations</span><span class="lang-zh">视觉表征基础</span></a>
+        <a href="#research-people"><span>02</span><span class="lang-en">Reliable human perception</span><span class="lang-zh">可靠的人体感知</span></a>
+        <a href="#research-unified"><span>03</span><span class="lang-en">Unified image &amp; video</span><span class="lang-zh">图像与视频统一理解</span></a>
+        <a href="#research-training"><span>04</span><span class="lang-en">Open multimodal training</span><span class="lang-zh">开放多模态训练</span></a>
+        <a href="#research-open-models"><span>05</span><span class="lang-en">Open-source practice</span><span class="lang-zh">开源模型实践</span></a>
+      </nav>
 
-  <section class="research-stage" id="research-representations" aria-labelledby="research-representations-title">
-    <span class="research-stage-number" aria-hidden="true">01</span>
-    <h3 id="research-representations-title"><span class="lang-en">Learn the structure of the visual world</span><span class="lang-zh">学到视觉世界的内在结构</span></h3>
-    <p class="research-stage-intro"><span class="lang-en">Start with representation learning: capture local objects and text, so a visual encoder can support fine-grained understanding.</span><span class="lang-zh">研究从表征学习这一基础问题出发：让视觉编码器捕捉局部物体与文字语义，为细粒度理解提供基础。</span></p>
-    <article class="research-film research-film-wide" data-film="rice">
-      <a class="research-cover" href="assets/research/rice.mp4" data-video="rice" aria-label="Watch RICE research film / 观看 RICE 论文视频">
-        <img src="assets/research/rice.jpg?v=2" width="960" height="540" loading="lazy" alt="RICE region-level visual representation demonstration">
-        <span class="research-play" aria-hidden="true">&#9654;</span><span class="research-duration">04:18</span>
-      </a>
-      <div class="research-film-body">
-        <div class="research-paper-meta"><span class="research-venue">ICCV 2025</span><span class="lang-en">Region-level semantics</span><span class="lang-zh">区域级语义</span></div>
-        <h4><a href="assets/research/rice.mp4" data-video="rice">RICE</a></h4>
-        <p class="research-paper-name">Region-based Cluster Discrimination for Visual Representation Learning</p>
-        <p class="research-film-summary"><span class="lang-en">Region-based cluster discrimination brings object and OCR semantics into a shared learning framework, strengthening the local visual representations needed for dense prediction and multimodal perception.</span><span class="lang-zh">通过区域级聚类判别，在统一框架中学习物体与 OCR 语义，增强密集预测与多模态感知所需的局部视觉表征。</span></p>
-        <div class="research-links"><a href="assets/research/rice.mp4" data-video="rice"><span class="lang-en">&#9654; Watch film</span><span class="lang-zh">&#9654; 观看视频</span></a><a href="https://arxiv.org/abs/2507.20025" target="_blank" rel="noopener noreferrer"><span class="lang-en">Paper ↗</span><span class="lang-zh">论文 ↗</span></a><a href="https://github.com/deepglint/MVT" target="_blank" rel="noopener noreferrer"><span class="lang-en">Code ↗</span><span class="lang-zh">代码 ↗</span></a></div>
-      </div>
-    </article>
-  </section>
+      <section class="stage" id="research-representations" aria-labelledby="research-representations-title">
+        <div class="stage-copy reveal">
+          <span class="stage-no" aria-hidden="true">01</span>
+          <h3 id="research-representations-title"><span class="lang-en">Learn the structure of the visual world</span><span class="lang-zh">学到视觉世界的内在结构</span></h3>
+          <p class="stage-intro"><span class="lang-en">Start with representation learning: capture local objects and text, so a visual encoder can support fine-grained understanding.</span><span class="lang-zh">研究从表征学习这一基础问题出发：让视觉编码器捕捉局部物体与文字语义，为细粒度理解提供基础。</span></p>
+        </div>
+        <div class="films">
+          <article class="research-film reveal" data-film="rice">
+            <a class="cover" href="assets/research/rice.mp4" data-video="rice" aria-label="Watch RICE research film / 观看 RICE 论文视频">
+              <img src="assets/research/rice.jpg?v=2" width="960" height="540" loading="lazy" decoding="async" alt="RICE region-level visual representation demonstration">
+              <span class="play label"><i aria-hidden="true">&#9654;</i>04:18</span>
+            </a>
+            <div class="film-body">
+              <div class="film-meta label"><span class="venue">ICCV 2025</span><span class="lang-en">Region-level semantics</span><span class="lang-zh">区域级语义</span></div>
+              <h4><a href="assets/research/rice.mp4" data-video="rice">RICE</a></h4>
+              <p class="paper-name">Region-based Cluster Discrimination for Visual Representation Learning</p>
+              <p class="research-film-summary"><span class="lang-en">Region-based cluster discrimination brings object and OCR semantics into a shared learning framework, strengthening the local visual representations needed for dense prediction and multimodal perception.</span><span class="lang-zh">通过区域级聚类判别，在统一框架中学习物体与 OCR 语义，增强密集预测与多模态感知所需的局部视觉表征。</span></p>
+              <div class="film-links"><a class="arrow-link" href="assets/research/rice.mp4" data-video="rice"><span class="lang-en">&#9654; Watch film</span><span class="lang-zh">&#9654; 观看视频</span></a><a class="arrow-link ghost" href="https://arxiv.org/abs/2507.20025" target="_blank" rel="noopener noreferrer"><span class="lang-en">Paper ↗</span><span class="lang-zh">论文 ↗</span></a><a class="arrow-link ghost" href="https://github.com/deepglint/MVT" target="_blank" rel="noopener noreferrer"><span class="lang-en">Code ↗</span><span class="lang-zh">代码 ↗</span></a></div>
+            </div>
+          </article>
+        </div>
+      </section>
 
-  <section class="research-stage" id="research-people" aria-labelledby="research-people-title">
-    <span class="research-stage-number" aria-hidden="true">02</span>
-    <h3 id="research-people-title"><span class="lang-en">Make human perception reliable</span><span class="lang-zh">让对人的感知更可靠</span></h3>
-    <p class="research-stage-intro"><span class="lang-en">At the human scale, meaningful representations must handle variation. Two complementary directions address appearance under changing illumination and identity across changing poses.</span><span class="lang-zh">将表征问题聚焦到人：面对真实场景中的变化，如何保持感知的可靠性？两条互补方向分别关注光照变化下的外观与姿态变化下的身份。</span></p>
-    <div class="research-films">
-      <article class="research-film" data-film="hust">
-        <a class="research-cover" href="assets/research/hust.mp4" data-video="hust" aria-label="Watch HUST research film / 观看 HUST 论文视频">
-          <img src="assets/research/hust.jpg?v=2" width="960" height="540" loading="lazy" alt="HUST facial texture and skin tone estimation demonstration">
-          <span class="research-play" aria-hidden="true">&#9654;</span><span class="research-duration">04:48</span>
-        </a>
-        <div class="research-film-body">
-          <div class="research-paper-meta"><span class="research-venue">ICCV 2025</span><span class="lang-en">Appearance &amp; fairness</span><span class="lang-zh">外观与公平性</span></div>
-          <h4><a href="assets/research/hust.mp4" data-video="hust">HUST</a></h4>
-          <p class="research-paper-name">High-Fidelity Unbiased Skin Tone Estimation via Texture Quantization</p>
-          <p class="research-film-summary"><span class="lang-en">Texture quantization and texture-to-albedo adaptation recover high-fidelity facial albedo from a single image, reducing illumination effects and skin tone bias for realistic digital humans.</span><span class="lang-zh">通过纹理量化与纹理到反照率的域适配，从单张图像恢复高保真人脸反照率，减少光照干扰与肤色偏差，为真实数字人提供外观基础。</span></p>
-          <div class="research-links"><a href="assets/research/hust.mp4" data-video="hust"><span class="lang-en">&#9654; Watch film</span><span class="lang-zh">&#9654; 观看视频</span></a><a href="https://ziminran.github.io/hust-iccv/" target="_blank" rel="noopener noreferrer"><span class="lang-en">Project &amp; paper ↗</span><span class="lang-zh">项目与论文 ↗</span></a></div>
+      <section class="stage" id="research-people" aria-labelledby="research-people-title">
+        <div class="stage-copy reveal">
+          <span class="stage-no" aria-hidden="true">02</span>
+          <h3 id="research-people-title"><span class="lang-en">Make human perception reliable</span><span class="lang-zh">让对人的感知更可靠</span></h3>
+          <p class="stage-intro"><span class="lang-en">At the human scale, meaningful representations must handle variation. Two complementary directions address appearance under changing illumination and identity across changing poses.</span><span class="lang-zh">将表征问题聚焦到人：面对真实场景中的变化，如何保持感知的可靠性？两条互补方向分别关注光照变化下的外观与姿态变化下的身份。</span></p>
         </div>
-      </article>
-      <article class="research-film" data-film="nptface">
-        <a class="research-cover" href="assets/research/nptface.mp4?v=continuous-1" data-video="nptface" aria-label="Watch NPTFace research film / 观看 NPTFace 论文视频">
-          <img src="assets/research/nptface.jpg" width="960" height="540" loading="lazy" alt="NPTFace pose-aligned face recognition demonstration">
-          <span class="research-play" aria-hidden="true">&#9654;</span><span class="research-duration">04:06</span>
-        </a>
-        <div class="research-film-body">
-          <div class="research-paper-meta"><span class="research-venue">CVPRW 2026</span><span class="lang-en">Identity &amp; pose</span><span class="lang-zh">身份与姿态</span></div>
-          <h4><a href="assets/research/nptface.mp4?v=continuous-1" data-video="nptface">NPTFace</a></h4>
-          <p class="research-paper-name">Native Pose-aligned Transformer for Face Recognition</p>
-          <p class="research-film-summary"><span class="lang-en">Native pose alignment within a Transformer addresses pose variation in face recognition, exploring how identity representations can remain stable when facial geometry changes.</span><span class="lang-zh">在 Transformer 中引入原生姿态对齐，缓解人脸识别中的姿态变化问题，探索如何在面部几何变化时仍保持稳定的身份表征。</span></p>
-          <div class="research-links"><a href="assets/research/nptface.mp4?v=continuous-1" data-video="nptface"><span class="lang-en">&#9654; Watch film</span><span class="lang-zh">&#9654; 观看视频</span></a><a href="#pub-nptface"><span class="lang-en">Publication details</span><span class="lang-zh">论文信息</span></a></div>
+        <div class="films two">
+          <article class="research-film reveal" data-film="hust">
+            <a class="cover" href="assets/research/hust.mp4" data-video="hust" aria-label="Watch HUST research film / 观看 HUST 论文视频">
+              <img src="assets/research/hust.jpg?v=2" width="960" height="540" loading="lazy" decoding="async" alt="HUST facial texture and skin tone estimation demonstration">
+              <span class="play label"><i aria-hidden="true">&#9654;</i>04:48</span>
+            </a>
+            <div class="film-body">
+              <div class="film-meta label"><span class="venue">ICCV 2025</span><span class="lang-en">Appearance &amp; fairness</span><span class="lang-zh">外观与公平性</span></div>
+              <h4><a href="assets/research/hust.mp4" data-video="hust">HUST</a></h4>
+              <p class="paper-name">High-Fidelity Unbiased Skin Tone Estimation via Texture Quantization</p>
+              <p class="research-film-summary"><span class="lang-en">Texture quantization and texture-to-albedo adaptation recover high-fidelity facial albedo from a single image, reducing illumination effects and skin tone bias for realistic digital humans.</span><span class="lang-zh">通过纹理量化与纹理到反照率的域适配，从单张图像恢复高保真人脸反照率，减少光照干扰与肤色偏差，为真实数字人提供外观基础。</span></p>
+              <div class="film-links"><a class="arrow-link" href="assets/research/hust.mp4" data-video="hust"><span class="lang-en">&#9654; Watch film</span><span class="lang-zh">&#9654; 观看视频</span></a><a class="arrow-link ghost" href="https://ziminran.github.io/hust-iccv/" target="_blank" rel="noopener noreferrer"><span class="lang-en">Project &amp; paper ↗</span><span class="lang-zh">项目与论文 ↗</span></a></div>
+            </div>
+          </article>
+          <article class="research-film reveal" data-film="nptface" style="--d:120ms">
+            <a class="cover" href="assets/research/nptface.mp4?v=continuous-1" data-video="nptface" aria-label="Watch NPTFace research film / 观看 NPTFace 论文视频">
+              <img src="assets/research/nptface.jpg" width="960" height="540" loading="lazy" decoding="async" alt="NPTFace pose-aligned face recognition demonstration">
+              <span class="play label"><i aria-hidden="true">&#9654;</i>04:06</span>
+            </a>
+            <div class="film-body">
+              <div class="film-meta label"><span class="venue">CVPRW 2026</span><span class="lang-en">Identity &amp; pose</span><span class="lang-zh">身份与姿态</span></div>
+              <h4><a href="assets/research/nptface.mp4?v=continuous-1" data-video="nptface">NPTFace</a></h4>
+              <p class="paper-name">Native Pose-aligned Transformer for Face Recognition</p>
+              <p class="research-film-summary"><span class="lang-en">Native pose alignment within a Transformer addresses pose variation in face recognition, exploring how identity representations can remain stable when facial geometry changes.</span><span class="lang-zh">在 Transformer 中引入原生姿态对齐，缓解人脸识别中的姿态变化问题，探索如何在面部几何变化时仍保持稳定的身份表征。</span></p>
+              <div class="film-links"><a class="arrow-link" href="assets/research/nptface.mp4?v=continuous-1" data-video="nptface"><span class="lang-en">&#9654; Watch film</span><span class="lang-zh">&#9654; 观看视频</span></a><a class="arrow-link ghost" href="#pub-nptface"><span class="lang-en">Publication details</span><span class="lang-zh">论文信息</span></a></div>
+            </div>
+          </article>
         </div>
-      </article>
-    </div>
-  </section>
+      </section>
 
-  <section class="research-stage" id="research-unified" aria-labelledby="research-unified-title">
-    <span class="research-stage-number" aria-hidden="true">03</span>
-    <h3 id="research-unified-title"><span class="lang-en">Connect still images and a moving world</span><span class="lang-zh">从静态图像走向动态世界</span></h3>
-    <p class="research-stage-intro"><span class="lang-en">Broaden the question from specialized perception to general visual understanding: can one encoder represent both what appears in an image and what happens over time?</span><span class="lang-zh">从具体感知任务进一步走向通用视觉理解：能否用同一个编码器，既理解图像中的内容，也理解视频中随时间发生的事件？</span></p>
-    <article class="research-film research-film-wide" data-film="univit">
-      <a class="research-cover" href="assets/research/univit.mp4?v=research-cut-1" data-video="univit" aria-label="Watch UniViT research film / 观看 UniViT 论文视频">
-        <img src="assets/research/univit.jpg" width="960" height="540" loading="lazy" alt="UniViT unified image and video encoder demonstration">
-        <span class="research-play" aria-hidden="true">&#9654;</span><span class="research-duration">03:30</span>
-      </a>
-      <div class="research-film-body">
-        <div class="research-paper-meta"><span class="research-venue">NeurIPS 2025</span><span class="lang-en">Unified spatiotemporal representations</span><span class="lang-zh">统一时空表征</span></div>
-        <h4><a href="assets/research/univit.mp4?v=research-cut-1" data-video="univit">UniViT</a></h4>
-        <p class="research-paper-name">Unifying Image and Video Understanding in One Vision Encoder</p>
-        <p class="research-film-summary"><span class="lang-en">A single vision encoder unifies image and video learning through object- and event-level clustering and unified positional encoding, connecting spatial semantics with temporal dynamics.</span><span class="lang-zh">通过物体级与事件级聚类及统一位置编码，在单一视觉编码器中联合学习图像与视频，连接空间语义与时间动态。</span></p>
-        <div class="research-links"><a href="assets/research/univit.mp4?v=research-cut-1" data-video="univit"><span class="lang-en">&#9654; Watch film</span><span class="lang-zh">&#9654; 观看视频</span></a><a href="#pub-univit"><span class="lang-en">Publication details</span><span class="lang-zh">论文信息</span></a></div>
-      </div>
-    </article>
-  </section>
+      <section class="stage" id="research-unified" aria-labelledby="research-unified-title">
+        <div class="stage-copy reveal">
+          <span class="stage-no" aria-hidden="true">03</span>
+          <h3 id="research-unified-title"><span class="lang-en">Connect still images and a moving world</span><span class="lang-zh">从静态图像走向动态世界</span></h3>
+          <p class="stage-intro"><span class="lang-en">Broaden the question from specialized perception to general visual understanding: can one encoder represent both what appears in an image and what happens over time?</span><span class="lang-zh">从具体感知任务进一步走向通用视觉理解：能否用同一个编码器，既理解图像中的内容，也理解视频中随时间发生的事件？</span></p>
+        </div>
+        <div class="films">
+          <article class="research-film reveal" data-film="univit">
+            <a class="cover" href="assets/research/univit.mp4?v=research-cut-1" data-video="univit" aria-label="Watch UniViT research film / 观看 UniViT 论文视频">
+              <img src="assets/research/univit.jpg" width="960" height="540" loading="lazy" decoding="async" alt="UniViT unified image and video encoder demonstration">
+              <span class="play label"><i aria-hidden="true">&#9654;</i>03:30</span>
+            </a>
+            <div class="film-body">
+              <div class="film-meta label"><span class="venue">NeurIPS 2025</span><span class="lang-en">Unified spatiotemporal representations</span><span class="lang-zh">统一时空表征</span></div>
+              <h4><a href="assets/research/univit.mp4?v=research-cut-1" data-video="univit">UniViT</a></h4>
+              <p class="paper-name">Unifying Image and Video Understanding in One Vision Encoder</p>
+              <p class="research-film-summary"><span class="lang-en">A single vision encoder unifies image and video learning through object- and event-level clustering and unified positional encoding, connecting spatial semantics with temporal dynamics.</span><span class="lang-zh">通过物体级与事件级聚类及统一位置编码，在单一视觉编码器中联合学习图像与视频，连接空间语义与时间动态。</span></p>
+              <div class="film-links"><a class="arrow-link" href="assets/research/univit.mp4?v=research-cut-1" data-video="univit"><span class="lang-en">&#9654; Watch film</span><span class="lang-zh">&#9654; 观看视频</span></a><a class="arrow-link ghost" href="#pub-univit"><span class="lang-en">Publication details</span><span class="lang-zh">论文信息</span></a></div>
+            </div>
+          </article>
+        </div>
+      </section>
 
-  <section class="research-stage" id="research-training" aria-labelledby="research-training-title">
-    <span class="research-stage-number" aria-hidden="true">04</span>
-    <h3 id="research-training-title"><span class="lang-en">Turn visual capability into open training</span><span class="lang-zh">从视觉能力走向开放训练体系</span></h3>
-    <p class="research-stage-intro"><span class="lang-en">Beyond the encoder, building a multimodal system also requires accessible data, training recipes, and reproducible experiments.</span><span class="lang-zh">有了视觉理解能力，还需要开放的数据、训练方法与可复现的实验流程，才能构建可持续迭代的多模态系统。</span></p>
-    <article class="research-open-work">
-      <div class="research-paper-meta"><span class="research-venue"><span class="lang-en">TPAMI · Under review</span><span class="lang-zh">TPAMI · 在审</span></span><span class="lang-en">Training framework</span><span class="lang-zh">训练框架</span></div>
-      <h4>Fully Open Framework for Democratized Multimodal Training</h4>
-      <p><span class="lang-en">An open framework for multimodal training, connecting research methods with a training process that the wider community can inspect, reproduce, and extend.</span><span class="lang-zh">围绕多模态训练的开放框架，将研究方法与社区可检查、可复现、可扩展的训练流程连接起来，降低开展多模态研究的门槛。</span></p>
-      <div class="research-links"><a href="https://github.com/EvolvingLMMs-Lab/LLaVA-OneVision-2" target="_blank" rel="noopener noreferrer"><span class="lang-en">Framework &amp; resources ↗</span><span class="lang-zh">框架与研究资源 ↗</span></a></div>
-    </article>
-  </section>
+      <section class="stage" id="research-training" aria-labelledby="research-training-title">
+        <div class="stage-copy reveal">
+          <span class="stage-no" aria-hidden="true">04</span>
+          <h3 id="research-training-title"><span class="lang-en">Turn visual capability into open training</span><span class="lang-zh">从视觉能力走向开放训练体系</span></h3>
+          <p class="stage-intro"><span class="lang-en">Beyond the encoder, building a multimodal system also requires accessible data, training recipes, and reproducible experiments.</span><span class="lang-zh">有了视觉理解能力，还需要开放的数据、训练方法与可复现的实验流程，才能构建可持续迭代的多模态系统。</span></p>
+        </div>
+        <div class="films">
+          <article class="open-work reveal">
+            <div class="film-meta label"><span class="venue"><span class="lang-en">TPAMI · Under review</span><span class="lang-zh">TPAMI · 在审</span></span><span class="lang-en">Training framework</span><span class="lang-zh">训练框架</span></div>
+            <h4>Fully Open Framework for Democratized Multimodal Training</h4>
+            <p><span class="lang-en">An open framework for multimodal training, connecting research methods with a training process that the wider community can inspect, reproduce, and extend.</span><span class="lang-zh">围绕多模态训练的开放框架，将研究方法与社区可检查、可复现、可扩展的训练流程连接起来，降低开展多模态研究的门槛。</span></p>
+            <div class="film-links"><a class="arrow-link ghost" href="https://github.com/EvolvingLMMs-Lab/LLaVA-OneVision-2" target="_blank" rel="noopener noreferrer"><span class="lang-en">Framework &amp; resources ↗</span><span class="lang-zh">框架与研究资源 ↗</span></a></div>
+          </article>
+        </div>
+      </section>
 
-  <section class="research-stage" id="research-open-models" aria-labelledby="research-open-models-title">
-    <span class="research-stage-number" aria-hidden="true">05</span>
-    <h3 id="research-open-models-title"><span class="lang-en">Put the framework into community practice</span><span class="lang-zh">让开放框架成为社区可用的模型</span></h3>
-    <p class="research-stage-intro"><span class="lang-en">LLaVA-OneVision-2 carries this open-training direction into an open-source project, connecting the framework with models and tools for further research and applications.</span><span class="lang-zh">LLaVA-OneVision-2 将上述开放训练方向落实为开源项目，把框架、模型与工具连接起来，支持后续研究与应用探索。</span></p>
-    <article class="research-film research-film-wide" data-film="llava">
-      <a class="research-cover" href="assets/research/llava.mp4" data-video="llava" aria-label="Watch LLaVA-OneVision-2 research film / 观看 LLaVA-OneVision-2 展示视频">
-        <img src="assets/research/llava.jpg" width="960" height="540" loading="lazy" alt="LLaVA-OneVision-2 multimodal model demonstration">
-        <span class="research-play" aria-hidden="true">&#9654;</span><span class="research-duration">03:16</span>
-      </a>
-      <div class="research-film-body">
-        <div class="research-paper-meta"><span class="research-venue">GitHub</span><span>1.2K+ stars</span></div>
-        <h4><a href="assets/research/llava.mp4" data-video="llava">LLaVA-OneVision-2</a></h4>
-        <p class="research-paper-name"><span class="lang-en">Open multimodal models · Technical report</span><span class="lang-zh">开源多模态大模型 · 技术报告</span></p>
-        <p class="research-film-summary"><span class="lang-en">Open multimodal models and their supporting research resources bring the training framework into a shared foundation that others can use and build upon.</span><span class="lang-zh">以开源多模态模型及配套研究资源承接训练框架，让研究成果成为他人可以使用、验证与继续构建的共同基础。</span></p>
-        <div class="research-links"><a href="assets/research/llava.mp4" data-video="llava"><span class="lang-en">&#9654; Watch film</span><span class="lang-zh">&#9654; 观看视频</span></a><a href="https://github.com/EvolvingLMMs-Lab/LLaVA-OneVision-2" target="_blank" rel="noopener noreferrer"><span class="lang-en">Explore on GitHub ↗</span><span class="lang-zh">访问 GitHub 项目 ↗</span></a></div>
-      </div>
-    </article>
-  </section>
+      <section class="stage" id="research-open-models" aria-labelledby="research-open-models-title">
+        <div class="stage-copy reveal">
+          <span class="stage-no" aria-hidden="true">05</span>
+          <h3 id="research-open-models-title"><span class="lang-en">Put the framework into community practice</span><span class="lang-zh">让开放框架成为社区可用的模型</span></h3>
+          <p class="stage-intro"><span class="lang-en">LLaVA-OneVision-2 carries this open-training direction into an open-source project, connecting the framework with models and tools for further research and applications.</span><span class="lang-zh">LLaVA-OneVision-2 将上述开放训练方向落实为开源项目，把框架、模型与工具连接起来，支持后续研究与应用探索。</span></p>
+        </div>
+        <div class="films">
+          <article class="research-film reveal" data-film="llava">
+            <a class="cover" href="assets/research/llava.mp4" data-video="llava" aria-label="Watch LLaVA-OneVision-2 research film / 观看 LLaVA-OneVision-2 展示视频">
+              <img src="assets/research/llava.jpg" width="960" height="540" loading="lazy" decoding="async" alt="LLaVA-OneVision-2 multimodal model demonstration">
+              <span class="play label"><i aria-hidden="true">&#9654;</i>03:16</span>
+            </a>
+            <div class="film-body">
+              <div class="film-meta label"><span class="venue">GitHub</span><span>1.2K+ stars</span></div>
+              <h4><a href="assets/research/llava.mp4" data-video="llava">LLaVA-OneVision-2</a></h4>
+              <p class="paper-name"><span class="lang-en">Open multimodal models · Technical report</span><span class="lang-zh">开源多模态大模型 · 技术报告</span></p>
+              <p class="research-film-summary"><span class="lang-en">Open multimodal models and their supporting research resources bring the training framework into a shared foundation that others can use and build upon.</span><span class="lang-zh">以开源多模态模型及配套研究资源承接训练框架，让研究成果成为他人可以使用、验证与继续构建的共同基础。</span></p>
+              <div class="film-links"><a class="arrow-link" href="assets/research/llava.mp4" data-video="llava"><span class="lang-en">&#9654; Watch film</span><span class="lang-zh">&#9654; 观看视频</span></a><a class="arrow-link ghost" href="https://github.com/EvolvingLMMs-Lab/LLaVA-OneVision-2" target="_blank" rel="noopener noreferrer"><span class="lang-en">Explore on GitHub ↗</span><span class="lang-zh">访问 GitHub 项目 ↗</span></a></div>
+            </div>
+          </article>
+        </div>
+      </section>
 
-  <div class="research-next">
-    <div class="research-eyebrow"><span class="lang-en">Looking ahead</span><span class="lang-zh">未来研究方向</span></div>
-    <h3><span class="lang-en">Human-centered multimodal intelligence</span><span class="lang-zh">面向人的多模态智能</span></h3>
-    <p><span class="lang-en">My next research direction is to connect fine-grained human perception, temporal understanding, and language interaction in digital humans and multimodal assistants, with reliability, fairness, and reproducibility as guiding principles.</span><span class="lang-zh">下一步，我希望在数字人与多模态助手中进一步连接细粒度人体感知、时序理解与语言交互，并将可靠性、公平性与可复现性贯穿其中。</span></p>
-  </div>
-</section>
-
-    <section id="publications" aria-labelledby="publications-title">
-      <div class="section-heading">
-        <div><div class="eyebrow">03 / <span class="lang-en">PAPERS &amp; OPEN SOURCE</span><span class="lang-zh">论文与开源</span></div><h2 id="publications-title"><span class="lang-en">Research, in the open.</span><span class="lang-zh">让研究，开放生长。</span></h2></div>
-        <p><span class="lang-en">Selected publications and open-source work. Five projects include research films—click their titles to watch.</span><span class="lang-zh">论文与开源项目。点击五项已配视频的研究工作标题，即可观看对应展示。</span></p>
+      <div class="next reveal">
+        <div class="label" style="color:#c9c9c5"><span class="lang-en">Looking ahead</span><span class="lang-zh">未来研究方向</span><h3><span class="lang-en">Human-centered multimodal intelligence</span><span class="lang-zh">面向人的多模态智能</span></h3></div>
+        <p><span class="lang-en">My next research direction is to connect fine-grained human perception, temporal understanding, and language interaction in digital humans and multimodal assistants, with reliability, fairness, and reproducibility as guiding principles.</span><span class="lang-zh">下一步，我希望在数字人与多模态助手中进一步连接细粒度人体感知、时序理解与语言交互，并将可靠性、公平性与可复现性贯穿其中。</span></p>
       </div>
-<div class="publications">
-  <ol class="bibliography">
-    <li id="pub-nptface">
-      <div class="pub-entry">
-        <div class="title">
-          <a href="assets/research/nptface.mp4?v=continuous-1" data-video="nptface">NPTFace: Native Pose-aligned Transformer for Face Recognition</a>
-        </div>
-        <div class="author">
-          <span><b>Zimin Ran</b>, Xuhan Zhu, Xiang An, Xingyu Ren, Kaicheng Yang, Feilong Tang, Zhichao Chen, Yumeng Wang, Ziyong Feng, Xianzhi Wang, Yin Xie, Linchao Zhu, Jiankang Deng</span>
-        </div>
-        <div class="periodical">
-          <span class="genre-tag">CVPRW 2026</span>
-        </div>
-        <a class="pub-video" href="assets/research/nptface.mp4?v=continuous-1" data-video="nptface"><span class="lang-en">&#9654; Watch research film</span><span class="lang-zh">&#9654; 观看论文视频</span></a>
-      </div>
-    </li>
-    <li>
-      <div class="pub-entry">
-        <div class="title">
-          <a href="assets/research/hust.mp4" data-video="hust">HUST: High-Fidelity Unbiased Skin Tone Estimation via Texture Quantization</a>
-        </div>
-        <div class="author">
-          <span><b>Zimin Ran</b>, Xingyu Ren, Xiang An, Kaicheng Yang, Ziyong Feng, Jing Yang, Rolandos Alexandros Potamias, Linchao Zhu, Jiankang Deng</span>
-        </div>
-        <div class="periodical">
-          <span class="genre-tag">ICCV 2025</span>
-        </div>
-        <a class="pub-video" href="assets/research/hust.mp4" data-video="hust"><span class="lang-en">&#9654; Watch research film</span><span class="lang-zh">&#9654; 观看论文视频</span></a>
-      </div>
-    </li>
-    <li>
-      <div class="pub-entry">
-        <div class="title">
-          <a href="assets/research/rice.mp4" data-video="rice">Region-based Cluster Discrimination for Visual Representation Learning</a>
-        </div>
-        <div class="author">
-          <span>Yin Xie, Kaicheng Yang, Xiang An, Kun Wu, Yongle Zhao, Weimo Deng, <b>Zimin Ran</b>, Yumeng Wang, Ziyong Feng, Roy Miles, Ismail Elezi, Jiankang Deng</span>
-        </div>
-        <div class="periodical">
-          <span class="genre-tag">ICCV 2025</span>
-        </div>
-        <a class="pub-video" href="assets/research/rice.mp4" data-video="rice"><span class="lang-en">&#9654; Watch research film</span><span class="lang-zh">&#9654; 观看论文视频</span></a>
-      </div>
-    </li>
-    <li id="pub-univit">
-      <div class="pub-entry">
-        <div class="title">
-          <a href="assets/research/univit.mp4?v=research-cut-1" data-video="univit">UniViT: Unifying Image and Video Understanding in One Vision Encoder</a>
-        </div>
-        <div class="author">
-          <span>Feilong Tang, Xiang An, Haolin Yang, Yin Xie, Kaicheng Yang, Ming Hu, Zheng Cheng, Xingyu Zhou, <b>Zimin Ran</b>, Imran Razzak, Ziyong Feng, Behzad Bozorgtabar, Jiankang Deng, Zongyuan Ge</span>
-        </div>
-        <div class="periodical">
-          <span class="genre-tag">NeurIPS 2025</span>
-        </div>
-        <a class="pub-video" href="assets/research/univit.mp4?v=research-cut-1" data-video="univit"><span class="lang-en">&#9654; Watch research film</span><span class="lang-zh">&#9654; 观看论文视频</span></a>
-      </div>
-    </li>
-    <li>
-      <div class="pub-entry">
-        <div class="title"><a href="https://github.com/EvolvingLMMs-Lab/LLaVA-OneVision-2" target="_blank" rel="noopener noreferrer">Fully Open Framework for Democratized Multimodal Training</a></div>
-        <div class="periodical"><span class="genre-tag"><span class="lang-en">TPAMI · Under review</span><span class="lang-zh">TPAMI · 在审</span></span></div>
-      </div>
-    </li>
-    <li>
-      <div class="pub-entry">
-        <div class="title"><a href="assets/research/llava.mp4" data-video="llava">LLaVA-OneVision-2</a></div>
-        <div class="periodical"><span class="genre-tag">GitHub · 1.2K+ stars</span><span class="genre-tag"><span class="lang-en">Open multimodal models · Technical report</span><span class="lang-zh">开源多模态大模型 · 技术报告</span></span></div>
-        <a class="pub-video" href="assets/research/llava.mp4" data-video="llava"><span class="lang-en">&#9654; Watch research film</span><span class="lang-zh">&#9654; 观看研究视频</span></a>
-      </div>
-    </li>
-  </ol>
-</div>
     </section>
 
-    <section class="investing-section" id="investing" aria-labelledby="investing-title">
-      <div class="section-heading">
-        <div><div class="eyebrow">04 / <span class="lang-en">INVESTMENT RESEARCH</span><span class="lang-zh">投研作品</span></div><h2 id="investing-title"><span class="lang-en">From technical judgment to investment judgment</span><span class="lang-zh">从技术判断到投资判断</span></h2></div>
-        <p><span class="lang-en">Applying the technical judgment of an AI researcher to top-tier investors' early-stage bets, data infrastructure and portfolio landscape in embodied AI.</span><span class="lang-zh">把 AI 研究中的技术判断，用于分析头部资本对具身智能的早期投资偏好、数据基建与机构布局。</span></p>
+    <section class="sec sec-light" id="publications" aria-labelledby="publications-title">
+      <div class="sec-head reveal">
+        <div>
+          <div class="sec-label label"><span class="dot" aria-hidden="true"></span>03 / <span class="lang-en">Papers &amp; open source</span><span class="lang-zh">论文与开源</span></div>
+          <h2 class="sec-title" id="publications-title"><span class="lang-en">Research, in the open.</span><span class="lang-zh">让研究，开放生长。</span></h2>
+        </div>
+        <p class="sec-intro"><span class="lang-en">Selected publications and open-source work. Five projects include research films—click their titles to watch.</span><span class="lang-zh">论文与开源项目。点击五项已配视频的研究工作标题，即可观看对应展示。</span></p>
       </div>
-      <div class="investing-grid">
-        <article class="research-film investing-card">
-          <a class="research-cover" href="research/embodied-ai-2026h2.html" target="_blank" rel="noopener" aria-label="Read the report / 阅读报告全文">
-            <img src="assets/research/embodied-ai-2026h2.jpg" width="960" height="540" loading="lazy" decoding="async" alt="Cover of the China embodied AI early-stage financing report, June–August 2026">
-          </a>
-          <div class="research-film-body">
-            <div class="research-paper-meta"><span class="research-venue"><span class="lang-en">Report</span><span class="lang-zh">研究报告</span></span><span>2026.10</span></div>
-            <h4><a href="research/embodied-ai-2026h2.html" target="_blank" rel="noopener"><span class="lang-en">China Embodied AI Early-Stage Financing Watch, Jun–Aug 2026</span><span class="lang-zh">2026 年 6–8 月中国具身智能早期融资观察</span></a></h4>
-            <p class="research-paper-name"><span class="lang-en">73 early-stage deals by top-tier investors · 67 companies</span><span class="lang-zh">头部资本 73 笔早期直投 · 67 家公司</span></p>
-            <p class="research-film-summary"><span class="lang-en">Top-tier investors' early bets concentrate on the brain and the hand; data is the next battleground.</span><span class="lang-zh">头部资本的早期投资集中在大脑与手，数据是下一阶段的胜负手。</span></p>
-            <div class="research-links"><a href="research/embodied-ai-2026h2.html" target="_blank" rel="noopener"><span class="lang-en">Read the report ↗</span><span class="lang-zh">阅读全文 ↗</span></a><a href="assets/research/embodied-ai-2026h2.pdf" download><span class="lang-en">Download PDF ↓</span><span class="lang-zh">下载 PDF ↓</span></a></div>
-          </div>
-        </article>
-        <article class="research-film investing-card">
-          <a class="research-cover" href="research/embodied-data-spec-v1.html" target="_blank" rel="noopener" aria-label="Read the data engineering spec / 阅读数据工程规格">
-            <img src="assets/research/embodied-data-spec-v1.jpg" width="960" height="540" loading="lazy" decoding="async" alt="Cover of the embodied AI data engineering specification V1.0">
-          </a>
-          <div class="research-film-body">
-            <div class="research-paper-meta"><span class="research-venue"><span class="lang-en">Specification</span><span class="lang-zh">技术规格</span></span><span>2026.08</span></div>
-            <h4><a href="research/embodied-data-spec-v1.html" target="_blank" rel="noopener"><span class="lang-en">Embodied AI Data Engineering Spec V1.0</span><span class="lang-zh">具身智能数据工程规格 V1.0</span></a></h4>
-            <p class="research-paper-name"><span class="lang-en">Two specs merged · 29 tables</span><span class="lang-zh">两份规格合并 · 29 张表</span></p>
-            <p class="research-film-summary"><span class="lang-en">Defines data scale, quality gates and acceptance criteria for data-capture rigs.</span><span class="lang-zh">定义数据规模、质量门槛与数采设备验收标准。</span></p>
-            <div class="research-links"><a href="research/embodied-data-spec-v1.html" target="_blank" rel="noopener"><span class="lang-en">Read ↗</span><span class="lang-zh">阅读 ↗</span></a><a href="assets/research/embodied-data-spec-v1.pdf" download><span class="lang-en">PDF ↓</span><span class="lang-zh">PDF ↓</span></a></div>
-          </div>
-        </article>
-        <article class="research-film investing-card">
-          <a class="research-cover" href="research/embodied-investor-map-2026.html" target="_blank" rel="noopener" aria-label="View the investor portfolio map / 查看机构组合地图">
-            <img src="assets/research/embodied-investor-map-2026.jpg" width="960" height="540" loading="lazy" decoding="async" alt="Header of the portfolio map of China's leading embodied AI investors">
-          </a>
-          <div class="research-film-body">
-            <div class="research-paper-meta"><span class="research-venue"><span class="lang-en">Market map</span><span class="lang-zh">组合地图</span></span><span>2026.08</span></div>
-            <h4><a href="research/embodied-investor-map-2026.html" target="_blank" rel="noopener"><span class="lang-en">Portfolio Map of China's Leading Embodied AI Investors</span><span class="lang-zh">中国头部投资机构具身智能组合地图</span></a></h4>
-            <p class="research-paper-name"><span class="lang-en">57 investors · 260 links · 116 companies</span><span class="lang-zh">57 家机构 · 260 条关系 · 116 家公司</span></p>
-            <div class="research-links"><a href="research/embodied-investor-map-2026.html" target="_blank" rel="noopener"><span class="lang-en">View ↗</span><span class="lang-zh">查看 ↗</span></a></div>
-          </div>
-        </article>
-      </div>
-      <ul class="investing-stats">
-        <li><b>167</b><span class="lang-en">source documents</span><span class="lang-zh">份资料</span></li>
-        <li><b>73</b><span class="lang-en">deals</span><span class="lang-zh">笔交易</span></li>
-        <li><b>57</b><span class="lang-en">investors</span><span class="lang-zh">家机构</span></li>
-        <li><b>116</b><span class="lang-en">companies</span><span class="lang-zh">家公司</span></li>
-      </ul>
+      <ol class="pubs">
+        <li id="pub-nptface" class="reveal"><span class="n">01</span><div><div class="pub-title"><a href="assets/research/nptface.mp4?v=continuous-1" data-video="nptface">NPTFace: Native Pose-aligned Transformer for Face Recognition</a></div><p class="pub-authors"><b>Zimin Ran</b>, Xuhan Zhu, Xiang An, Xingyu Ren, Kaicheng Yang, Feilong Tang, Zhichao Chen, Yumeng Wang, Ziyong Feng, Xianzhi Wang, Yin Xie, Linchao Zhu, Jiankang Deng</p><div class="pub-tags"><span>CVPRW 2026</span></div></div><a class="pub-side arrow-link ghost" href="assets/research/nptface.mp4?v=continuous-1" data-video="nptface"><span class="lang-en">&#9654; Watch research film</span><span class="lang-zh">&#9654; 观看论文视频</span></a></li>
+        <li class="reveal"><span class="n">02</span><div><div class="pub-title"><a href="assets/research/hust.mp4" data-video="hust">HUST: High-Fidelity Unbiased Skin Tone Estimation via Texture Quantization</a></div><p class="pub-authors"><b>Zimin Ran</b>, Xingyu Ren, Xiang An, Kaicheng Yang, Ziyong Feng, Jing Yang, Rolandos Alexandros Potamias, Linchao Zhu, Jiankang Deng</p><div class="pub-tags"><span>ICCV 2025</span></div></div><a class="pub-side arrow-link ghost" href="assets/research/hust.mp4" data-video="hust"><span class="lang-en">&#9654; Watch research film</span><span class="lang-zh">&#9654; 观看论文视频</span></a></li>
+        <li class="reveal"><span class="n">03</span><div><div class="pub-title"><a href="assets/research/rice.mp4" data-video="rice">Region-based Cluster Discrimination for Visual Representation Learning</a></div><p class="pub-authors">Yin Xie, Kaicheng Yang, Xiang An, Kun Wu, Yongle Zhao, Weimo Deng, <b>Zimin Ran</b>, Yumeng Wang, Ziyong Feng, Roy Miles, Ismail Elezi, Jiankang Deng</p><div class="pub-tags"><span>ICCV 2025</span></div></div><a class="pub-side arrow-link ghost" href="assets/research/rice.mp4" data-video="rice"><span class="lang-en">&#9654; Watch research film</span><span class="lang-zh">&#9654; 观看论文视频</span></a></li>
+        <li id="pub-univit" class="reveal"><span class="n">04</span><div><div class="pub-title"><a href="assets/research/univit.mp4?v=research-cut-1" data-video="univit">UniViT: Unifying Image and Video Understanding in One Vision Encoder</a></div><p class="pub-authors">Feilong Tang, Xiang An, Haolin Yang, Yin Xie, Kaicheng Yang, Ming Hu, Zheng Cheng, Xingyu Zhou, <b>Zimin Ran</b>, Imran Razzak, Ziyong Feng, Behzad Bozorgtabar, Jiankang Deng, Zongyuan Ge</p><div class="pub-tags"><span>NeurIPS 2025</span></div></div><a class="pub-side arrow-link ghost" href="assets/research/univit.mp4?v=research-cut-1" data-video="univit"><span class="lang-en">&#9654; Watch research film</span><span class="lang-zh">&#9654; 观看论文视频</span></a></li>
+        <li class="reveal"><span class="n">05</span><div><div class="pub-title"><a href="https://github.com/EvolvingLMMs-Lab/LLaVA-OneVision-2" target="_blank" rel="noopener noreferrer">Fully Open Framework for Democratized Multimodal Training</a></div><div class="pub-tags"><span><span class="lang-en">TPAMI · Under review</span><span class="lang-zh">TPAMI · 在审</span></span></div></div></li>
+        <li class="reveal"><span class="n">06</span><div><div class="pub-title"><a href="assets/research/llava.mp4" data-video="llava">LLaVA-OneVision-2</a></div><div class="pub-tags"><span>GitHub · 1.2K+ stars</span><span><span class="lang-en">Open multimodal models · Technical report</span><span class="lang-zh">开源多模态大模型 · 技术报告</span></span></div></div><a class="pub-side arrow-link ghost" href="assets/research/llava.mp4" data-video="llava"><span class="lang-en">&#9654; Watch research film</span><span class="lang-zh">&#9654; 观看研究视频</span></a></li>
+      </ol>
     </section>
 
-    <section class="contact-section" id="contact" aria-labelledby="contact-title">
-      <div><div class="eyebrow">05 / <span class="lang-en">LET'S CONNECT</span><span class="lang-zh">与我联系</span></div><h2 id="contact-title"><span class="lang-en">What's next? Let's find out.</span><span class="lang-zh">下一种可能，一起探索。</span></h2><p><span class="lang-en">For research, collaboration, and conversations that move ideas forward.</span><span class="lang-zh">期待研究合作、想法交流，以及让技术走向现实的机会。</span></p></div>
-      <a href="mailto:2944515344@qq.com" class="contact-email">2944515344@qq.com <span aria-hidden="true">↗</span></a>
+    <section class="sec sec-dark alt" id="investing" aria-labelledby="investing-title">
+      <div class="sec-head reveal">
+        <div>
+          <div class="sec-label label"><span class="dot" aria-hidden="true"></span>04 / <span class="lang-en">Investment research</span><span class="lang-zh">投研作品</span></div>
+          <h2 class="sec-title" id="investing-title"><span class="lang-en">From technical judgment to investment judgment</span><span class="lang-zh">从技术判断到投资判断</span></h2>
+        </div>
+        <p class="sec-intro"><span class="lang-en">Applying the technical judgment of an AI researcher to top-tier investors' early-stage bets, data infrastructure and portfolio landscape in embodied AI.</span><span class="lang-zh">把 AI 研究中的技术判断，用于分析头部资本对具身智能的早期投资偏好、数据基建与机构布局。</span></p>
+      </div>
+      <div class="stats reveal">
+        <div class="stat"><span class="label"><span class="dot" aria-hidden="true"></span><span class="lang-en">Source documents</span><span class="lang-zh">份资料</span></span><b data-count="167">167</b></div>
+        <div class="stat"><span class="label"><span class="dot" aria-hidden="true"></span><span class="lang-en">Deals</span><span class="lang-zh">笔交易</span></span><b data-count="73">73</b></div>
+        <div class="stat"><span class="label"><span class="dot" aria-hidden="true"></span><span class="lang-en">Investors</span><span class="lang-zh">家机构</span></span><b data-count="57">57</b></div>
+        <div class="stat"><span class="label"><span class="dot" aria-hidden="true"></span><span class="lang-en">Companies</span><span class="lang-zh">家公司</span></span><b data-count="116">116</b></div>
+      </div>
+      <div class="works">
+        <article class="work reveal">
+          <a class="cover" href="research/embodied-ai-2026h2.html" target="_blank" rel="noopener" aria-label="Read the report / 阅读报告全文"><img src="assets/research/embodied-ai-2026h2.jpg?v=3" width="960" height="540" loading="lazy" decoding="async" alt="Cover of the China embodied AI early-stage financing report, June–August 2026"></a>
+          <div class="film-meta label" style="margin-top:20px"><span class="venue"><span class="lang-en">Report</span><span class="lang-zh">研究报告</span></span><span>2026.10</span></div>
+          <h4><span class="lang-en">China Embodied AI Early-Stage Financing Watch, Jun–Aug 2026</span><span class="lang-zh">2026 年 6–8 月中国具身智能早期融资观察</span></h4>
+          <div class="metric label"><span class="lang-en">73 early-stage deals by top-tier investors · 67 companies</span><span class="lang-zh">头部资本 73 笔早期直投 · 67 家公司</span></div>
+          <p><span class="lang-en">Breaks the deals down by segment, stage and round size, and maps how 57 leading investors build their portfolios.</span><span class="lang-zh">按环节、轮次与单轮金额拆解这些交易，并梳理 57 家头部机构的组合结构。</span></p>
+          <div class="film-links"><a class="arrow-link" href="research/embodied-ai-2026h2.html" target="_blank" rel="noopener"><span class="lang-en">Read the report ↗</span><span class="lang-zh">阅读全文 ↗</span></a><a class="arrow-link ghost" href="assets/research/embodied-ai-2026h2.pdf" download><span class="lang-en">Download PDF ↓</span><span class="lang-zh">下载 PDF ↓</span></a></div>
+        </article>
+        <article class="work reveal" style="--d:100ms">
+          <a class="cover" href="research/embodied-data-spec-v1.html" target="_blank" rel="noopener" aria-label="Read the data engineering spec / 阅读数据工程规格"><img src="assets/research/embodied-data-spec-v1.jpg" width="960" height="540" loading="lazy" decoding="async" alt="Cover of the embodied AI data engineering specification V1.0"></a>
+          <div class="film-meta label" style="margin-top:20px"><span class="venue"><span class="lang-en">Specification</span><span class="lang-zh">技术规格</span></span><span>2026.08</span></div>
+          <h4><span class="lang-en">Embodied AI Data Engineering Spec V1.0</span><span class="lang-zh">具身智能数据工程规格 V1.0</span></h4>
+          <div class="metric label"><span class="lang-en">Two specs merged · 29 tables</span><span class="lang-zh">两份规格合并 · 29 张表</span></div>
+          <p><span class="lang-en">Defines data scale, quality gates and acceptance criteria for data-capture rigs.</span><span class="lang-zh">定义数据规模、质量门槛与数采设备验收标准。</span></p>
+          <div class="film-links"><a class="arrow-link" href="research/embodied-data-spec-v1.html" target="_blank" rel="noopener"><span class="lang-en">Read ↗</span><span class="lang-zh">阅读 ↗</span></a><a class="arrow-link ghost" href="assets/research/embodied-data-spec-v1.pdf" download><span class="lang-en">PDF ↓</span><span class="lang-zh">PDF ↓</span></a></div>
+        </article>
+        <article class="work reveal" style="--d:200ms">
+          <a class="cover" href="research/embodied-investor-map-2026.html" target="_blank" rel="noopener" aria-label="View the investor portfolio map / 查看机构组合地图"><img src="assets/research/embodied-investor-map-2026.jpg" width="960" height="540" loading="lazy" decoding="async" alt="Header of the portfolio map of China's leading embodied AI investors"></a>
+          <div class="film-meta label" style="margin-top:20px"><span class="venue"><span class="lang-en">Market map</span><span class="lang-zh">组合地图</span></span><span>2026.08</span></div>
+          <h4><span class="lang-en">Portfolio Map of China's Leading Embodied AI Investors</span><span class="lang-zh">中国头部投资机构具身智能组合地图</span></h4>
+          <div class="metric label"><span class="lang-en">57 investors · 260 links · 116 companies</span><span class="lang-zh">57 家机构 · 260 条关系 · 116 家公司</span></div>
+          <div class="film-links"><a class="arrow-link" href="research/embodied-investor-map-2026.html" target="_blank" rel="noopener"><span class="lang-en">View ↗</span><span class="lang-zh">查看 ↗</span></a></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="sec sec-light" id="contact" aria-labelledby="contact-title">
+      <div class="contact">
+        <div class="reveal">
+          <div class="sec-label label"><span class="dot" aria-hidden="true"></span>05 / <span class="lang-en">Let's connect</span><span class="lang-zh">与我联系</span></div>
+          <h2 class="sec-title" id="contact-title"><span class="lang-en">What's next? Let's find out.</span><span class="lang-zh">下一种可能，一起探索。</span></h2>
+          <p class="sec-intro" style="margin-top:24px"><span class="lang-en">For research, collaboration, and conversations that move ideas forward.</span><span class="lang-zh">期待研究合作、想法交流，以及让技术走向现实的机会。</span></p>
+          <a class="email" href="mailto:2944515344@qq.com">2944515344@qq.com <span aria-hidden="true">↗</span></a>
+        </div>
+        <ol class="foot-nav reveal">
+          <li><a href="#about"><span>01</span><span class="lang-en">About</span><span class="lang-zh">关于</span></a></li>
+          <li><a href="#research"><span>02</span><span class="lang-en">Research</span><span class="lang-zh">研究</span></a></li>
+          <li><a href="#publications"><span>03</span><span class="lang-en">Publications</span><span class="lang-zh">论文</span></a></li>
+          <li><a href="#investing"><span>04</span><span class="lang-en">Investing</span><span class="lang-zh">投研</span></a></li>
+          <li><a href="#contact"><span>05</span><span class="lang-en">Contact</span><span class="lang-zh">联系</span></a></li>
+        </ol>
+      </div>
+      <span class="giant" aria-hidden="true"><span>Zimin Ran</span></span>
+      <footer class="foot-meta label">
+        <span>© 2026 Zimin Ran · <span class="lang-en">Exploring the space between vision and intelligence.</span><span class="lang-zh">探索视觉与智能之间的可能。</span></span>
+        <span>Last updated / 2026.10.29</span>
+      </footer>
     </section>
   </main>
 
-<dialog class="research-dialog" id="researchVideoDialog" aria-labelledby="researchVideoTitle" aria-describedby="researchVideoDescription">
+  <dialog class="research-dialog" id="researchVideoDialog" aria-labelledby="researchVideoTitle" aria-describedby="researchVideoDescription">
     <div class="research-dialog-header">
       <div>
         <div class="research-dialog-label"><span class="lang-en">RESEARCH FILM</span><span class="lang-zh">论文展示视频</span></div>
@@ -377,14 +336,5 @@
       </div>
     </div>
   </dialog>
-
-  <footer class="site-footer"><div class="container footer-inner"><span>© 2026 Zimin Ran · <span class="lang-en">Exploring the space between vision and intelligence.</span><span class="lang-zh">探索视觉与智能之间的可能。</span></span><span class="footer-status"><span class="status-dot" aria-hidden="true"></span>LAST UPDATED / 2026.10.21</span></div></footer>
-<script>
-    function toggleLang() {
-      var zh = document.body.classList.toggle('lang-zh');
-      document.body.classList.toggle('lang-en', !zh);
-      document.documentElement.lang = zh ? 'zh' : 'en';
-    }
-  </script>
 </body>
 </html>
