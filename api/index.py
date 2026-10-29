@@ -29,7 +29,7 @@ class Message(BaseModel):
 
 class ChatRequest(BaseModel):
     messages: List[Message]
-    model: Optional[str] = "qwen-plus"
+    model: Optional[str] = "qwen-plus-2025-07-28"
 
 # 3. RAG 知识库：冉子民的个人信息
 ZIMIN_PROFILE = """
@@ -66,7 +66,7 @@ ZIMIN_PROFILE = """
 
 【联系方式】
 - GitHub: https://github.com/ziminran
-- Email: grimmiran@gmail.com
+- Email: 2944515344@qq.com
 
 【回答规则】
 - 始终以"我"自称，代表冉子民的智能分身说话

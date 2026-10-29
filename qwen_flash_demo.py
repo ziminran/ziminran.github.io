@@ -5,9 +5,12 @@ Qwen Flash API 推理演示
 
 import requests
 import json
+import os
 
-# API 配置
-API_KEY = ""
+# API 配置 - 从环境变量读取，不要硬编码！
+API_KEY = os.environ.get("DASHSCOPE_API_KEY")
+if not API_KEY:
+    raise ValueError("请设置环境变量 DASHSCOPE_API_KEY，例如: export DASHSCOPE_API_KEY='your-key-here'")
 API_URL = "https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation"
 
 def chat_with_qwen(prompt, model="qwen-turbo", stream=False):

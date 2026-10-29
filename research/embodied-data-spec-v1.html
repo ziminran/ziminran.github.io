@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>具身智能数据工程规格 V1.0</title>
+<style>
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:#f5f2e9;color:#17211b;font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.72}
+.binder{background:#0b3d33;color:#fff;padding:56px max(6vw,24px) 44px}
+.binder-tag{display:inline-block;padding:5px 11px;border:1px solid #76a99b;border-radius:999px;font-size:13px;letter-spacing:.08em}
+.binder h1{max-width:960px;font-size:clamp(32px,4.6vw,56px);line-height:1.12;margin:22px 0 14px;letter-spacing:-.03em}
+.binder p{max-width:880px;margin:0;color:#d9ebe5;font-size:17px}
+.binder-meta{display:flex;flex-wrap:wrap;gap:22px;margin-top:22px;font-size:14px;color:#cfe3dc}
+.binder-parts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;max-width:1120px;margin-top:30px}
+.binder-parts a{display:block;padding:16px 18px;border:1px solid #ffffff33;border-radius:10px;background:#ffffff0d;color:#fff;text-decoration:none}
+.binder-parts a:hover{background:#ffffff1a}
+.binder-parts b{display:inline-grid;place-items:center;width:26px;height:26px;margin-right:10px;border-radius:50%;background:#c8ed71;color:#0d5c48;font-size:13px}
+.binder-parts small{display:block;margin-top:6px;color:#bcd6cd;font-size:13px}
+@media(max-width:700px){.binder{padding:40px 22px 34px}.binder-parts{grid-template-columns:1fr}}
+@media print{
+@page{size:A4;margin:14mm 12mm}
+.binder{background:#fff;color:#000;padding:0 0 16px;border-bottom:3px solid #000}
+.binder p,.binder-meta,.binder-parts small{color:#333}
+.binder-parts a{color:#000;background:none;border-color:#999}
+.binder-parts b{background:#000;color:#fff}
+.part-b{break-before:page}
+.part table{display:table!important;overflow:visible!important}
+.part tr{break-inside:avoid}
+body .part section{break-inside:auto}
+}
+/* Part A：原《具身智能数据需求与数采设备技术规格 V1.0》样式，作用域 .part-a */
+.part-a{--ink:#17211b;--muted:#607067;--paper:#f5f2e9;--card:#fffdf7;--line:#d9d4c6;--green:#0d5c48;--lime:#c8ed71;--amber:#b85e19;--red:#9b2f2f;--blue:#245a83}
+.part-a *{box-sizing:border-box}
+.part-a{margin:0;background:var(--paper);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.72}
+.part-a header{background:var(--green);color:white;padding:64px max(6vw,24px) 52px;border-bottom:8px solid var(--lime)}
+.part-a header .tag{display:inline-block;padding:5px 11px;border:1px solid #76a99b;border-radius:999px;font-size:13px;letter-spacing:.08em}
+.part-a h1{max-width:900px;font-size:clamp(34px,5vw,64px);line-height:1.1;margin:24px 0 16px;letter-spacing:-.04em}
+.part-a header p{max-width:840px;color:#d9ebe5;font-size:18px}
+.part-a .meta{display:flex;gap:24px;flex-wrap:wrap;margin-top:30px;font-size:14px}
+.part-a .layout{display:grid;grid-template-columns:260px minmax(0,980px);gap:42px;max-width:1320px;margin:auto;padding:42px 28px 90px}
+.part-a nav{position:sticky;top:20px;align-self:start;background:#ebe7da;border:1px solid var(--line);padding:18px;border-radius:12px}
+.part-a nav strong{font-size:13px;letter-spacing:.1em;color:var(--green)}
+.part-a nav a{display:block;color:#405047;text-decoration:none;padding:7px 8px;border-left:2px solid transparent;font-size:14px}
+.part-a nav a:hover{border-color:var(--green);background:#fff9}
+.part-a main{min-width:0}
+.part-a section{scroll-margin-top:24px;margin-bottom:52px}
+.part-a h2{font-size:30px;line-height:1.25;margin:0 0 18px;padding-bottom:10px;border-bottom:3px solid var(--ink)}
+.part-a h3{font-size:20px;margin:28px 0 12px;color:var(--green)}
+.part-a h4{margin:20px 0 8px}
+.part-a .lead{font-size:18px;color:#35453c}
+.part-a .callout{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--green);padding:18px 20px;margin:18px 0;border-radius:4px}
+.part-a .warn{border-left-color:var(--amber)}
+.part-a .danger{border-left-color:var(--red)}
+.part-a .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.part-a .metric{background:var(--ink);color:white;padding:18px;border-radius:8px}
+.part-a .metric b{display:block;color:var(--lime);font-size:24px}
+.part-a .metric span{font-size:13px;color:#ced6d1}
+.part-a table{width:100%;border-collapse:collapse;background:var(--card);font-size:14px;margin:14px 0 26px}
+.part-a th,.part-a td{padding:11px 12px;border:1px solid var(--line);vertical-align:top;text-align:left}
+.part-a th{background:#e7e3d6;color:#29382f}
+.part-a .must{color:var(--red);font-weight:700}
+.part-a .should{color:var(--blue);font-weight:700}
+.part-a .optional{color:#75611f;font-weight:700}
+.part-a code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#e9e4d8;padding:2px 5px;border-radius:4px;font-size:.92em}
+.part-a pre{background:#17211b;color:#eef4f0;padding:18px;overflow:auto;border-radius:8px;line-height:1.5}
+.part-a .pill{display:inline-block;padding:2px 8px;border-radius:999px;background:#dcebdc;font-size:12px;font-weight:700}
+.part-a ul,.part-a ol{padding-left:22px}
+.part-a .small{font-size:13px;color:var(--muted)}
+.part-a footer{padding:28px;color:var(--muted);text-align:center;border-top:1px solid var(--line)}
+@media(max-width:900px){
+.part-a .layout{display:block;padding:26px 18px}
+.part-a nav{position:relative;top:0;margin-bottom:34px}
+.part-a .grid{grid-template-columns:1fr}
+.part-a header{padding:42px 22px}
+.part-a table{display:block;overflow-x:auto;white-space:normal}
+.part-a h2{font-size:26px}
+}
+@media print{
+.part-a nav{display:none}
+.part-a .layout{display:block;max-width:none}
+.part-a header{padding:30px;color:#000;background:#fff;border-bottom:4px solid #000}
+.part-a header p,.part-a .meta{color:#333}
+.part-a section{break-inside:avoid}
+.part-a{background:#fff}
+.part-a a{color:inherit}
+}
+/* Part B：原《具身智能 Ego 预训练数据需求与数采设备技术规格 V1.0》样式，作用域 .part-b */
+.part-b{--ink:#19201f;--paper:#f2efe8;--card:#fffdf8;--line:#d6d0c3;--teal:#064f52;--cyan:#63d6ce;--orange:#d66a2c;--red:#a83232;--blue:#285e8a;--muted:#63706d}
+.part-b *{box-sizing:border-box}
+.part-b{margin:0;background:var(--paper);color:var(--ink);font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;line-height:1.72}
+.part-b header{padding:62px max(6vw,24px) 50px;background:radial-gradient(circle at 85% 15%,#168b89 0,transparent 32%),var(--teal);color:#fff;border-bottom:7px solid var(--cyan)}
+.part-b .eyebrow{font:600 12px ui-monospace,monospace;letter-spacing:.16em;border:1px solid #77bbb8;padding:5px 10px;border-radius:99px}
+.part-b h1{font-size:clamp(34px,5vw,62px);line-height:1.08;letter-spacing:-.04em;max-width:940px;margin:24px 0 16px}
+.part-b header p{max-width:880px;font-size:18px;color:#d7eeee}
+.part-b .meta{display:flex;gap:22px;flex-wrap:wrap;margin-top:28px;font-size:14px}
+.part-b .layout{display:grid;grid-template-columns:260px minmax(0,980px);gap:42px;max-width:1320px;margin:auto;padding:42px 28px 90px}
+.part-b nav{position:sticky;top:18px;align-self:start;background:#e7e2d6;border:1px solid var(--line);border-radius:10px;padding:17px}
+.part-b nav b{font-size:12px;letter-spacing:.12em;color:var(--teal)}
+.part-b nav a{display:block;color:#44524f;text-decoration:none;padding:6px 7px;border-left:2px solid transparent;font-size:14px}
+.part-b nav a:hover{border-color:var(--teal);background:#fff8}
+.part-b main{min-width:0}
+.part-b section{margin-bottom:50px;scroll-margin-top:22px}
+.part-b h2{font-size:29px;line-height:1.25;margin:0 0 17px;padding-bottom:10px;border-bottom:3px solid var(--ink)}
+.part-b h3{font-size:20px;color:var(--teal);margin:27px 0 10px}
+.part-b .lead{font-size:18px;color:#374542}
+.part-b .callout{background:var(--card);border:1px solid var(--line);border-left:6px solid var(--teal);padding:18px 20px;margin:17px 0;border-radius:4px}
+.part-b .warn{border-left-color:var(--orange)}
+.part-b .danger{border-left-color:var(--red)}
+.part-b .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.part-b .metric{padding:18px;background:var(--ink);color:white;border-radius:8px}
+.part-b .metric b{display:block;color:var(--cyan);font-size:24px}
+.part-b .metric span{font-size:13px;color:#d0d8d6}
+.part-b table{width:100%;border-collapse:collapse;background:var(--card);font-size:14px;margin:13px 0 25px}
+.part-b th,.part-b td{border:1px solid var(--line);padding:10px 12px;text-align:left;vertical-align:top}
+.part-b th{background:#e4dfd3}
+.part-b .must{color:var(--red);font-weight:700}
+.part-b .should{color:var(--blue);font-weight:700}
+.part-b .optional{color:#79631e;font-weight:700}
+.part-b code{font-family:ui-monospace,monospace;background:#e8e2d6;padding:2px 5px;border-radius:4px;font-size:.92em}
+.part-b pre{background:var(--ink);color:#edf5f3;padding:18px;border-radius:8px;overflow:auto;line-height:1.5}
+.part-b .small{font-size:13px;color:var(--muted)}
+.part-b ul,.part-b ol{padding-left:22px}
+.part-b footer{text-align:center;color:var(--muted);padding:26px;border-top:1px solid var(--line)}
+@media(max-width:900px){
+.part-b .layout{display:block;padding:26px 18px}
+.part-b nav{position:relative;top:0;margin-bottom:32px}
+.part-b .grid{grid-template-columns:1fr}
+.part-b header{padding:42px 22px}
+.part-b table{display:block;overflow-x:auto}
+}
+@media print{
+.part-b nav{display:none}
+.part-b .layout{display:block;max-width:none}
+.part-b header{background:#fff;color:#000;padding:28px;border-color:#000}
+.part-b header p,.part-b .meta{color:#333}
+.part-b{background:#fff}
+}
+</style></head>
+<body>
+<header class="binder">
+  <span class="binder-tag">EMBODIED AI DATA ENGINEERING SPEC</span>
+  <h1>具身智能数据工程规格 V1.0</h1>
+  <p>本文件合并两份规格：A 面向机械臂与灵巧手的机器人操作数据（遥操作示教、自主执行等），B 面向人类第一视角（Ego）预训练数据。两部分正文保持原样，共 29 张表。</p>
+  <div class="binder-meta"><span>版本：V1.0</span><span>状态：评审稿</span><span>日期：2026-08-12</span><span>表格：A 15 张 · B 14 张</span></div>
+  <nav class="binder-parts" aria-label="规格分册">
+    <a href="#part-a"><b>A</b>具身智能数据需求与数采设备技术规格<small>机械臂 / 灵巧手操作数据 · 15 张表</small></a>
+    <a href="#part-b"><b>B</b>具身智能 Ego 预训练数据需求与数采设备技术规格<small>人类第一视角数据 · 14 张表</small></a>
+  </nav>
+</header>
+<div class="part part-a" id="part-a">
+<header>
+  <span class="tag">DATA &amp; ACQUISITION SPECIFICATION</span>
+  <h1>具身智能数据需求与数采设备技术规格</h1>
+  <p>面向机械臂与灵巧手 VLA / 具身基础模型的数据生产规范，覆盖任务设计、数据协议、质量治理、采集设备、系统集成与验收。</p>
+  <div class="meta"><span>版本：V1.0</span><span>状态：评审稿</span><span>日期：2026-08-12</span><span>适用：桌面操作 / 装配 / 工具使用</span></div>
+</header>
+<div class="layout">
+<nav><strong>目录</strong>
+  <a href="#a-scope">01 文档定位</a><a href="#a-goals">02 建设目标</a><a href="#a-tasks">03 任务与数据规模</a><a href="#a-modalities">04 数据模态</a><a href="#a-schema">05 数据协议</a><a href="#a-annotation">06 标注规范</a><a href="#a-quality">07 质量与验收</a><a href="#a-equipment">08 设备技术规格</a><a href="#a-architecture">09 系统架构</a><a href="#a-acceptance">10 整体验收</a><a href="#a-security">11 安全合规</a><a href="#a-delivery">12 交付物</a><a href="#a-appendix">附录</a>
+</nav>
+<main>
+<section id="a-scope"><h2>01 文档定位</h2>
+  <p class="lead">本规范用于建设可训练、可复现、可追溯的机械臂 / 灵巧手多模态操作数据集，并作为数采工作站采购、集成和验收的技术基线。</p>
+  <div class="callout"><b>核心原则：</b>模型最终看到的观测、语言和动作必须共享同一时间基准；原始数据不可被派生数据替代；每条轨迹必须保留任务上下文、设备配置、标定版本和质量结论。</div>
+  <table><tr><th>范围</th><th>包含</th><th>不默认包含</th></tr><tr><td>机器人</td><td>单臂、双臂、夹爪、五指/多指灵巧手，固定工作台</td><td>移动底盘、腿足运动、户外导航</td></tr><tr><td>学习范式</td><td>VLA 预训练、指令微调、行为克隆、失败恢复</td><td>纯仿真强化学习、自动驾驶数据</td></tr><tr><td>数据来源</td><td>遥操作示教、自主执行、人工干预、失败样本</td><td>未经许可的互联网数据与身份敏感数据</td></tr></table>
+  <p><span class="must">MUST</span> 为强制项；<span class="should">SHOULD</span> 为推荐项；<span class="optional">OPTIONAL</span> 为增强项。项目合同另有明确约定时，以合同为准。</p>
+</section>
+
+<section id="a-goals"><h2>02 建设目标与非功能指标</h2>
+  <div class="grid"><div class="metric"><b>≥ 98%</b><span>可用轨迹率（试运行验收目标）</span></div><div class="metric"><b>≤ 5 ms</b><span>跨模态对齐误差 P95</span></div><div class="metric"><b>100%</b><span>轨迹、设备、标定版本可追溯</span></div></div>
+  <table><tr><th>目标</th><th>要求</th><th>验证方式</th></tr>
+  <tr><td>可训练</td><td>字段固定、单位统一、时间单调、动作语义明确，支持按 episode 流式读取</td><td>Schema 校验与训练加载冒烟测试</td></tr>
+  <tr><td>可复现</td><td>保留场景、物体、机器人、控制器、相机与标定版本</td><td>随机抽取轨迹重放或回放核验</td></tr>
+  <tr><td>可扩展</td><td>传感器以独立 topic / stream 扩展，不破坏既有字段</td><td>新增传感器兼容测试</td></tr>
+  <tr><td>高可用</td><td>单设备故障不损坏已完成 episode；断电后可恢复索引</td><td>故障注入与断电恢复</td></tr>
+  <tr><td>安全</td><td>硬件急停独立于上位机；速度、力矩和工作空间可限制</td><td>安全回路与边界测试</td></tr></table>
+</section>
+
+<section id="a-tasks"><h2>03 任务体系与数据规模</h2>
+  <h3>3.1 任务分类</h3>
+  <table><tr><th>一级任务</th><th>代表任务</th><th>关键能力</th><th>难度变量</th></tr>
+  <tr><td>抓取与放置</td><td>散乱抓取、指定容器放置、堆叠</td><td>目标定位、抓取、避障、释放</td><td>材质、透明/反光、遮挡、姿态、拥挤度</td></tr>
+  <tr><td>可变形物体</td><td>叠毛巾、整理线缆、装袋</td><td>双臂协调、状态估计、连续接触</td><td>软硬度、摩擦、形变、初始拓扑</td></tr>
+  <tr><td>精密装配</td><td>插拔、对孔、旋拧、卡扣</td><td>视觉伺服、力控、微小误差修正</td><td>间隙、孔位、力阈值、容差</td></tr>
+  <tr><td>工具使用</td><td>使用螺丝刀、刷子、刮板、剪具</td><td>工具选择、功能端定位、轨迹规划</td><td>工具种类、握持点、作用对象</td></tr>
+  <tr><td>长程复合任务</td><td>整理桌面、备餐流程、零件分拣装箱</td><td>任务规划、记忆、错误恢复</td><td>步骤数、干扰项、状态分支</td></tr></table>
+  <h3>3.2 采样配额</h3>
+  <p>每个任务应按 <code>场景 × 物体 × 初态 × 指令表达 × 操作者 × 机器人配置 × 成败类型</code> 分层采样。不得只追求总时长而忽略覆盖度。</p>
+  <table><tr><th>阶段</th><th>建议有效时长</th><th>任务数</th><th>用途</th></tr><tr><td>PoC</td><td>100–300 小时</td><td>20–50</td><td>验证设备、协议和训练闭环</td></tr><tr><td>首期</td><td>1,000–3,000 小时</td><td>100–300</td><td>领域 VLA 微调与泛化评估</td></tr><tr><td>规模化</td><td>≥10,000 小时</td><td>持续扩展</td><td>跨本体、跨场景基础模型训练</td></tr></table>
+  <div class="callout warn"><b>规模说明：</b>以上是工程规划建议，不是模型效果承诺。正式预算应根据目标模型、动作空间、任务熵、成功率与每小时全成本，通过 100–300 小时先导实验测得 scaling curve 后确定。</div>
+  <h3>3.3 数据划分</h3><ul><li>训练 / 验证 / 测试建议为 80% / 10% / 10%，按任务变量分组后切分，禁止相邻重复轨迹跨集合泄漏。</li><li>至少设置三类测试：同分布测试、组合泛化测试、未见物体/场景测试。</li><li>黄金测试集冻结并实行访问控制；测试指令、场景种子和结果不得进入训练集。</li></ul>
+</section>
+
+<section id="a-modalities"><h2>04 数据模态与最低要求</h2>
+  <table><tr><th>模态</th><th>字段 / 内容</th><th>最低采集要求</th><th>等级</th></tr>
+  <tr><td>外部 RGB</td><td>主视角、侧视角或俯视角</td><td>1920×1080，30 fps；全局快门优先；保留曝光参数</td><td class="must">MUST</td></tr>
+  <tr><td>腕部 RGB</td><td>每个执行臂 1 路</td><td>1280×720，30 fps；低延迟；近距离对焦</td><td class="must">MUST</td></tr>
+  <tr><td>深度</td><td>与至少一路 RGB 配准的深度图</td><td>≥640×480，30 fps，16-bit mm 或 float32 m；无效值显式编码</td><td class="should">SHOULD</td></tr>
+  <tr><td>关节状态</td><td>位置、速度、力矩/电流、温度、故障码</td><td>机械臂 ≥100 Hz；灵巧手 ≥100 Hz，精细接触推荐 200 Hz</td><td class="must">MUST</td></tr>
+  <tr><td>末端状态</td><td>基坐标系下 6D 位姿、速度；夹爪宽度</td><td>≥100 Hz；位姿以平移 + 单位四元数表示</td><td class="must">MUST</td></tr>
+  <tr><td>动作命令</td><td>原始示教输入、发送命令、控制器实际目标</td><td>与控制周期同频；三者不得混写</td><td class="must">MUST</td></tr>
+  <tr><td>腕部六维力</td><td>Fx/Fy/Fz/Tx/Ty/Tz</td><td>≥500 Hz，推荐 1 kHz；含原始值、滤波值与量程</td><td class="should">SHOULD</td></tr>
+  <tr><td>触觉</td><td>阵列压力、剪切、接触区域或触觉图像</td><td>阵列 ≥100 Hz；视觉触觉 ≥30 fps；保留原始信号</td><td class="optional">OPTIONAL</td></tr>
+  <tr><td>音频</td><td>环境与接触声</td><td>48 kHz / 24-bit，双通道优先</td><td class="optional">OPTIONAL</td></tr>
+  <tr><td>语言</td><td>原始指令、规范化指令、步骤描述、纠错指令</td><td>UTF-8；保留语言、来源、说话时间区间</td><td class="must">MUST</td></tr>
+  <tr><td>事件</td><td>开始/结束、接触、抓取、释放、阶段切换、干预、急停</td><td>统一时钟下纳秒整数时间戳</td><td class="must">MUST</td></tr></table>
+  <p class="small">“采样率”指传感器产生有效样本的频率；“发布率”指中间件发送频率；“控制率”指闭环控制周期；视频 fps 指完整图像帧率。四者应分别记录。</p>
+</section>
+
+<section id="a-schema"><h2>05 数据协议与目录结构</h2>
+  <h3>5.1 时间、坐标与单位</h3>
+  <ul><li><span class="must">MUST</span>：所有记录使用设备原始时间戳和统一主时钟时间戳，存为 <code>int64</code> 纳秒；禁止用文件写入时间代替采样时间。</li><li><span class="must">MUST</span>：统一采用 SI 单位，长度 m、角度 rad、力 N、力矩 N·m；图像坐标另行声明。</li><li><span class="must">MUST</span>：坐标系组成无环 TF 树，明确 <code>world → robot_base → link → tool0 → sensor</code>；右手系；四元数顺序必须在 schema 中声明，推荐 <code>[x,y,z,w]</code>。</li><li><span class="must">MUST</span>：每条样本记录 <code>valid</code>、<code>latency_ns</code>、<code>sequence_id</code>，缺失数据不得静默前向填充。</li></ul>
+  <h3>5.2 Episode 元数据</h3>
+  <table><tr><th>类别</th><th>必要字段</th></tr><tr><td>身份</td><td><code>dataset_id, episode_id, task_id, session_id, site_id</code></td></tr><tr><td>任务</td><td>原始指令、规范指令、步骤、成功判据、失败类型、难度标签</td></tr><tr><td>环境</td><td>场景、光照、背景、工作台、物体实例与初始/目标状态</td></tr><tr><td>机器人</td><td>本体型号、URDF/描述哈希、末端工具、固件、控制器与限位版本</td></tr><tr><td>设备</td><td>传感器序列号、配置、内外参版本、同步模式、采集软件 commit</td></tr><tr><td>人员</td><td>匿名操作者 ID、熟练度、采集员、审核员；不保存非必要身份信息</td></tr><tr><td>质量</td><td>自动 QC 结果、人工审核、剔除原因、修订历史</td></tr></table>
+  <h3>5.3 推荐目录</h3>
+<pre>dataset_root/
+  manifest.jsonl
+  schemas/v1.0/*.json
+  calibrations/{calibration_id}/
+  episodes/{episode_id}/
+    metadata.json
+    language.jsonl
+    events.parquet
+    robot_state.parquet
+    action.parquet
+    force_torque.parquet
+    cameras/{camera_id}/video.mp4
+    cameras/{camera_id}/timestamps.parquet
+    checksums.sha256</pre>
+  <p>视频可采用帧内可寻址编码或 MP4 + 精确帧时间戳边车文件；结构化时序数据推荐 Parquet / Arrow。训练发布版可转换为 RLDS、LeRobot 等目标格式，但原始归档层应保持无损、不可覆盖。</p>
+</section>
+
+<section id="a-annotation"><h2>06 语言与行为标注规范</h2>
+  <table><tr><th>层级</th><th>内容</th><th>示例</th><th>要求</th></tr><tr><td>L0 轨迹级</td><td>任务指令与结果</td><td>“把红色齿轮装入左侧轴座”</td><td>全量</td></tr><tr><td>L1 步骤级</td><td>时段、子目标、动作语义</td><td>定位→接近→抓取→对孔→插入</td><td>全量自动生成，抽检修订</td></tr><tr><td>L2 事件级</td><td>接触、抓稳、滑移、释放、碰撞</td><td><code>contact_start</code></td><td>关键任务全量</td></tr><tr><td>L3 物体级</td><td>类别、实例、6D 位姿、状态、关系</td><td>齿轮 A 位于托盘 B 内</td><td>评测集精标，训练集按需</td></tr><tr><td>L4 失败级</td><td>失败点、根因、恢复动作</td><td>抓取偏心→滑落→重新定位</td><td>失败轨迹全量</td></tr></table>
+  <ul><li>指令应同时保留自然表达与规范化表达，不得只保留模板句。</li><li>成功必须由可观测终态判定；“操作者认为成功”不能作为唯一依据。</li><li>失败标签至少区分感知、规划、控制、抓取、接触、设备、人员中止和安全中止。</li><li>自动标注必须记录模型、版本、置信度和人工修改痕迹。</li></ul>
+</section>
+
+<section id="a-quality"><h2>07 数据质量与单轨迹验收</h2>
+  <table><tr><th>检查项</th><th>合格门槛</th><th>处置</th></tr>
+  <tr><td>时间单调性</td><td>每流时间戳严格单调；重复或倒退样本 = 0</td><td>不合格轨迹隔离</td></tr>
+  <tr><td>跨模态同步</td><td>主时钟对齐误差 P95 ≤5 ms，最大值 ≤10 ms；力控精细任务推荐 P95 ≤2 ms</td><td>超限不得进入精细操作训练集</td></tr>
+  <tr><td>图像完整性</td><td>帧丢失率 ≤0.1%；连续丢帧 ≤2 帧；无持续过曝、欠曝或明显拖影</td><td>自动检测 + 抽检</td></tr>
+  <tr><td>状态完整性</td><td>关节/动作样本缺失率 ≤0.01%；无 NaN/Inf；越限有事件记录</td><td>关键流缺失则整条剔除</td></tr>
+  <tr><td>标定</td><td>内参重投影 RMS ≤0.5 px；手眼/外参平移误差 ≤3 mm、旋转误差 ≤0.5°</td><td>超限重标定并隔离影响区间</td></tr>
+  <tr><td>动作一致性</td><td>命令、控制目标、实际状态语义清楚；维度与机器人描述一致</td><td>Schema 自动校验</td></tr>
+  <tr><td>任务标签</td><td>指令、物体、成功判据与视频一致；关键标注抽检准确率 ≥98%</td><td>退回修订</td></tr>
+  <tr><td>文件完整性</td><td>100% 文件校验和通过；episode 可独立读取</td><td>损坏文件重传或重采</td></tr></table>
+  <div class="callout danger"><b>禁止自动修复：</b>不得通过插帧、平滑、裁剪异常区间等方式掩盖原始数据缺陷。派生修复数据必须另存，记录算法与版本，并保持原始数据可追溯。</div>
+</section>
+
+<section id="a-equipment"><h2>08 数采设备技术规格</h2>
+  <h3>8.1 机器人与遥操作端</h3>
+  <table><tr><th>模块</th><th>强制规格</th><th>推荐 / 增强规格</th><th>验收</th></tr>
+  <tr><td>机械臂</td><td>≥6 DoF；位置/速度/电流或力矩可读；状态与命令接口 ≥100 Hz；支持外部急停和安全限位</td><td>重复定位精度 ≤±0.1 mm；关节力矩传感；1 kHz 实时控制接口</td><td>接口压力测试、轨迹重复性、安全停机</td></tr>
+  <tr><td>灵巧手 / 夹爪</td><td>位置可读可控；状态 ≥100 Hz；夹持范围覆盖任务物体；可更换指尖</td><td>多指 ≥12 主动 DoF；电流/力估计；触觉阵列；状态 200 Hz</td><td>全行程、重复抓取、通信丢包测试</td></tr>
+  <tr><td>主端遥操作器</td><td>与从端有效自由度匹配；输出 ≥100 Hz；端到端控制延迟 P95 ≤50 ms；支持离合、归中和增益调整</td><td>双臂同构主端；6D 力反馈；延迟 P95 ≤30 ms</td><td>运动映射、时延、漂移、长时操作</td></tr>
+  <tr><td>人机接口</td><td>脚踏/按钮支持采集开始、离合、成功、失败、急停；事件均带时间戳</td><td>语音指令、阶段标记、触觉反馈</td><td>按键映射与事件一致性</td></tr></table>
+
+  <h3>8.2 视觉设备</h3>
+  <table><tr><th>模块</th><th>强制规格</th><th>推荐规格</th></tr>
+  <tr><td>外部 RGB 相机</td><td>≥2 路；1920×1080@30 fps；硬件触发或 PTP；固定焦距；手动锁定曝光/白平衡；时间戳可读取</td><td>全局快门；60 fps；≥70 dB 动态范围；C/CS 镜头；PoE</td></tr>
+  <tr><td>腕部 RGB 相机</td><td>每臂 ≥1 路；1280×720@30 fps；工作距离 0.1–1 m；低畸变；刚性安装</td><td>全局快门；1920×1080@60 fps；重量 ≤100 g；同步输入</td></tr>
+  <tr><td>深度相机</td><td>≥640×480@30 fps；工作范围覆盖工作区；深度尺度可校准；输出原始深度与置信度</td><td>RGB-D 硬同步；1 m 处深度误差 ≤1%；多机抗干扰方案</td></tr>
+  <tr><td>镜头与照明</td><td>视场覆盖工作区且目标关键区域 ≥40 px；无频闪照明；显色指数 CRI ≥90</td><td>可调面光/环形光；偏振方案；照度闭环记录</td></tr></table>
+  <p class="small">采购时不得只写“4K 相机”。必须同时约定快门类型、帧率、曝光模式、触发/同步、镜头、工作距离、输出格式、时间戳来源和持续传输能力。</p>
+
+  <h3>8.3 力觉、触觉与定位</h3>
+  <table><tr><th>模块</th><th>最低规格</th><th>建议指标</th></tr>
+  <tr><td>六维力/力矩</td><td>6 轴；采样 ≥500 Hz；过载保护；提供标定矩阵与温漂信息</td><td>1 kHz；力分辨率 ≤0.1 N；力矩分辨率 ≤0.005 N·m；量程按最大任务载荷的 2–3 倍选择</td></tr>
+  <tr><td>触觉传感器</td><td>能输出接触强度与时间戳；覆盖主要接触面</td><td>空间分辨率 ≤3 mm；≥100 Hz；支持法向/剪切；可更换保护层</td></tr>
+  <tr><td>外部位姿真值</td><td>评测与标定工位至少配置一种可追溯方案</td><td>光学动捕 ≥100 Hz、位置误差 ≤1 mm；或经验证的标记视觉方案</td></tr></table>
+
+  <h3>8.4 同步、计算、网络与存储</h3>
+  <table><tr><th>模块</th><th>强制规格</th><th>推荐规格</th></tr>
+  <tr><td>主时钟</td><td>单调时钟；相机与计算节点支持硬触发、IEEE 1588 PTP 或同等方案；记录同步状态</td><td>PTP 硬件时间戳；GM 时钟保持；PPS/触发分配；跨设备偏差 ≤1 ms</td></tr>
+  <tr><td>采集计算机</td><td>≥16 核 CPU、64 GB RAM、系统盘 1 TB NVMe、数据盘 ≥4 TB NVMe；独立采集进程；UPS</td><td>≥24 核、128 GB RAM、可选 NVIDIA GPU、企业级 NVMe RAID、双电源</td></tr>
+  <tr><td>网络</td><td>视觉设备独立网络；≥2.5 GbE；可管理交换机；带宽余量 ≥30%</td><td>10 GbE 主干；PoE+；PTP aware 交换机；控制与数据 VLAN 隔离</td></tr>
+  <tr><td>在线缓存</td><td>满足 ≥24 小时峰值数据；掉盘告警；写入吞吐持续高于峰值 1.5 倍</td><td>72 小时缓存；RAID10；自动断点续传</td></tr>
+  <tr><td>归档存储</td><td>三副本策略至少包含一份异地/离线副本；SHA-256 校验；生命周期管理</td><td>对象存储、不可变版本、冷热分层、自动完整性巡检</td></tr></table>
+  <div class="callout"><b>容量估算：</b><code>日容量 = Σ(各流平均码率) × 日采集秒数 × 1.2</code>。例如 4 路 1080p RGB（每路 12 Mb/s）+ 2 路深度（每路 150 Mb/s）+ 状态流，8 小时原始/轻压缩采集约 1.3 TB/日；具体值必须以目标编码和实测码率为准。</div>
+
+  <h3>8.5 标定工具与工装</h3>
+  <ul><li>高精度标定板、尺寸证书、刚性固定架、水平/垂直测量工具。</li><li>手眼标定工装、TCP 标定尖端、已知质量砝码、力传感器零点与负载验证工装。</li><li>物体实例唯一编码、电子秤/卡尺、标准照明计；关键装配任务配通止规或终态检测传感器。</li><li>每次更换相机、镜头、支架、末端工具或发生碰撞后必须触发重标定或漂移验证。</li></ul>
+</section>
+
+<section id="a-architecture"><h2>09 采集系统架构与工作流</h2>
+  <h3>9.1 逻辑链路</h3>
+  <pre>传感器 / 机器人控制器
+        ↓ 原始驱动与设备时间戳
+实时采集层 → 时钟对齐 → 环形缓存 → Episode 编排
+        ↓                              ↓
+   在线健康监控                  原始数据落盘
+                                       ↓
+                              自动 QC / 人工审核
+                                       ↓
+                              版本化数据集 / 训练格式</pre>
+  <h3>9.2 标准作业流程</h3>
+  <ol><li>开机自检：设备在线、磁盘、网络、急停、安全边界、时钟锁定。</li><li>班前校验：相机清洁、曝光、TF、零点、已知点位和抓取测试。</li><li>任务初始化：扫描机器人、工具、物体、场景和操作者匿名 ID，加载任务配方。</li><li>采集：系统自动预录至少 2 秒，结束后后录至少 2 秒；操作者标记结果和异常。</li><li>在线 QC：检查丢帧、同步、越限、模糊、曝光、磁盘写入和元数据完整性。</li><li>人工审核：按风险分层抽检；失败与安全事件 100% 审核。</li><li>发布：冻结 manifest、schema、校准、校验和与版本说明，生成训练集索引。</li></ol>
+  <h3>9.3 可观测性</h3>
+  <p>监控面板至少显示各流频率、延迟、队列积压、丢包/丢帧、PTP 偏差、CPU/GPU、内存、磁盘吞吐与余量、机器人状态、急停状态。任何关键流断开、时钟失锁或磁盘余量低于 15% 时应停止新 episode 并告警。</p>
+</section>
+
+<section id="a-acceptance"><h2>10 设备与系统整体验收</h2>
+  <table><tr><th>阶段</th><th>测试</th><th>通过标准</th></tr>
+  <tr><td>FAT 出厂验收</td><td>设备清单、接口、连续满载写入、同步、安全回路</td><td>8 小时连续运行无关键流中断；所有强制规格有证据</td></tr>
+  <tr><td>SAT 现场验收</td><td>安装、网络、照明、标定、目标任务采集</td><td>标定达标；24 小时累计运行无数据损坏；故障可恢复</td></tr>
+  <tr><td>试运行</td><td>至少 3 类任务、10 个物体、3 名操作者、≥100 条轨迹</td><td>可用轨迹率 ≥98%；同步/完整性/标注指标达标</td></tr>
+  <tr><td>训练闭环</td><td>数据读取、批处理、样本可视化、最小模型训练</td><td>随机抽样可正确重建观察-动作序列；无单位/坐标/动作语义错误</td></tr></table>
+  <h3>10.1 必测场景</h3><ul><li>所有相机最高约定配置并发 + 所有状态流 + 力觉满速，持续 8 小时。</li><li>拔除非关键相机、网络抖动、磁盘接近阈值、进程重启、上位机断电恢复。</li><li>急停、限位、通信中断、超力阈值，确认机器人进入约定安全状态。</li><li>快速运动和精细插装各一组，使用 LED/触发信号或同等方法实测跨模态对齐。</li></ul>
+</section>
+
+<section id="a-security"><h2>11 安全、隐私与合规</h2>
+  <ul><li>机器人工作区应设置围栏、光栅或安全扫描；风险评估参考适用的工业机器人/协作机器人安全标准，并由有资质人员确认。</li><li>硬件急停必须直接进入安全控制链路，不依赖 ROS、网络、采集软件或普通操作系统。</li><li>采集人员接受操作培训；禁止佩戴可能卷入设备的饰物；高风险工装设置机械限位和防护罩。</li><li>摄像头视野最小化，默认不采集人脸、屏幕、证件和无关音频；确需采集时取得授权并设置访问、脱敏和删除机制。</li><li>数据实行最小权限、传输加密、静态加密、审计日志和离职/供应商权限回收。</li><li>物体 CAD、客户场景、第三方数据与开源数据分别记录权属、许可、地域和训练使用限制。</li></ul>
+</section>
+
+<section id="a-delivery"><h2>12 项目交付物</h2>
+  <table><tr><th>类别</th><th>交付内容</th></tr><tr><td>文档</td><td>需求规格、系统设计、接口文档、数据字典、标注手册、SOP、安全手册、运维手册</td></tr><tr><td>硬件</td><td>BOM、型号与序列号、合格证、标定证书、接线图、机柜与工装</td></tr><tr><td>软件</td><td>驱动、采集、监控、QC、转换、可视化、部署脚本、源码/许可证与版本清单</td></tr><tr><td>数据</td><td>原始样例集、标注集、manifest、schema、校准文件、校验和、质量报告</td></tr><tr><td>验收</td><td>FAT/SAT 报告、同步测试、吞吐测试、故障注入、安全测试、训练加载报告</td></tr></table>
+  <div class="callout"><b>采购边界：</b>供应商须逐项响应本规范，给出“满足 / 偏离 / 不适用”、实测值、证明材料和偏离影响。仅提供产品宣传页不视为完成技术响应。</div>
+</section>
+
+<section id="a-appendix"><h2>附录 A：最小数据字典</h2>
+  <table><tr><th>字段</th><th>类型</th><th>说明</th></tr><tr><td><code>timestamp_ns</code></td><td>int64</td><td>统一主时钟采样时刻</td></tr><tr><td><code>device_timestamp_ns</code></td><td>int64</td><td>设备原始时钟采样时刻</td></tr><tr><td><code>joint_position</code></td><td>float32[n]</td><td>rad 或 m，顺序引用机器人描述</td></tr><tr><td><code>joint_velocity</code></td><td>float32[n]</td><td>rad/s 或 m/s</td></tr><tr><td><code>joint_effort</code></td><td>float32[n]</td><td>N·m / N 或明确标记为电流 A</td></tr><tr><td><code>ee_pose</code></td><td>float32[7]</td><td>[x,y,z,qx,qy,qz,qw]，相对指定 frame</td></tr><tr><td><code>action</code></td><td>float32[m]</td><td>动作空间由 <code>action_type</code> 与 schema 定义</td></tr><tr><td><code>action_type</code></td><td>enum</td><td>joint_position / joint_velocity / ee_delta / torque 等</td></tr><tr><td><code>valid</code></td><td>bool</td><td>该样本是否有效</td></tr><tr><td><code>calibration_id</code></td><td>string</td><td>引用不可变标定版本</td></tr></table>
+  <h2>附录 B：待项目评审确认</h2>
+  <ol><li>目标本体型号、臂数、自由度、控制接口和动作表示。</li><li>首期任务清单、成功判据、对象范围、目标时长与预算上限。</li><li>是否需要触觉、六维力、音频、动捕及多工位并行。</li><li>模型训练框架及最终发布格式：自定义、RLDS、LeRobot 或其他。</li><li>场地、安全等级、数据权属、供应商远程运维与网络隔离要求。</li></ol>
+</section>
+</main></div>
+<footer>具身智能数据需求与数采设备技术规格 · V1.0 评审稿 · 2026-08-12</footer>
+</div>
+<div class="part part-b" id="part-b">
+<header><span class="eyebrow">EGOCENTRIC EMBODIED DATA SPEC</span><h1>具身智能 Ego 预训练数据需求与数采设备技术规格</h1><p>面向机械臂与灵巧手 VLA / 具身基础模型的人类第一视角操作数据规范，覆盖自然行为采集、手物交互表征、动作监督、质量治理、穿戴式设备与验收。</p><div class="meta"><span>版本：V1.0</span><span>状态：评审稿</span><span>日期：2026-08-12</span><span>数据主体：人类第一视角</span></div></header>
+<div class="layout"><nav><b>目录</b><a href="#b-definition">01 定义与边界</a><a href="#b-objective">02 训练目标</a><a href="#b-tasks">03 任务与规模</a><a href="#b-modalities">04 数据模态</a><a href="#b-action">05 动作表征</a><a href="#b-schema">06 数据协议</a><a href="#b-annotation">07 标注体系</a><a href="#b-quality">08 质量要求</a><a href="#b-equipment">09 设备规格</a><a href="#b-workflow">10 采集流程</a><a href="#b-acceptance">11 验收方案</a><a href="#b-privacy">12 隐私安全</a><a href="#b-delivery">13 交付物</a><a href="#b-appendix">附录</a></nav><main>
+
+<section id="b-definition"><h2>01 定义、用途与边界</h2><p class="lead">Ego 数据是由人类佩戴者头部、眼镜或胸前第一视角设备记录的自然操作过程。它提供大规模任务语义、手物交互与行为先验，但不天然包含机器人可直接执行的关节动作。</p>
+<table><tr><th>类别</th><th>本规范定义</th><th>是否属于核心 Ego 数据</th></tr><tr><td>人类第一视角</td><td>头戴 RGB/深度、头部运动、双手、物体、语言、音频与接触事件</td><td class="must">是</td></tr><tr><td>机器人腕部视角</td><td>安装在机器人腕部或末端的相机</td><td>不是人类 Ego；可作机器人域配对数据</td></tr><tr><td>第三视角</td><td>固定相机或跟拍相机观察操作者全身与环境</td><td>辅助真值和遮挡恢复，不替代 Ego</td></tr><tr><td>人体动作捕捉</td><td>手、腕、上肢、头部的 3D 位姿</td><td>增强监督，可由传感器或算法获得</td></tr></table>
+<div class="callout"><b>适用：</b>视觉-语言预训练、手物交互预测、动作分段、未来状态预测、可供性学习、任务规划、人体动作先验与跨本体迁移。<br><b>不直接保证：</b>机器人关节控制、力矩控制、碰撞安全或零样本执行。机器人策略训练仍需机器人域数据、动作对齐或闭环验证。</div>
+<p><span class="must">MUST</span> 强制；<span class="should">SHOULD</span> 推荐；<span class="optional">OPTIONAL</span> 增强。</p></section>
+
+<section id="b-objective"><h2>02 预训练目标与建设指标</h2><div class="grid"><div class="metric"><b>≥95%</b><span>双手关键操作时段可见率</span></div><div class="metric"><b>≤5 ms</b><span>设备内多模态对齐误差 P95</span></div><div class="metric"><b>100%</b><span>授权、设备、标定、处理链可追溯</span></div></div>
+<table><tr><th>训练目标</th><th>输入</th><th>监督 / 预测目标</th></tr><tr><td>视觉-语言表征</td><td>Ego 视频、语音、指令</td><td>任务、步骤、对象、状态、叙述与问答</td></tr><tr><td>手物交互</td><td>视频、手部、物体、可选深度</td><td>接触、抓握类型、活跃手、作用对象、可供性</td></tr><tr><td>动作预测</td><td>历史观察与语言</td><td>未来腕部 SE(3)、手关键点、接触事件、语义动作</td></tr><tr><td>世界模型</td><td>观察与动作代理</td><td>下一状态、物体状态变化、完成度与失败风险</td></tr><tr><td>跨本体迁移</td><td>人体动作 + 机器人形态约束</td><td>规范化末端轨迹或 retargeting 候选，不作为真值命令</td></tr></table></section>
+
+<section id="b-tasks"><h2>03 任务体系与数据规模</h2><h3>3.1 内容范围</h3>
+<table><tr><th>场景</th><th>代表任务</th><th>关键变化维度</th></tr><tr><td>家庭与日常</td><td>收纳、清洁、叠衣、冲泡、备餐、开关容器</td><td>房间、光照、物体实例、摆放、个人习惯</td></tr><tr><td>办公与零售</td><td>整理桌面、包装、补货、扫码、文件处理</td><td>工具、货架、包装、步骤顺序、干扰任务</td></tr><tr><td>轻工业</td><td>分拣、插拔、旋拧、线束整理、质检</td><td>公差、手套、节拍、工位、左右手协作</td></tr><tr><td>工具使用</td><td>剪、拧、刷、铲、测量、粘贴</td><td>工具类别、握法、功能端、施力方向</td></tr><tr><td>长程任务</td><td>多步骤组装、完整备餐、区域整理</td><td>步骤数、分支、暂停、纠错、状态记忆</td></tr></table>
+<h3>3.2 配额与覆盖</h3><p>按 <code>任务 × 场景 × 物体实例 × 初态 × 操作者 × 左右利手 × 熟练度 × 视角设备 × 成败</code> 分层采样，避免单一人员、场地和模板任务占据数据主体。</p>
+<table><tr><th>阶段</th><th>建议有效时长</th><th>目标</th></tr><tr><td>先导集</td><td>200–500 小时</td><td>验证佩戴舒适性、可见率、标注与训练收益</td></tr><tr><td>领域预训练集</td><td>5,000–20,000 小时</td><td>覆盖目标场景、任务和人群差异</td></tr><tr><td>通用规模集</td><td>≥100,000 小时</td><td>跨场景长尾行为与开放词汇预训练</td></tr></table>
+<div class="callout warn"><b>规模不是唯一目标：</b>正式扩量前应测量有效操作分钟占比、双手可见率、对象覆盖、重复度和下游 scaling curve。走路、等待与无关交流不得按同等价值计入有效操作时长。</div>
+<h3>3.3 数据切分</h3><ul><li>训练、验证、测试按操作者与场地分组切分，禁止同一连续会话切片后跨集合。</li><li>测试集至少包含未见人员、未见物体实例、未见场景及已见技能的新组合。</li><li>身份可识别原始数据与脱敏训练发布数据分别管理。</li></ul></section>
+
+<section id="b-modalities"><h2>04 数据模态与采集要求</h2>
+<table><tr><th>模态</th><th>最低要求</th><th>用途</th><th>等级</th></tr><tr><td>头戴 Ego RGB</td><td>≥1920×1080，30 fps；推荐 60 fps；水平 FOV 90°–120°；保留逐帧时间戳、曝光与相机参数</td><td>核心视觉观察</td><td class="must">MUST</td></tr><tr><td>双目 / 深度</td><td>≥640×480@30 fps；深度置信度与无效值；与 RGB 标定并同步</td><td>尺度、手物 3D、几何</td><td class="should">SHOULD</td></tr><tr><td>头部 IMU</td><td>6 轴 ≥200 Hz，推荐 9 轴；原始值与标定参数</td><td>视觉惯性、头部运动、去模糊</td><td class="must">MUST</td></tr><tr><td>音频</td><td>48 kHz / 24-bit；至少双麦；记录静音状态</td><td>自然指令、叙述、环境事件</td><td class="should">SHOULD</td></tr><tr><td>眼动</td><td>双眼 ≥90 Hz；注视点、有效性、瞳孔；与视频同步</td><td>注意力、作用对象、意图</td><td class="optional">OPTIONAL</td></tr><tr><td>手部姿态</td><td>每手 ≥21 个关键点，2D 全量；3D 推荐 ≥30 Hz；包含置信度与遮挡</td><td>动作代理与交互理解</td><td class="must">MUST</td></tr><tr><td>腕部 / 上肢位姿</td><td>腕部 6D；可选肘、肩；≥30 Hz，推荐 60–120 Hz</td><td>轨迹、retargeting</td><td class="should">SHOULD</td></tr><tr><td>手物接触</td><td>左右手、手指/掌区、物体实例、开始/结束、置信度</td><td>操作边界与可供性</td><td class="must">MUST</td></tr><tr><td>第三视角</td><td>≥1 路 1080p@30 fps，标定到统一坐标系</td><td>遮挡恢复、人体真值</td><td class="optional">OPTIONAL</td></tr><tr><td>可穿戴触觉/压力</td><td>≥100 Hz；指尖或手套接触压力；不显著改变自然操作</td><td>接触与施力代理</td><td class="optional">OPTIONAL</td></tr></table>
+<p class="small">算法派生的手姿态、深度或眼动不得伪装为传感器真值，必须记录来源、模型版本、置信度和处理参数。</p></section>
+
+<section id="b-action"><h2>05 人类动作表征与机器人迁移</h2>
+<h3>5.1 分层动作监督</h3><table><tr><th>层级</th><th>表征</th><th>要求</th></tr><tr><td>A0 语义动作</td><td>动词、对象、工具、目标状态，例如“右手抓取杯柄”</td><td>跨本体、全量</td></tr><tr><td>A1 事件动作</td><td>接近、接触、抓稳、移动、释放、滑移、纠错</td><td>关键交互全量</td></tr><tr><td>A2 几何动作</td><td>左右腕 6D 轨迹、手关键点、抓握类型、相对物体运动</td><td>含坐标系、尺度、置信度</td></tr><tr><td>A3 对象状态</td><td>对象位姿、开合、插入深度、装配关系、形变状态</td><td>优先描述任务效果</td></tr><tr><td>A4 机器人候选动作</td><td>经形态约束 retargeting 的末端/手指目标</td><td>派生数据，不能标记为机器人实测动作</td></tr></table>
+<h3>5.2 Retargeting 约束</h3><ul><li>保留原始人体动作与每个派生版本；记录人体模型、机器人 URDF、优化目标、约束、求解器和误差。</li><li>优先使用相对对象坐标的腕部轨迹、接触关系和目标状态，降低人机尺度与自由度差异。</li><li>人体手指关节角不得直接映射为灵巧手关节命令；需处理关节拓扑、限位、碰撞和可达性。</li><li>retargeting 结果必须通过仿真可达性/碰撞检查；用于真机前须经速度、力和安全策略约束。</li></ul>
+<div class="callout danger"><b>证据边界：</b>Ego 视频可监督“人做了什么”和“环境如何变化”，但通常不能提供真实接触力、机器人关节力矩或控制频率动作。不得将视频估计值宣传为机器人控制真值。</div></section>
+
+<section id="b-schema"><h2>06 数据协议与组织结构</h2><h3>6.1 基本规则</h3><ul><li>统一主时钟采用 <code>int64</code> 纳秒；同时保留设备原始时间戳。文件写入时刻不得作为采样时刻。</li><li>坐标系统一为右手系、SI 单位，建立 <code>world → head → camera/imu/eye</code> 与可选 <code>world → wrist/hand/object</code> 变换树。</li><li>每帧/样本包含 <code>valid</code>、<code>confidence</code>、<code>source</code>、<code>latency_ns</code>；缺失不得静默插值。</li><li>每个会话记录设备序列号、固件、内外参、佩戴位置、操作者匿名 ID、授权版本和处理链版本。</li></ul>
+<h3>6.2 推荐目录</h3><pre>ego_dataset/
+  manifest.jsonl
+  schemas/v1.0/
+  consents/{consent_version}/
+  calibrations/{calibration_id}/
+  sessions/{session_id}/
+    session.json
+    tasks.jsonl
+    events.parquet
+    narration.jsonl
+    ego/video.mp4
+    ego/frame_timestamps.parquet
+    imu.parquet
+    audio.flac
+    hands.parquet
+    objects.parquet
+    gaze.parquet
+    derived/{pipeline_version}/
+    checksums.sha256</pre>
+<p>原始层、脱敏层、标注层和训练发布层应分开且版本不可覆盖。视频采用可精确定位帧的编码，并配置逐帧时间戳边车文件。</p></section>
+
+<section id="b-annotation"><h2>07 标注体系</h2><table><tr><th>层级</th><th>内容</th><th>最低要求</th></tr><tr><td>会话级</td><td>场景、人员匿名属性、设备、任务集合、授权范围</td><td>全量</td></tr><tr><td>任务级</td><td>自然指令、规范任务、起止、成功、目标状态</td><td>全量</td></tr><tr><td>步骤级</td><td>动作-对象-工具-目标、起止时间</td><td>全量自动预标，人工抽检</td></tr><tr><td>交互级</td><td>活跃手、接触区域、对象实例、抓握、状态变化</td><td>关键操作全量</td></tr><tr><td>空间级</td><td>手/腕/物体 2D/3D、遮挡、可见性、置信度</td><td>2D 全量；3D 按目标配置</td></tr><tr><td>语言级</td><td>语音转写、说话人、时间段、意图、指代</td><td>有语音会话全量</td></tr><tr><td>异常级</td><td>中断、失败、返工、危险动作、设备异常</td><td>全量</td></tr></table>
+<ul><li>动作词表采用开放文本 + 规范标签双轨制，保留同义表达。</li><li>对象标注使用类别与实例双 ID；手中工具和被作用对象不得混为一类。</li><li>标注必须区分左/右手、主操作手/辅助稳定手及双手协同。</li><li>自动标注记录模型、代码 commit、参数和置信度；人工修改保留审计历史。</li></ul></section>
+
+<section id="b-quality"><h2>08 数据质量与验收门槛</h2><table><tr><th>指标</th><th>合格要求</th><th>说明</th></tr><tr><td>有效操作占比</td><td>会话中目标操作时长 ≥70%，或非操作区间已明确标记</td><td>避免无效长视频稀释</td></tr><tr><td>双手可见率</td><td>关键操作时段 ≥95%；任一主操作手完全离开画面连续超过 1 s 的片段需标记</td><td>按关键操作帧计算</td></tr><tr><td>图像质量</td><td>丢帧率 ≤0.1%；连续丢帧 ≤2；关键帧无严重模糊/过曝/遮挡</td><td>自动检测 + 抽检</td></tr><tr><td>多模态同步</td><td>设备内 P95 ≤5 ms，最大 ≤10 ms；外部辅助设备 P95 ≤10 ms</td><td>音画、IMU、眼动分别验证</td></tr><tr><td>手关键点</td><td>可见关键点 2D PCK@0.05 ≥95% 或按项目定义；置信度校准</td><td>在独立精标集评估</td></tr><tr><td>任务边界</td><td>起止误差中位数 ≤0.5 s；步骤边界 ≤0.3 s</td><td>双人复标集评估</td></tr><tr><td>标签一致性</td><td>核心类别 Cohen's κ ≥0.8 或一致率 ≥95%</td><td>需报告样本量与类别分布</td></tr><tr><td>隐私</td><td>发布集人脸、屏幕、证件、地址等敏感信息漏检率 = 0</td><td>自动扫描 + 人工复核</td></tr><tr><td>完整性</td><td>校验和 100% 通过；授权、标定、元数据完整</td><td>缺任一关键链路不得发布</td></tr></table>
+<div class="callout warn"><b>指标口径：</b>PCK、边界误差与一致性阈值必须在项目启动时锁定评测集和计算脚本；不同算法输出不得只比较单一平均值。</div></section>
+
+<section id="b-equipment"><h2>09 Ego 数采设备技术规格</h2><h3>9.1 头戴式核心设备</h3>
+<table><tr><th>模块</th><th>强制规格</th><th>推荐 / 增强规格</th><th>验收</th></tr><tr><td>Ego RGB</td><td>1920×1080@30 fps；HFOV 90°–120°；逐帧硬件/驱动时间戳；锁曝光/白平衡；H.264/H.265 或原始输出</td><td>≥2.5K@60 fps；全局快门或低 rolling-shutter；HDR；双目</td><td>动态清晰度、视野、帧率、时间戳</td></tr><tr><td>IMU</td><td>6 轴 ≥200 Hz；量程覆盖快速头动；原始数据可导出；与视频同钟或可校时</td><td>400–1000 Hz；硬件同步；温度与标定矩阵</td><td>静态噪声、动态范围、同步</td></tr><tr><td>音频</td><td>双麦，48 kHz / 24-bit；硬件静音或明显录音指示</td><td>4 麦阵列；抗风噪；波束成形原始通道可保留</td><td>音画同步、语音可懂度</td></tr><tr><td>佩戴</td><td>总重建议 ≤250 g；重心靠近头部；连续佩戴 ≥2 h；防滑、防夹伤、可清洁</td><td>≤150 g；可适配眼镜/安全帽；电池可热插拔</td><td>多体型试戴、动作稳定、舒适度问卷</td></tr><tr><td>隐私控制</td><td>物理录制开关、可见录制指示、快速暂停；状态写入日志</td><td>硬件镜头盖、区域禁录、边缘实时脱敏预览</td><td>开关与日志一致性</td></tr></table>
+<h3>9.2 深度、眼动与手部增强设备</h3><table><tr><th>模块</th><th>最低规格</th><th>推荐规格</th></tr><tr><td>深度 / 双目</td><td>≥640×480@30 fps；0.2–5 m；同步输出；深度标尺可验证</td><td>≥1024×768@60 fps；1 m 误差 ≤1%；室内多光照稳定</td></tr><tr><td>眼动</td><td>双眼 ≥90 Hz；视角覆盖；逐样本有效性；支持个体校准</td><td>120–200 Hz；注视精度 ≤1°、精密度 ≤0.5°；漂移快速校正</td></tr><tr><td>手部追踪</td><td>Ego 视觉估计 2D/3D 手关键点；不得要求操作者始终佩戴影响操作的手套</td><td>轻量惯性/光学手套 ≥60 Hz；无线同步；单手附加重量 ≤100 g</td></tr><tr><td>触觉/压力</td><td>可选指尖或掌部薄膜，≥100 Hz；不遮挡关键接触面</td><td>法向与剪切；可更换传感层；标定工具</td></tr><tr><td>辅助第三视角</td><td>1080p@30 fps；工作区覆盖；可与 Ego 对齐</td><td>全局快门 60 fps；多视角；外部位姿真值</td></tr></table>
+<h3>9.3 边缘记录、网络与存储</h3><table><tr><th>模块</th><th>强制规格</th><th>推荐规格</th></tr><tr><td>记录单元</td><td>连续写入高于峰值码率 1.5 倍；单会话文件损坏不影响其他会话；掉电保护</td><td>边缘 NVMe ≥1 TB；断点续传；低温升</td></tr><tr><td>续航</td><td>连续录制 ≥2 h；低电量提前告警且入日志</td><td>≥4 h 或热插拔；电池状态遥测</td></tr><tr><td>同步</td><td>设备内硬同步或共享时钟；跨设备支持 PTP/PPS/时间码/可验证同步事件</td><td>硬件时间戳；偏差实时监控</td></tr><tr><td>上传站</td><td>10 GbE；NVMe 缓存；自动校验和、加密上传与清卡确认</td><td>多设备并行坞站、自动充电、设备健康检测</td></tr><tr><td>归档</td><td>至少三副本，含异地/离线副本；SHA-256；权限与生命周期管理</td><td>不可变对象存储、冷热分层、完整性巡检</td></tr></table>
+<div class="callout"><b>容量估算：</b><code>日容量 = Σ平均码率 × 有效录制秒数 × 1.2</code>。单路 2.5K/60 fps 视频的实际码率可能因编码、运动和画质差异显著，采购与预算必须用目标场景连续实录不少于 2 小时后确定。</div>
+<h3>9.4 标定与现场工具</h3><ul><li>相机内参板、双目/深度标定板、IMU-相机标定工装、眼动校准靶。</li><li>头戴设备佩戴定位模板，记录相机相对头部位置；每次结构调整后重新标定。</li><li>时间同步验证 LED/蜂鸣/运动事件装置，可同时被视频、音频、IMU和辅助相机观测。</li><li>色卡、照度计、分辨率卡、快速动作模糊测试卡及已知尺寸/位姿对象。</li></ul></section>
+
+<section id="b-workflow"><h2>10 采集工作流与系统架构</h2><pre>穿戴传感器 → 设备时间戳 → 本地加密缓存 → 会话编排
+                       ↓                  ↓
+                 实时健康提示       自动完整性/QC
+                                           ↓
+授权绑定 → 安全上传 → 原始不可变层 → 脱敏 → 标注/派生 → 版本化训练集</pre>
+<ol><li>任务前：确认授权范围、禁录区、设备消毒、电量、容量、时钟、标定和录制指示。</li><li>佩戴校准：调整视野，使自然低头操作时双手与工作区处于画面主要区域；执行手眼与同步检查。</li><li>采集：先记录自然任务指令和初态；禁止为了“画面好看”持续改变自然动作，除非任务设计明确要求。</li><li>现场质检：监控帧率、温度、存储、手可见率、镜头遮挡、音频静音和同步状态。</li><li>会话结束：操作者确认任务结果、异常、暂停和敏感内容；系统计算校验和并加密上传。</li><li>后台处理：原始层冻结，执行脱敏、自动标注、抽检、版本发布；所有修改留痕。</li></ol>
+<p>触发以下任一条件应停止或重采：相机位置明显滑动、关键时段手持续出画、时间失锁、镜头污染、过热降频、隐私指示失效、授权撤回或设备数据损坏。</p></section>
+
+<section id="b-acceptance"><h2>11 设备与数据集验收</h2><table><tr><th>阶段</th><th>测试</th><th>通过标准</th></tr><tr><td>设备 FAT</td><td>满配置连续录制、续航、温升、掉电、同步、录制指示</td><td>4 小时无关键流中断；外壳接触温度符合设备安全设计；文件完整</td></tr><tr><td>现场 SAT</td><td>10 类动作、室内多光照、快速头动、低头精细操作</td><td>帧率、模糊、手可见率、音画同步和佩戴稳定达标</td></tr><tr><td>试运行</td><td>≥20 人、≥5 场景、≥50 任务、≥200 小时原始数据</td><td>有效数据率 ≥95%；核心质量指标达标；无隐私泄漏</td></tr><tr><td>训练闭环</td><td>数据加载、视频解码、时间对齐、手物可视化、最小预训练任务</td><td>可重建观察-动作代理-状态序列；无坐标、单位、左右手错误</td></tr></table>
+<h3>11.1 必须提交的实测报告</h3><ul><li>动态分辨率、rolling-shutter / 运动模糊、FOV 与低照度测试。</li><li>视频-IMU、音画、眼动和外部辅助设备同步误差分布，不只提供平均值。</li><li>佩戴重量、重心、续航、热稳定、多头型适配与两小时舒适度。</li><li>连续写入、断电恢复、满盘、异常拔线、上传中断和校验和测试。</li><li>脱敏召回、手关键点、任务边界、标注一致性及分人群/场景结果。</li></ul></section>
+
+<section id="b-privacy"><h2>12 隐私、伦理与安全</h2><ul><li>采集前取得清晰、可撤回的知情同意，明确用途、期限、共享对象、商业训练、跨境和删除机制。</li><li>现场设置明显录制提示与禁录区；第三方进入画面时须有合法依据或立即暂停/脱敏。</li><li>默认最小化采集人脸、未成年人、证件、地址、屏幕、账户、医疗和私密语音。</li><li>原始可识别数据与训练发布数据隔离；人脸、车牌、屏幕、票据和声音身份按风险脱敏。</li><li>操作者匿名 ID 不得由姓名、手机号或工号直接生成；身份映射表单独加密并限权。</li><li>设备采用静态与传输加密、远程擦除或丢失吊销、访问审计、供应商权限回收。</li><li>长时佩戴应评估眩晕、视疲劳、颈部负担、发热、电池和工作环境风险；设置休息制度。</li></ul>
+<div class="callout danger"><b>发布门禁：</b>未完成授权链验证、敏感信息复核、许可证审查和删除请求同步的数据，不得进入训练发布版本。</div></section>
+
+<section id="b-delivery"><h2>13 交付物</h2><table><tr><th>类别</th><th>内容</th></tr><tr><td>规范</td><td>任务本体、数据字典、标注手册、质量规则、隐私政策、采集 SOP、应急预案</td></tr><tr><td>设备</td><td>BOM、序列号、固件、接线/同步图、佩戴工装、标定工具、清洁与维护件</td></tr><tr><td>软件</td><td>采集、健康监控、上传、校验、脱敏、标注、转换、可视化及版本清单</td></tr><tr><td>数据</td><td>原始样例、脱敏样例、标注、派生动作、manifest、schema、标定、校验和</td></tr><tr><td>验收</td><td>FAT/SAT、质量统计、隐私扫描、故障测试、训练加载与最小模型报告</td></tr></table><div class="callout"><b>供应商响应：</b>逐项给出“满足 / 偏离 / 不适用”、实测值、测试条件、证明材料和偏离影响。宣传页参数不能替代目标场景持续实测。</div></section>
+
+<section id="b-appendix"><h2>附录 A：最小事件与动作字段</h2><table><tr><th>字段</th><th>说明</th></tr><tr><td><code>timestamp_ns</code></td><td>统一主时钟时间戳</td></tr><tr><td><code>left/right_hand_keypoints_2d/3d</code></td><td>关键点、置信度、可见性与坐标系</td></tr><tr><td><code>left/right_wrist_pose</code></td><td>位置 + 单位四元数，相对指定 frame</td></tr><tr><td><code>active_hand</code></td><td>left / right / both / none</td></tr><tr><td><code>contact_state</code></td><td>接触手区、对象实例、接触类型、置信度</td></tr><tr><td><code>action_verb</code></td><td>开放文本及规范动作词</td></tr><tr><td><code>object_id / tool_id</code></td><td>被作用对象与工具实例</td></tr><tr><td><code>state_before / state_after</code></td><td>任务相关对象状态变化</td></tr><tr><td><code>success / failure_type</code></td><td>结果、失败类型与判定来源</td></tr><tr><td><code>source / pipeline_version</code></td><td>传感器、人工或算法来源及版本</td></tr></table>
+<h2>附录 B：项目启动待确认</h2><ol><li>目标下游模型、机器人形态、动作空间及 Ego 数据在训练配方中的占比。</li><li>目标场景、任务、有效时长、人员规模、地域语言与长尾覆盖。</li><li>是否配置深度、眼动、第三视角、手套、触觉和对象位姿真值。</li><li>原始数据保留期、授权撤回、商业使用、对外共享与地域存储要求。</li><li>训练发布格式、压缩策略、标注精度、验收样本量和预算。</li></ol></section>
+</main></div><footer>具身智能 Ego 预训练数据需求与数采设备技术规格 · V1.0 评审稿 · 2026-08-12</footer>
+</div>
+</body></html>
