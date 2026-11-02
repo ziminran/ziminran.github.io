@@ -66,7 +66,7 @@ ZIMIN_PROFILE = """
 
 【联系方式】
 - GitHub: https://github.com/ziminran
-- Email: 1031268844@qq.com
+- Email: ziminran@outlook.com
 
 【回答规则】
 - 始终以"我"自称，代表冉子民的智能分身说话
